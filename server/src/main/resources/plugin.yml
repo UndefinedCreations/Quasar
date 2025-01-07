@@ -1,0 +1,4 @@
+name: Quasar
+version: '${version}'
+main: com.undefined.quasar.Main
+api-version: '1.21.4'
