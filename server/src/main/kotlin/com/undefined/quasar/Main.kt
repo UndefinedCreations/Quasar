@@ -1,5 +1,7 @@
 package com.undefined.quasar
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
 import com.undefined.stellar.StellarCommand
@@ -20,6 +22,11 @@ class Main : JavaPlugin() {
         val quasar = Quasar(this)
 
         val mainCommand = StellarCommand("quasar")
+
+        mainCommand.addArgument("randomEntityData")
+            .addExecution<Player> {
+                sender.sendMessage(GsonBuilder().setPrettyPrinting().create().toJson(spawnedEntities.random().getEntityData()))
+            }
 
         val entitySub = mainCommand.addArgument("entities").addEnumArgument<EntityType>("type")
 
@@ -55,7 +62,7 @@ class Main : JavaPlugin() {
             .addExecution<Player> {
                 val type = getArgument<EntityType>("type")
                 val entity = quasar.createQuasarEntity(type)
-                runTest(sender, entity, getArgument("time"))
+                runTest(sender, entity, getArgument<Int>("time"))
             }
 
         mainCommand.register(this)
@@ -66,14 +73,14 @@ class Main : JavaPlugin() {
         logger.sendMessage("${ChatColor.GREEN} Tests started [${ChatColor.AQUA}${entity.entityType.name.lowercase()}${ChatColor.GRAY}]")
         entity.addViewer(logger)
         entity.spawn(logger.location)
-        logger.sendMessage("${ChatColor.GRAY} Entity | Spawning {${ChatColor.GREEN}Success!${ChatColor.GRAY}}")
+        logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Spawning {${ChatColor.GREEN}Success!${ChatColor.GRAY}}")
         entity.runTest(logger,
             time,
             {
                 if (it == null) {
-                    logger.sendMessage("${ChatColor.GRAY} Entity | {${ChatColor.GREEN}Tests Passed!${ChatColor.GRAY}}")
+                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | {${ChatColor.GREEN}Tests Passed!${ChatColor.GRAY}}")
                 } else {
-                    logger.sendMessage("${ChatColor.GRAY} Entity | ${ChatColor.RED} Tests failed! ${ChatColor.GRAY}[${ChatColor.AQUA}${it::class.java.simpleName}${ChatColor.GRAY}] Check console for more.")
+                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | ${ChatColor.RED} Tests failed! ${ChatColor.GRAY}[${ChatColor.AQUA}${it::class.java.simpleName}${ChatColor.GRAY}] Check console for more.")
                     Bukkit.getLogger().log(Level.SEVERE, it.message.toString())
                 }
             }
@@ -83,7 +90,7 @@ class Main : JavaPlugin() {
 
                     entity.kill()
 
-                    logger.sendMessage("${ChatColor.GRAY} Entity | Removing {${ChatColor.GREEN}Success!${ChatColor.GRAY}}")
+                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Removing {${ChatColor.GREEN}Success!${ChatColor.GRAY}}")
 
                 } else {
                     logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | ${ChatColor.RED} Tests failed! ${ChatColor.GRAY}[${ChatColor.AQUA}${it::class.java.simpleName}${ChatColor.GRAY}] Check console for more.")

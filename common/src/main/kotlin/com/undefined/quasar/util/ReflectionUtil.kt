@@ -1,4 +1,8 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.undefined.quasar.util
+
+import java.lang.reflect.Method
 
 
 object ReflectionUtil {
@@ -17,3 +21,9 @@ fun <T : Any> Any.getPrivateField(name: String): T =
 
 fun <T : Any> Any.executePrivateMethod(name: String, vararg args: Any?): T =
     javaClass.getDeclaredMethod(name).apply { isAccessible = true }(this, args) as T
+
+fun Class<*>.getPrivateMethod(name: String, vararg args: Class<*>) =
+    getDeclaredMethod(name, *args).apply { this.isAccessible = true}
+
+fun Method.execute(instance: Any, vararg parameters: Any) =
+    this(instance, *parameters)

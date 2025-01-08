@@ -74,28 +74,25 @@ class Minecart: com.undefined.quasar.interfaces.entities.entity.Minecart, Entity
     override fun updateEntity() {
         super.updateEntity()
         displayBlock?.run { setDisplayBlock(this) }
-        if (displayBlockOffset != 0) setDisplayBlockOffset(displayBlockOffset)
+        setDisplayBlockOffset(displayBlockOffset)
+        setCustomDisplay(customDisplay)
     }
 
     override fun setEntityData(json: JsonObject) {
         val minecartJson = json["minecartData"].asJsonObject
-        minecartJson["displayBlock"]?.run {
-            displayBlock = BlockDataUtil.getBlockData(this.asInt)
-        }
-        minecartJson["displayBlockOffset"]?.run {
-            displayBlockOffset = this.asInt
-        }
+        val blockID = minecartJson["displayBlock"].asInt
+        if (blockID == -1) displayBlock = null else displayBlock = BlockDataUtil.getBlockData(blockID)
+        displayBlockOffset = minecartJson["displayBlockOffset"].asInt
+        customDisplay = minecartJson["customDisplay"].asBoolean
     }
 
     override fun getEntityData(): JsonObject {
         val json = super.getEntityData()
         val minecartJson = JsonObject()
-        displayBlock?.run {
-            minecartJson.addProperty("displayBlock", BlockDataUtil.getID(this))
-        }
-        if (displayBlockOffset != 0)
-            minecartJson.addProperty("displayBlockOffset", displayBlockOffset)
-        if (!minecartJson.isEmpty) json.add("minecartData", minecartJson)
+        minecartJson.addProperty("displayBlock", BlockDataUtil.getID(displayBlock))
+        minecartJson.addProperty("displayBlockOffset", displayBlockOffset)
+        minecartJson.addProperty("customDisplay", customDisplay)
+        json.add("minecartData", minecartJson)
         return json
     }
 
@@ -113,16 +110,16 @@ class Minecart: com.undefined.quasar.interfaces.entities.entity.Minecart, Entity
                 setDisplayBlock(randomMaterial.createBlockData())
                 logger.sendMessage("${ChatColor.GRAY} Minecart | Set display block {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}${randomMaterial.name.lowercase()}${ChatColor.GRAY}]")
 
-                delay(10) {
+                delay(delayTime) {
                     val randomOffset = Random.nextInt(50)
                     setDisplayBlockOffset(randomOffset)
                     logger.sendMessage("${ChatColor.GRAY} Minecart | Set display block offset {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}$randomOffset${ChatColor.GRAY}]")
 
-                    delay(10) {
+                    delay(delayTime) {
                         setCustomDisplay(false)
                         logger.sendMessage("${ChatColor.GRAY} Minecart | Set custom display {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}false${ChatColor.GRAY}]")
 
-                        delay(10) {
+                        delay(delayTime) {
                             specificTests.invoke(null)
                         }
                     }

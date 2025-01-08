@@ -5,7 +5,6 @@ import com.google.gson.JsonParser
 import com.undefined.quasar.enums.EntityType
 import org.bukkit.ChatColor
 import org.bukkit.Location
-import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 
 interface Entity {
@@ -26,13 +25,17 @@ interface Entity {
 
     fun getCustomName(): String?
 
-    fun hasCustomName(): Boolean
+    fun hasCustomName(): Boolean { return getCustomName() != null }
+
+    fun isCustomNameVisible(): Boolean
+
+    fun setCustomNameVisibility(visible: Boolean)
 
     fun isAlive(): Boolean
 
     fun teleport(location: Location)
 
-    fun teleport(entity: Entity) = teleport(entity.location)
+    fun teleport(entity: org.bukkit.entity.Entity) = teleport(entity.location)
 
     fun getLocation(): Location
 
@@ -44,9 +47,9 @@ interface Entity {
 
     fun isFreezing(): Boolean
 
-    fun setVisible()
+    fun setVisible(visible: Boolean)
 
-    fun isViable(): Boolean
+    fun isVisible(): Boolean
 
     fun setCollidable(collibable: Boolean)
 
@@ -54,9 +57,11 @@ interface Entity {
 
     fun setRotation(yaw: Float, pitch: Float)
 
-    fun addPassenger(entity: Entity)
+    fun addPassenger(passenger: Entity)
 
-    fun removePassenger(entity: Entity)
+    fun removePassenger(passenger: Entity)
+
+    fun getPassengers(): List<Entity>
 
     fun clearPassenger()
 
@@ -64,11 +69,17 @@ interface Entity {
 
     fun setGlowingColor(chatColor: ChatColor)
 
+    fun getGlowingColor(): ChatColor
+
     fun isGlowing(): Boolean
 
     fun setGravity(gravity: Boolean)
 
     fun hasGravity(): Boolean
+
+    fun isSilent(): Boolean
+
+    fun setSilent(silent: Boolean)
 
     fun setEntityData(string: String) = setEntityData(JsonParser.parseString(string).asJsonObject)
 

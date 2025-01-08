@@ -7,8 +7,11 @@ import com.unedfined.quasar.v1_21_4.util.sendPackets
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
+import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket
 import net.minecraft.server.level.ServerEntity
 import net.minecraft.world.level.Level
+import net.minecraft.world.scores.PlayerTeam
+import net.minecraft.world.scores.Scoreboard
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_21_R3.CraftWorld
@@ -18,6 +21,9 @@ import java.util.*
 abstract class AbstractEntity(
     override val entityType: EntityType
 ) : Entity {
+
+    var scoreboard: Scoreboard = Scoreboard()
+    var entityTeam: PlayerTeam = scoreboard.addPlayerTeam("qausar_${UUID.randomUUID()}")
 
     var entity: net.minecraft.world.entity.Entity? = null
     private var location: Location? = null
@@ -51,7 +57,11 @@ abstract class AbstractEntity(
         )
 
         val packet = entity.getAddEntityPacket(serverEntity)
-        sendPackets(packet)
+        sendPackets(
+            packet,
+            ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(entityTeam, true),
+            ClientboundSetPlayerTeamPacket.createPlayerPacket(entityTeam, entity.uuid.toString(), ClientboundSetPlayerTeamPacket.Action.ADD)
+        )
 
         this.entity = entity
         updateEntity()
@@ -59,7 +69,7 @@ abstract class AbstractEntity(
 
     fun sendEntityMetaData() {
         if (entity == null) return
-        val data = entity!!.entityData.packDirty()
+        val data = entity!!.entityData.packDirty() ?: return
         val packet = ClientboundSetEntityDataPacket(entity!!.id, data)
         sendPackets(packet)
     }
@@ -84,6 +94,8 @@ abstract class AbstractEntity(
 
     fun sendPackets(vararg packet: Packet<*>) {
         for (viewer in viewers)
-            Bukkit.getOfflinePlayer(viewer)?.player?.let { it.sendPackets(packet.toList()) }
+            Bukkit.getOfflinePlayer(viewer).player?.sendPackets(packet.toList())
     }
+
+    override fun getLocation(): Location = location ?: Location(Bukkit.getWorlds().first(), 0.0, 0.0, 0.0)
 }

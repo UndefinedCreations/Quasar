@@ -5,7 +5,12 @@ object FieldMappings {
     object Entity {
 
         object Base {
-
+            // net/minecraft/world/entity/Entity.html
+            const val DATA_CUSTOM_NAME = "aO"
+            const val DATA_CUSTOM_NAME_VISIBLE = "aP"
+            const val DATA_SILENT = "aQ"
+            const val DATA_NO_GRAVITY = "aR"
+            const val DATA_TICKS_FROZEN = "aS"
         }
 
         object Vehicle {
