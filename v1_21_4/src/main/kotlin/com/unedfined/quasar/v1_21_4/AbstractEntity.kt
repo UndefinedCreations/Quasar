@@ -3,8 +3,6 @@ package com.unedfined.quasar.v1_21_4
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
-import com.undefined.quasar.util.executePrivateMethod
-import com.unedfined.quasar.v1_21_4.mappings.MethodMappings
 import com.unedfined.quasar.v1_21_4.util.sendPackets
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
@@ -15,7 +13,7 @@ import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_21_R3.CraftWorld
 import org.bukkit.entity.Player
-import java.util.UUID
+import java.util.*
 
 abstract class AbstractEntity(
     override val entityType: EntityType

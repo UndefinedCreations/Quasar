@@ -2,6 +2,7 @@ package com.unedfined.quasar.v1_21_4.impl.entity
 
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
+import com.undefined.quasar.util.delay
 import com.undefined.quasar.util.getPrivateField
 import com.unedfined.quasar.v1_21_4.Entity
 import com.unedfined.quasar.v1_21_4.mappings.FieldMappings
@@ -9,7 +10,12 @@ import com.unedfined.quasar.v1_21_4.util.BlockDataUtil
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.vehicle.AbstractMinecart
 import net.minecraft.world.level.Level
+import org.bukkit.ChatColor
+import org.bukkit.Material
 import org.bukkit.block.data.BlockData
+import org.bukkit.entity.Player
+import kotlin.math.log
+import kotlin.random.Random
 
 class Minecart: com.undefined.quasar.interfaces.entities.entity.Minecart, Entity(EntityType.MINECART) {
 
@@ -96,5 +102,35 @@ class Minecart: com.undefined.quasar.interfaces.entities.entity.Minecart, Entity
     override fun getEntityClass(level: Level): net.minecraft.world.entity.Entity =
         net.minecraft.world.entity.vehicle.Minecart(net.minecraft.world.entity.EntityType.MINECART, level)
 
+    override fun runTest(logger: Player, delayTime: Int, entityTests: (Exception?) -> Unit, specificTests: (Exception?) -> Unit) {
+        super.runTest(logger,
+            delayTime, {
+           entityTests.invoke(it)
+           if (it != null) return@runTest
 
+            try {
+                val randomMaterial = Material.entries.filter { it.isBlock }.random()
+                setDisplayBlock(randomMaterial.createBlockData())
+                logger.sendMessage("${ChatColor.GRAY} Minecart | Set display block {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}${randomMaterial.name.lowercase()}${ChatColor.GRAY}]")
+
+                delay(10) {
+                    val randomOffset = Random.nextInt(50)
+                    setDisplayBlockOffset(randomOffset)
+                    logger.sendMessage("${ChatColor.GRAY} Minecart | Set display block offset {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}$randomOffset${ChatColor.GRAY}]")
+
+                    delay(10) {
+                        setCustomDisplay(false)
+                        logger.sendMessage("${ChatColor.GRAY} Minecart | Set custom display {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}false${ChatColor.GRAY}]")
+
+                        delay(10) {
+                            specificTests.invoke(null)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                specificTests.invoke(e)
+            }
+
+        }, {})
+    }
 }

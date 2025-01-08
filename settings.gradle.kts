@@ -5,10 +5,3 @@ include(
     "common",
     "v1_21_4"
 )
-
-pluginManagement {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-    }
-}

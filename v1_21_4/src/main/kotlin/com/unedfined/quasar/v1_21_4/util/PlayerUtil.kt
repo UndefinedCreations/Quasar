@@ -1,7 +1,6 @@
 package com.unedfined.quasar.v1_21_4.util
 
 import net.minecraft.network.protocol.Packet
-import net.minecraft.server.packs.repository.Pack
 import org.bukkit.craftbukkit.v1_21_R3.entity.CraftPlayer
 import org.bukkit.entity.Player
 

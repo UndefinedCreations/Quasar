@@ -47,6 +47,7 @@ tasks {
         minecraftVersion("1.21.4")
         allowedRam(4, RamAmount.GIGABYTE)
         acceptMojangEula()
+        serverFolderName { "run" }
     }
 }
 

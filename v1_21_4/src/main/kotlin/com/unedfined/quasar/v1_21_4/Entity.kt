@@ -4,6 +4,7 @@ import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
 import org.bukkit.ChatColor
 import org.bukkit.Location
+import org.bukkit.entity.Player
 
 abstract class Entity(
     override val entityType: EntityType
@@ -101,5 +102,15 @@ abstract class Entity(
 
     override fun updateEntity() {
 
+    }
+
+    override fun runTest(logger: Player , delayTime: Int, entityTests: (Exception?) -> Unit, specificTests: (Exception?) -> Unit) {
+
+        try {
+
+            entityTests.invoke(null)
+        } catch (e: Exception) {
+            entityTests.invoke(e)
+        }
     }
 }

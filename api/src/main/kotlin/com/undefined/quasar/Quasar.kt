@@ -7,9 +7,9 @@ import com.undefined.quasar.exception.EntityNotFoundException
 import com.undefined.quasar.exception.UnsupportedVersionException
 import com.undefined.quasar.interfaces.Entity
 import com.undefined.quasar.util.NMSVersion
-import org.bukkit.World
+import org.bukkit.plugin.java.JavaPlugin
 
-class Quasar {
+class Quasar(plugin: JavaPlugin) {
 
     companion object {
         lateinit var INSTANCE: Quasar
@@ -20,6 +20,7 @@ class Quasar {
 
     init {
         INSTANCE = this
+        QuasarCommon.PLUGIN = plugin
     }
 
     inline fun <reified T: Entity> createQuasarEntity(): T {

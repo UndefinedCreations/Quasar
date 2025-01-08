@@ -78,4 +78,6 @@ interface Entity {
 
     fun updateEntity()
 
+    fun runTest(logger: Player, delayTime: Int = 10, entityTests: (Exception?) -> Unit = {}, specificTests: (Exception?) -> Unit = {})
+
 }
