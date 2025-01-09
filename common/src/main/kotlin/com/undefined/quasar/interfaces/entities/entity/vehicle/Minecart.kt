@@ -1,4 +1,4 @@
-package com.undefined.quasar.interfaces.entities.entity
+package com.undefined.quasar.interfaces.entities.entity.vehicle
 
 import com.undefined.quasar.interfaces.Entity
 import org.bukkit.block.data.BlockData

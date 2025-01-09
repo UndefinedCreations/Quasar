@@ -1,7 +1,8 @@
-package com.unedfined.quasar.v1_21_4.impl.entity
+package com.unedfined.quasar.v1_21_4.impl.entity.vehicle
 
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
+import com.undefined.quasar.interfaces.entities.entity.vehicle.Minecart
 import com.undefined.quasar.util.delay
 import com.undefined.quasar.util.getPrivateField
 import com.unedfined.quasar.v1_21_4.Entity
@@ -14,10 +15,9 @@ import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.block.data.BlockData
 import org.bukkit.entity.Player
-import kotlin.math.log
 import kotlin.random.Random
 
-class Minecart: com.undefined.quasar.interfaces.entities.entity.Minecart, Entity(EntityType.MINECART) {
+class Minecart: Minecart, Entity(EntityType.MINECART) {
 
     private var displayBlock: BlockData? = null
     private var displayBlockOffset: Int = 0
@@ -30,7 +30,6 @@ class Minecart: com.undefined.quasar.interfaces.entities.entity.Minecart, Entity
             field = entity!!.getPrivateField(AbstractMinecart::class.java, FieldMappings.Entity.Vehicle.Minecart.DATA_ID_DISPLAY_BLOCK)
             return field
         }
-
     private var DATA_ID_DISPLAY_OFFSET: EntityDataAccessor<Int>? = null
         get() {
             if (field != null) return field
@@ -78,10 +77,10 @@ class Minecart: com.undefined.quasar.interfaces.entities.entity.Minecart, Entity
         setCustomDisplay(customDisplay)
     }
 
-    override fun setEntityData(json: JsonObject) {
-        val minecartJson = json["minecartData"].asJsonObject
+    override fun setEntityData(jsonObject: JsonObject) {
+        val minecartJson = jsonObject["minecartData"].asJsonObject
         val blockID = minecartJson["displayBlock"].asInt
-        if (blockID == -1) displayBlock = null else displayBlock = BlockDataUtil.getBlockData(blockID)
+        displayBlock = if (blockID == -1) null else BlockDataUtil.getBlockData(blockID)
         displayBlockOffset = minecartJson["displayBlockOffset"].asInt
         customDisplay = minecartJson["customDisplay"].asBoolean
     }
@@ -96,17 +95,21 @@ class Minecart: com.undefined.quasar.interfaces.entities.entity.Minecart, Entity
         return json
     }
 
-    override fun getEntityClass(level: Level): net.minecraft.world.entity.Entity =
-        net.minecraft.world.entity.vehicle.Minecart(net.minecraft.world.entity.EntityType.MINECART, level)
-
-    override fun runTest(logger: Player, delayTime: Int, entityTests: (Exception?) -> Unit, specificTests: (Exception?) -> Unit) {
+    @Suppress("LABEL_NAME_CLASH")
+    override fun runTest(
+        logger: Player,
+        delayTime: Int,
+        stageOneTest: (Exception?) -> Unit,
+        stageTwoTest: (Exception?) -> Unit,
+        stageThreeTest: (Exception?) -> Unit
+    ): Int {
         super.runTest(logger,
             delayTime, {
-           entityTests.invoke(it)
+                stageOneTest(it)
            if (it != null) return@runTest
 
-            try {
-                val randomMaterial = Material.entries.filter { it.isBlock }.random()
+            trycatch({
+                val randomMaterial = Material.entries.filter { material -> material.isBlock }.random()
                 setDisplayBlock(randomMaterial.createBlockData())
                 logger.sendMessage("${ChatColor.GRAY} Minecart | Set display block {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}${randomMaterial.name.lowercase()}${ChatColor.GRAY}]")
 
@@ -120,14 +123,17 @@ class Minecart: com.undefined.quasar.interfaces.entities.entity.Minecart, Entity
                         logger.sendMessage("${ChatColor.GRAY} Minecart | Set custom display {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}false${ChatColor.GRAY}]")
 
                         delay(delayTime) {
-                            specificTests.invoke(null)
+                            stageTwoTest(null)
                         }
                     }
                 }
-            } catch (e: Exception) {
-                specificTests.invoke(e)
-            }
+            }, stageTwoTest)
 
-        }, {})
+        }, stageTwoTest, stageThreeTest)
+
+        return 2
     }
+
+    override fun getEntityClass(level: Level): net.minecraft.world.entity.Entity =
+        net.minecraft.world.entity.vehicle.Minecart(net.minecraft.world.entity.EntityType.MINECART, level)
 }

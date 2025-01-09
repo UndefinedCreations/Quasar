@@ -22,7 +22,7 @@ abstract class AbstractEntity(
     override val entityType: EntityType
 ) : Entity {
 
-    var scoreboard: Scoreboard = Scoreboard()
+    private var scoreboard: Scoreboard = Scoreboard()
     var entityTeam: PlayerTeam = scoreboard.addPlayerTeam("qausar_${UUID.randomUUID()}")
 
     var entity: net.minecraft.world.entity.Entity? = null

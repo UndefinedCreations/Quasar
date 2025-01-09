@@ -51,7 +51,7 @@ interface Entity {
 
     fun isVisible(): Boolean
 
-    fun setCollidable(collibable: Boolean)
+    fun setCollidable(collidable: Boolean)
 
     fun isCollidable(): Boolean
 
@@ -89,6 +89,12 @@ interface Entity {
 
     fun updateEntity()
 
-    fun runTest(logger: Player, delayTime: Int = 10, entityTests: (Exception?) -> Unit = {}, specificTests: (Exception?) -> Unit = {})
+    fun runTest(
+        logger: Player,
+        delayTime: Int = 10,
+        stageOneTest: (Exception?) -> Unit = {},
+        stageTwoTest: (Exception?) -> Unit = {},
+        stageThreeTest: (Exception?) -> Unit = {}
+    ): Int
 
 }

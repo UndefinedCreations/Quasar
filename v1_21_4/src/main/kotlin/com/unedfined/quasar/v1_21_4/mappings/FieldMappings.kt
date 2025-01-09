@@ -24,6 +24,17 @@ object FieldMappings {
 
         }
 
+        object ArmorStand {
+            // net/minecraft/world/entity/decoration/ArmorStand.html
+            const val DATA_CLIENT_FLAGS = "bI"
+            const val DATA_HEAD_POSE = "bJ"
+            const val DATA_BODY_POSE = "bK"
+            const val DATA_LEFT_ARM_POSE = "bL"
+            const val DATA_RIGHT_ARM_POSE = "bM"
+            const val DATA_LEFT_LEG_POSE = "bN"
+            const val DATA_RIGHT_LEG_POSE = "bO"
+        }
+
     }
 
 }

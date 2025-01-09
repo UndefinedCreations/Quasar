@@ -4,7 +4,7 @@ import com.undefined.quasar.entity.EntityFactory
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.exception.EntityNotFoundException
 import com.undefined.quasar.interfaces.Entity
-import com.unedfined.quasar.v1_21_4.impl.entity.Minecart
+import com.unedfined.quasar.v1_21_4.impl.entity.vehicle.Minecart
 
 class EntityFactory1_21_4: EntityFactory {
 

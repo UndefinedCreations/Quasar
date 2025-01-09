@@ -5,27 +5,20 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
-import com.undefined.quasar.util.delay
 import com.undefined.quasar.util.execute
 import com.undefined.quasar.util.getPrivateField
 import com.undefined.quasar.util.getPrivateMethod
 import com.unedfined.quasar.v1_21_4.mappings.FieldMappings
 import com.unedfined.quasar.v1_21_4.mappings.MethodMappings
 import net.minecraft.ChatFormatting
-import net.minecraft.core.Holder
 import net.minecraft.network.chat.Component
-import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket
-import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket
 import net.minecraft.network.syncher.EntityDataAccessor
-import net.minecraft.network.syncher.EntityDataSerializers
-import net.minecraft.network.syncher.SynchedEntityData
 import net.minecraft.world.entity.PositionMoveRotation
-import net.minecraft.world.entity.ai.attributes.Attribute
-import net.minecraft.world.entity.ai.attributes.AttributeInstance
 import net.minecraft.world.scores.Team
+import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_21_R3.util.CraftChatMessage
@@ -64,7 +57,6 @@ abstract class Entity(
             field = entity!!.getPrivateField(net.minecraft.world.entity.Entity::class.java, FieldMappings.Entity.Base.DATA_NO_GRAVITY)
             return field
         }
-
     private var DATA_TICKS_FROZEN: EntityDataAccessor<Int>? = null
         get() {
             if (field != null) return field
@@ -73,19 +65,20 @@ abstract class Entity(
             return field
         }
 
+    private var FLAG_ONFIRE = 0
+    private var FLAG_INVISIBLE = 5
+    private var FLAG_GLOWING = 6
+
     private var customName: String? = null
     private var isCustomNameVisible = false
-
     private var fire = false
     private var freezing = false
     private var visible = false
     private var gravity = false
     private var silent = false
-
     private var collidable = false
     private var glowing = false
     private var glowingColor: ChatColor = ChatColor.WHITE
-
     private var passengers: MutableList<Entity> = mutableListOf()
 
     override fun setCustomName(name: String?) {
@@ -108,7 +101,7 @@ abstract class Entity(
 
         entity.setPos(location.x, location.y, location.z)
         net.minecraft.world.entity.Entity::class.java.getPrivateMethod(MethodMappings.Entity.Base.SET_ROT, Float::class.java, Float::class.java)
-            .execute(entity, location.yaw, location.pitch)
+            .invoke(entity, location.yaw, location.pitch)
 
         getLocation().x = location.x
         getLocation().y = location.y
@@ -121,7 +114,7 @@ abstract class Entity(
     override fun setVisualFire(fire: Boolean) {
         val entity = entity ?: return
         this.fire = fire
-        entity.setSharedFlag(0, fire)
+        entity.setSharedFlag(FLAG_ONFIRE, fire)
         sendEntityMetaData()
     }
     override fun isVisualFire(): Boolean = fire
@@ -136,12 +129,12 @@ abstract class Entity(
     override fun setVisible(visible: Boolean) {
         val entity = entity ?: return
         this.visible = visible
-        entity.setSharedFlag(5, visible)
+        entity.setSharedFlag(FLAG_INVISIBLE, visible)
         sendEntityMetaData()
     }
     override fun isVisible(): Boolean = visible
     override fun setCollidable(collidable: Boolean) {
-        val entity = entity ?: return
+        entity ?: return
         this.collidable = collidable
         entityTeam.collisionRule = if (this.collidable) Team.CollisionRule.ALWAYS else Team.CollisionRule.NEVER
         sendPackets(
@@ -153,7 +146,7 @@ abstract class Entity(
         val entity = entity ?: return
 
         net.minecraft.world.entity.Entity::class.java.getPrivateMethod(MethodMappings.Entity.Base.SET_ROT, Float::class.java, Float::class.java)
-            .execute(entity, yaw, pitch)
+            .invoke(entity, yaw, pitch)
 
         getLocation().yaw = yaw
         getLocation().pitch = pitch
@@ -201,15 +194,13 @@ abstract class Entity(
     override fun setGlowing(glow: Boolean) {
         val entity = entity ?: return
         this.glowing = glow
-        entity.setSharedFlag(6, glow)
+        entity.setSharedFlag(FLAG_GLOWING, glow)
         sendEntityMetaData()
     }
     override fun setGlowingColor(chatColor: ChatColor) {
-        val entity = entity ?: return
-
+        entity ?: return
         glowingColor = chatColor
         entityTeam.color = ChatFormatting.valueOf(chatColor.name)
-
         sendPackets(
             ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(entityTeam, true)
         )
@@ -285,10 +276,15 @@ abstract class Entity(
         setGlowing(gravity)
         setGlowingColor(glowingColor)
     }
-    override fun runTest(logger: Player, delayTime: Int, entityTests: (Exception?) -> Unit, specificTests: (Exception?) -> Unit) {
-        try {
+    override fun runTest(
+        logger: Player,
+        delayTime: Int,
+        stageOneTest: (Exception?) -> Unit,
+        stageTwoTest: (Exception?) -> Unit,
+        stageThreeTest: (Exception?) -> Unit
+    ): Int {
+        trycatch({
             var time = 0
-
             com.undefined.quasar.util.repeat(22, delayTime) {
                 when(time) {
                     0 -> {
@@ -386,13 +382,21 @@ abstract class Entity(
                         logger.sendMessage("${ChatColor.GRAY} Entity | Set rotation {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}0, 0]${ChatColor.GRAY}]")
                     }
                     21 -> {
-                        entityTests(null)
+                        stageOneTest(null)
                     }
                 }
                 time++
             }
-        } catch (e: Exception) {
-            entityTests(e)
+        },stageOneTest)
+
+        return 1
+    }
+
+    fun trycatch(runnable: (Unit) -> Unit, exception: (Exception?) -> Unit) {
+        try {
+            runnable(Unit)
+        }catch (e: Exception) {
+            exception(e)
         }
     }
 }

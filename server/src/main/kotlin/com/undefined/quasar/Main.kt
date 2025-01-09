@@ -1,6 +1,5 @@
 package com.undefined.quasar
 
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
@@ -13,7 +12,7 @@ import java.util.logging.Level
 
 class Main : JavaPlugin() {
 
-    val spawnedEntities: MutableList<Entity> = mutableListOf()
+    private val spawnedEntities: MutableList<Entity> = mutableListOf()
 
     override fun onEnable() {
 
@@ -69,35 +68,55 @@ class Main : JavaPlugin() {
 
     }
 
-    fun runTest(logger: Player, entity: Entity, time: Int = 10) {
+    private fun runTest(logger: Player, entity: Entity, time: Int = 10) {
         logger.sendMessage("${ChatColor.GREEN} Tests started [${ChatColor.AQUA}${entity.entityType.name.lowercase()}${ChatColor.GRAY}]")
         entity.addViewer(logger)
         entity.spawn(logger.location)
         logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Spawning {${ChatColor.GREEN}Success!${ChatColor.GRAY}}")
-        entity.runTest(logger,
+        val times = entity.runTest(logger,
             time,
             {
                 if (it == null) {
-                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | {${ChatColor.GREEN}Tests Passed!${ChatColor.GRAY}}")
+                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Stage One {${ChatColor.GREEN}Tests Passed!${ChatColor.GRAY}}")
                 } else {
-                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | ${ChatColor.RED} Tests failed! ${ChatColor.GRAY}[${ChatColor.AQUA}${it::class.java.simpleName}${ChatColor.GRAY}] Check console for more.")
+                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Stage One ${ChatColor.RED} Tests failed! ${ChatColor.GRAY}[${ChatColor.AQUA}${it::class.java.simpleName}${ChatColor.GRAY}] Check console for more.")
                     Bukkit.getLogger().log(Level.SEVERE, it.message.toString())
                 }
+
+                if (times == 1) finishTest(logger, entity)
+
             }
             ,{
                 if (it == null) {
-                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | {${ChatColor.GREEN}Tests Passed!${ChatColor.GRAY}}")
-
-                    entity.kill()
-
-                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Removing {${ChatColor.GREEN}Success!${ChatColor.GRAY}}")
-
+                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Stage two {${ChatColor.GREEN}Tests Passed!${ChatColor.GRAY}}")
                 } else {
-                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | ${ChatColor.RED} Tests failed! ${ChatColor.GRAY}[${ChatColor.AQUA}${it::class.java.simpleName}${ChatColor.GRAY}] Check console for more.")
+                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Stage two ${ChatColor.RED} Tests failed! ${ChatColor.GRAY}[${ChatColor.AQUA}${it::class.java.simpleName}${ChatColor.GRAY}] Check console for more.")
                     Bukkit.getLogger().log(Level.SEVERE, it.message.toString())
                 }
+
+                if (times == 2) finishTest(logger, entity)
+            }
+            ,{
+                if (it == null) {
+                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Stage three {${ChatColor.GREEN}Tests Passed!${ChatColor.GRAY}}")
+                } else {
+                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Stage three ${ChatColor.RED} Tests failed! ${ChatColor.GRAY}[${ChatColor.AQUA}${it::class.java.simpleName}${ChatColor.GRAY}] Check console for more.")
+                    Bukkit.getLogger().log(Level.SEVERE, it.message.toString())
+                }
+
+                if (times == 2) finishTest(logger, entity)
             }
         )
+    }
+
+    fun finishTest(logger: Player, entity: Entity) {
+        logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | {${ChatColor.GREEN}Tests Passed!${ChatColor.GRAY}}")
+
+        entity.kill()
+
+        logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Removing {${ChatColor.GREEN}Success!${ChatColor.GRAY}}")
+
+
     }
 
     override fun onDisable() {
