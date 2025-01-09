@@ -1,4 +1,4 @@
-package com.unedfined.quasar.v1_21_4
+package com.undefined.quasar.v1_21_4
 
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType

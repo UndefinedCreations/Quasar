@@ -1,16 +1,15 @@
-package com.unedfined.quasar.v1_21_4
+package com.undefined.quasar.v1_21_4
 
 import com.google.common.collect.ImmutableList
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
-import com.undefined.quasar.interfaces.entities.entity.vehicle.Minecart
 import com.undefined.quasar.util.getPrivateField
 import com.undefined.quasar.util.getPrivateMethod
 import com.undefined.quasar.util.repeat
-import com.unedfined.quasar.v1_21_4.mappings.FieldMappings
-import com.unedfined.quasar.v1_21_4.mappings.MethodMappings
+import com.undefined.quasar.v1_21_4.mappings.FieldMappings
+import com.undefined.quasar.v1_21_4.mappings.MethodMappings
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket
@@ -19,7 +18,6 @@ import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.PositionMoveRotation
 import net.minecraft.world.scores.Team
-import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_21_R3.util.CraftChatMessage

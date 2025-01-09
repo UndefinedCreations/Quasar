@@ -1,4 +1,4 @@
-package com.unedfined.quasar.v1_21_4.mappings
+package com.undefined.quasar.v1_21_4.mappings
 
 object MethodMappings {
 

@@ -1,12 +1,12 @@
-package com.unedfined.quasar.v1_21_4.impl.entity
+package com.undefined.quasar.v1_21_4.impl.entity
 
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.entities.entity.ArmorStand
 import com.undefined.quasar.util.getPrivateField
 import com.undefined.quasar.util.repeat
-import com.unedfined.quasar.v1_21_4.LivingEntity
-import com.unedfined.quasar.v1_21_4.mappings.FieldMappings
+import com.undefined.quasar.v1_21_4.LivingEntity
+import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import net.minecraft.core.Rotations
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.level.Level

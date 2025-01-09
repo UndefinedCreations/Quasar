@@ -1,4 +1,4 @@
-package com.unedfined.quasar.v1_21_4.util
+package com.undefined.quasar.v1_21_4.util
 
 import net.minecraft.network.protocol.Packet
 import org.bukkit.craftbukkit.v1_21_R3.entity.CraftPlayer

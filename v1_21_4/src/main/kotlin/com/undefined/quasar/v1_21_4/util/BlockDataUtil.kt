@@ -1,4 +1,4 @@
-package com.unedfined.quasar.v1_21_4.util
+package com.undefined.quasar.v1_21_4.util
 
 import net.minecraft.world.level.block.Block
 import org.bukkit.block.data.BlockData

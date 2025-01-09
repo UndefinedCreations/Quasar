@@ -1,9 +1,9 @@
-package com.unedfined.quasar.v1_21_4
+package com.undefined.quasar.v1_21_4
 
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
-import com.unedfined.quasar.v1_21_4.util.sendPackets
+import com.undefined.quasar.v1_21_4.util.sendPackets
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
