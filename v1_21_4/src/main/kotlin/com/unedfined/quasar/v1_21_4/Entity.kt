@@ -5,9 +5,10 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
-import com.undefined.quasar.util.execute
+import com.undefined.quasar.interfaces.entities.entity.vehicle.Minecart
 import com.undefined.quasar.util.getPrivateField
 import com.undefined.quasar.util.getPrivateMethod
+import com.undefined.quasar.util.repeat
 import com.unedfined.quasar.v1_21_4.mappings.FieldMappings
 import com.unedfined.quasar.v1_21_4.mappings.MethodMappings
 import net.minecraft.ChatFormatting
@@ -33,35 +34,50 @@ abstract class Entity(
         get() {
             if (field != null) return field
             if (entity == null) return null
-            field = entity!!.getPrivateField(net.minecraft.world.entity.Entity::class.java, FieldMappings.Entity.Base.DATA_CUSTOM_NAME)
+            field = entity!!.getPrivateField(
+                net.minecraft.world.entity.Entity::class.java,
+                FieldMappings.Entity.Base.DATA_CUSTOM_NAME
+            )
             return field
         }
     private var DATA_CUSTOM_NAME_VISIBLE: EntityDataAccessor<Boolean>? = null
         get() {
             if (field != null) return field
             if (entity == null) return null
-            field = entity!!.getPrivateField(net.minecraft.world.entity.Entity::class.java, FieldMappings.Entity.Base.DATA_CUSTOM_NAME_VISIBLE)
+            field = entity!!.getPrivateField(
+                net.minecraft.world.entity.Entity::class.java,
+                FieldMappings.Entity.Base.DATA_CUSTOM_NAME_VISIBLE
+            )
             return field
         }
     private var DATA_SILENT: EntityDataAccessor<Boolean>? = null
         get() {
             if (field != null) return field
             if (entity == null) return null
-            field = entity!!.getPrivateField(net.minecraft.world.entity.Entity::class.java, FieldMappings.Entity.Base.DATA_SILENT)
+            field = entity!!.getPrivateField(
+                net.minecraft.world.entity.Entity::class.java,
+                FieldMappings.Entity.Base.DATA_SILENT
+            )
             return field
         }
     private var DATA_NO_GRAVITY: EntityDataAccessor<Boolean>? = null
         get() {
             if (field != null) return field
             if (entity == null) return null
-            field = entity!!.getPrivateField(net.minecraft.world.entity.Entity::class.java, FieldMappings.Entity.Base.DATA_NO_GRAVITY)
+            field = entity!!.getPrivateField(
+                net.minecraft.world.entity.Entity::class.java,
+                FieldMappings.Entity.Base.DATA_NO_GRAVITY
+            )
             return field
         }
     private var DATA_TICKS_FROZEN: EntityDataAccessor<Int>? = null
         get() {
             if (field != null) return field
             if (entity == null) return null
-            field = entity!!.getPrivateField(net.minecraft.world.entity.Entity::class.java, FieldMappings.Entity.Base.DATA_TICKS_FROZEN)
+            field = entity!!.getPrivateField(
+                net.minecraft.world.entity.Entity::class.java,
+                FieldMappings.Entity.Base.DATA_TICKS_FROZEN
+            )
             return field
         }
 
@@ -73,7 +89,7 @@ abstract class Entity(
     private var isCustomNameVisible = false
     private var fire = false
     private var freezing = false
-    private var visible = false
+    private var visible = true
     private var gravity = false
     private var silent = false
     private var collidable = false
@@ -129,7 +145,7 @@ abstract class Entity(
     override fun setVisible(visible: Boolean) {
         val entity = entity ?: return
         this.visible = visible
-        entity.setSharedFlag(FLAG_INVISIBLE, visible)
+        entity.setSharedFlag(FLAG_INVISIBLE, !visible)
         sendEntityMetaData()
     }
     override fun isVisible(): Boolean = visible
@@ -276,16 +292,10 @@ abstract class Entity(
         setGlowing(gravity)
         setGlowingColor(glowingColor)
     }
-    override fun runTest(
-        logger: Player,
-        delayTime: Int,
-        stageOneTest: (Exception?) -> Unit,
-        stageTwoTest: (Exception?) -> Unit,
-        stageThreeTest: (Exception?) -> Unit
-    ): Int {
+    override fun runTest(logger: Player, delayTime: Int, testStage: (Exception?) -> Unit, done: (Unit) -> Unit): Int {
         trycatch({
             var time = 0
-            com.undefined.quasar.util.repeat(22, delayTime) {
+            repeat(22, delayTime) {
                 when(time) {
                     0 -> {
                         val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
@@ -382,12 +392,12 @@ abstract class Entity(
                         logger.sendMessage("${ChatColor.GRAY} Entity | Set rotation {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}0, 0]${ChatColor.GRAY}]")
                     }
                     21 -> {
-                        stageOneTest(null)
+                        testStage(null)
                     }
                 }
                 time++
             }
-        },stageOneTest)
+        }, testStage)
 
         return 1
     }
@@ -398,5 +408,11 @@ abstract class Entity(
         }catch (e: Exception) {
             exception(e)
         }
+    }
+
+    enum class Tests(action: (Entity) -> Exception?, failMessage: String, successMessage: String) {
+
+
+
     }
 }

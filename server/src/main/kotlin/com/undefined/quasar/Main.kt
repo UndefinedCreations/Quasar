@@ -73,38 +73,19 @@ class Main : JavaPlugin() {
         entity.addViewer(logger)
         entity.spawn(logger.location)
         logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Spawning {${ChatColor.GREEN}Success!${ChatColor.GRAY}}")
-        val times = entity.runTest(logger,
+        var stage = 0
+        entity.runTest(logger,
             time,
             {
                 if (it == null) {
-                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Stage One {${ChatColor.GREEN}Tests Passed!${ChatColor.GRAY}}")
+                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Stage $stage {${ChatColor.GREEN}Tests Passed!${ChatColor.GRAY}}")
                 } else {
-                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Stage One ${ChatColor.RED} Tests failed! ${ChatColor.GRAY}[${ChatColor.AQUA}${it::class.java.simpleName}${ChatColor.GRAY}] Check console for more.")
+                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Stage $stage ${ChatColor.RED} Tests failed! ${ChatColor.GRAY}[${ChatColor.AQUA}${it::class.java.simpleName}${ChatColor.GRAY}] Check console for more.")
                     Bukkit.getLogger().log(Level.SEVERE, it.message.toString())
                 }
-
-                if (times == 1) finishTest(logger, entity)
-
-            }
-            ,{
-                if (it == null) {
-                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Stage two {${ChatColor.GREEN}Tests Passed!${ChatColor.GRAY}}")
-                } else {
-                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Stage two ${ChatColor.RED} Tests failed! ${ChatColor.GRAY}[${ChatColor.AQUA}${it::class.java.simpleName}${ChatColor.GRAY}] Check console for more.")
-                    Bukkit.getLogger().log(Level.SEVERE, it.message.toString())
-                }
-
-                if (times == 2) finishTest(logger, entity)
-            }
-            ,{
-                if (it == null) {
-                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Stage three {${ChatColor.GREEN}Tests Passed!${ChatColor.GRAY}}")
-                } else {
-                    logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Stage three ${ChatColor.RED} Tests failed! ${ChatColor.GRAY}[${ChatColor.AQUA}${it::class.java.simpleName}${ChatColor.GRAY}] Check console for more.")
-                    Bukkit.getLogger().log(Level.SEVERE, it.message.toString())
-                }
-
-                if (times == 2) finishTest(logger, entity)
+                stage++
+            }, {
+                finishTest(logger, entity)
             }
         )
     }

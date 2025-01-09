@@ -96,17 +96,10 @@ class Minecart: Minecart, Entity(EntityType.MINECART) {
     }
 
     @Suppress("LABEL_NAME_CLASH")
-    override fun runTest(
-        logger: Player,
-        delayTime: Int,
-        stageOneTest: (Exception?) -> Unit,
-        stageTwoTest: (Exception?) -> Unit,
-        stageThreeTest: (Exception?) -> Unit
-    ): Int {
+    override fun runTest(logger: Player, delayTime: Int, testStage: (Exception?) -> Unit, done: (Unit) -> Unit): Int {
         super.runTest(logger,
             delayTime, {
-                stageOneTest(it)
-           if (it != null) return@runTest
+            if (it != null) return@runTest
 
             trycatch({
                 val randomMaterial = Material.entries.filter { material -> material.isBlock }.random()
@@ -123,17 +116,18 @@ class Minecart: Minecart, Entity(EntityType.MINECART) {
                         logger.sendMessage("${ChatColor.GRAY} Minecart | Set custom display {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}false${ChatColor.GRAY}]")
 
                         delay(delayTime) {
-                            stageTwoTest(null)
+                            done(Unit)
                         }
                     }
                 }
-            }, stageTwoTest)
+            }, testStage)
 
-        }, stageTwoTest, stageThreeTest)
+        }, done)
 
         return 2
     }
 
     override fun getEntityClass(level: Level): net.minecraft.world.entity.Entity =
         net.minecraft.world.entity.vehicle.Minecart(net.minecraft.world.entity.EntityType.MINECART, level)
+
 }

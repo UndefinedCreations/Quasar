@@ -97,5 +97,7 @@ abstract class AbstractEntity(
             Bukkit.getOfflinePlayer(viewer).player?.sendPackets(packet.toList())
     }
 
+    fun setLocation(location: Location) { this.location = location }
+
     override fun getLocation(): Location = location ?: Location(Bukkit.getWorlds().first(), 0.0, 0.0, 0.0)
 }

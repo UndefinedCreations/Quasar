@@ -22,7 +22,7 @@ repositories {
 
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT")
-    implementation("com.undefined:stellar:0.0.37")
+    implementation("com.undefined:stellar:0.0.38")
 
 
     implementation(project(":common"))

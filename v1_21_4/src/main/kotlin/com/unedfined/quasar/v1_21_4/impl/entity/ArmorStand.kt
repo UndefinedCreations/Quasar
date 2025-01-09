@@ -4,12 +4,15 @@ import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.entities.entity.ArmorStand
 import com.undefined.quasar.util.getPrivateField
+import com.undefined.quasar.util.repeat
 import com.unedfined.quasar.v1_21_4.LivingEntity
 import com.unedfined.quasar.v1_21_4.mappings.FieldMappings
 import net.minecraft.core.Rotations
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.level.Level
+import org.bukkit.ChatColor
 import org.bukkit.entity.Player
+import kotlin.random.Random
 
 class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
 
@@ -241,22 +244,209 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
         setRightLegRotation(rightLegRotation)
     }
 
-    override fun runTest(
-        logger: Player,
-        delayTime: Int,
-        stageOneTest: (Exception?) -> Unit,
-        stageTwoTest: (Exception?) -> Unit,
-        stageThreeTest: (Exception?) -> Unit
-    ): Int {
-        super.runTest(logger, delayTime, stageOneTest, { e ->
+    override fun runTest(logger: Player, delayTime: Int, testStage: (Exception?) -> Unit, done: (Unit) -> Unit): Int {
+        super.runTest(logger, delayTime, { e ->
             trycatch({
-                stageTwoTest(e)
                 if (e != null) return@trycatch
+                var time = 0
 
-                //TODO ArmorSTand Tester
+                repeat(20, delayTime) {
+                    when (time) {
+                        0 -> {
+                            setSmall(true)
+                            logger.sendMessage("${ChatColor.GRAY} ArmorStand | Set small {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}true${ChatColor.GRAY}]")
+                        }
 
-            }, stageThreeTest)
-        }, stageThreeTest)
+                        1 -> {
+                            setSmall(false)
+                            logger.sendMessage("${ChatColor.GRAY} ArmorStand | Set small {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}false${ChatColor.GRAY}]")
+                        }
+
+                        2 -> {
+                            setShowingBasePlate(false)
+                            logger.sendMessage("${ChatColor.GRAY} ArmorStand | Set base plate {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}false${ChatColor.GRAY}]")
+                        }
+
+                        3 -> {
+                            setShowingBasePlate(true)
+                            logger.sendMessage("${ChatColor.GRAY} ArmorStand | Set base plate {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}true${ChatColor.GRAY}]")
+                        }
+
+                        4 -> {
+                            setShowingArms(true)
+                            logger.sendMessage("${ChatColor.GRAY} ArmorStand | Set arms {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}true${ChatColor.GRAY}]")
+                        }
+
+                        6 -> {
+                            setShowingArms(false)
+                            logger.sendMessage("${ChatColor.GRAY} ArmorStand | Set arms {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}false${ChatColor.GRAY}]")
+                        }
+
+                        7 -> {
+                            setHeadRotation(
+                                Random.nextDouble(-180.0, 180.0).toFloat(),
+                                Random.nextDouble(-180.0, 180.0).toFloat(),
+                                Random.nextDouble(-180.0, 180.0).toFloat()
+                            )
+                            logger.sendMessage(
+                                "${ChatColor.GRAY} ArmorStand | Set head rotation " +
+                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
+                                        "[${ChatColor.AQUA}${getHeadRotation().firstRot}, ${getHeadRotation().secondRot}, ${getHeadRotation().thridRot}${ChatColor.GRAY}]"
+                            )
+                        }
+
+                        8 -> {
+                            setBodyRotation(
+                                Random.nextDouble(-180.0, 180.0).toFloat(),
+                                Random.nextDouble(-180.0, 180.0).toFloat(),
+                                Random.nextDouble(-180.0, 180.0).toFloat()
+                            )
+                            logger.sendMessage(
+                                "${ChatColor.GRAY} ArmorStand | Set body rotation " +
+                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
+                                        "[${ChatColor.AQUA}${getBodyRotation().firstRot}, ${getBodyRotation().secondRot}, ${getBodyRotation().thridRot}${ChatColor.GRAY}]"
+                            )
+                        }
+
+                        9 -> {
+                            setShowingArms(true)
+                            setLeftArmRotation(
+                                Random.nextDouble(-180.0, 180.0).toFloat(),
+                                Random.nextDouble(-180.0, 180.0).toFloat(),
+                                Random.nextDouble(-180.0, 180.0).toFloat()
+                            )
+                            logger.sendMessage(
+                                "${ChatColor.GRAY} ArmorStand | Set left arm rotation " +
+                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
+                                        "[${ChatColor.AQUA}${getLeftArmRotation().firstRot}, ${getLeftArmRotation().secondRot}, ${getLeftArmRotation().thridRot}${ChatColor.GRAY}]"
+                            )
+                        }
+
+                        10 -> {
+                            setRightArmRotation(
+                                Random.nextDouble(-180.0, 180.0).toFloat(),
+                                Random.nextDouble(-180.0, 180.0).toFloat(),
+                                Random.nextDouble(-180.0, 180.0).toFloat()
+                            )
+                            logger.sendMessage(
+                                "${ChatColor.GRAY} ArmorStand | Set right arm rotation " +
+                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
+                                        "[${ChatColor.AQUA}${getRightArmRotation().firstRot}, ${getRightArmRotation().secondRot}, ${getRightArmRotation().thridRot}${ChatColor.GRAY}]"
+                            )
+                        }
+
+                        11 -> {
+                            setLeftLegRotation(
+                                Random.nextDouble(-180.0, 180.0).toFloat(),
+                                Random.nextDouble(-180.0, 180.0).toFloat(),
+                                Random.nextDouble(-180.0, 180.0).toFloat()
+                            )
+                            logger.sendMessage(
+                                "${ChatColor.GRAY} ArmorStand | Set left leg rotation " +
+                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
+                                        "[${ChatColor.AQUA}${getLeftLegRotation().firstRot}, ${getLeftLegRotation().secondRot}, ${getLeftLegRotation().thridRot}${ChatColor.GRAY}]"
+                            )
+                        }
+
+                        12 -> {
+                            setRightLegRotation(
+                                Random.nextDouble(-180.0, 180.0).toFloat(),
+                                Random.nextDouble(-180.0, 180.0).toFloat(),
+                                Random.nextDouble(-180.0, 180.0).toFloat()
+                            )
+                            logger.sendMessage(
+                                "${ChatColor.GRAY} ArmorStand | Set right leg rotation " +
+                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
+                                        "[${ChatColor.AQUA}${getRightLegRotation().firstRot}, ${getRightLegRotation().secondRot}, ${getRightLegRotation().thridRot}${ChatColor.GRAY}]"
+                            )
+                        }
+
+                        13 -> {
+                            setHeadRotation(
+                                0.0f,
+                                0.0f,
+                                0.0f
+                            )
+                            logger.sendMessage(
+                                "${ChatColor.GRAY} ArmorStand | Set head rotation " +
+                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
+                                        "[${ChatColor.AQUA}${getHeadRotation().firstRot}, ${getHeadRotation().secondRot}, ${getHeadRotation().thridRot}${ChatColor.GRAY}]"
+                            )
+                        }
+
+                        14 -> {
+                            setBodyRotation(
+                                0.0f,
+                                0.0f,
+                                0.0f
+                            )
+                            logger.sendMessage(
+                                "${ChatColor.GRAY} ArmorStand | Set body rotation " +
+                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
+                                        "[${ChatColor.AQUA}${getBodyRotation().firstRot}, ${getBodyRotation().secondRot}, ${getBodyRotation().thridRot}${ChatColor.GRAY}]"
+                            )
+                        }
+
+                        15 -> {
+                            setLeftArmRotation(
+                                0.0f,
+                                0.0f,
+                                0.0f
+                            )
+                            logger.sendMessage(
+                                "${ChatColor.GRAY} ArmorStand | Set left arm rotation " +
+                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
+                                        "[${ChatColor.AQUA}${getLeftArmRotation().firstRot}, ${getLeftArmRotation().secondRot}, ${getLeftArmRotation().thridRot}${ChatColor.GRAY}]"
+                            )
+                        }
+
+                        16 -> {
+                            setRightArmRotation(
+                                0.0f,
+                                0.0f,
+                                0.0f
+                            )
+                            logger.sendMessage(
+                                "${ChatColor.GRAY} ArmorStand | Set right arm rotation " +
+                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
+                                        "[${ChatColor.AQUA}${getRightArmRotation().firstRot}, ${getRightArmRotation().secondRot}, ${getRightArmRotation().thridRot}${ChatColor.GRAY}]"
+                            )
+                        }
+
+                        17 -> {
+                            setLeftLegRotation(
+                                0.0f,
+                                0.0f,
+                                0.0f
+                            )
+                            logger.sendMessage(
+                                "${ChatColor.GRAY} ArmorStand | Set left leg rotation " +
+                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
+                                        "[${ChatColor.AQUA}${getLeftLegRotation().firstRot}, ${getLeftLegRotation().secondRot}, ${getLeftLegRotation().thridRot}${ChatColor.GRAY}]"
+                            )
+                        }
+
+                        18 -> {
+                            setRightLegRotation(
+                                0.0f,
+                                0.0f,
+                                0.0f
+                            )
+                            logger.sendMessage(
+                                "${ChatColor.GRAY} ArmorStand | Set right leg rotation " +
+                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
+                                        "[${ChatColor.AQUA}${getRightLegRotation().firstRot}, ${getRightLegRotation().secondRot}, ${getRightLegRotation().thridRot}${ChatColor.GRAY}]"
+                            )
+                        }
+
+                        19 -> {
+                            done(Unit)
+                        }
+                    }
+                    time++
+                }
+            }, testStage)
+        }, done)
         return 3
     }
 
