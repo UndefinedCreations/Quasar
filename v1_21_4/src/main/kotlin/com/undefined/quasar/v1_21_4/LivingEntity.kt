@@ -1,6 +1,7 @@
 package com.undefined.quasar.v1_21_4
 
 import com.google.gson.JsonObject
+import com.mojang.datafixers.util.Pair
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.LivingEntity
 import com.undefined.quasar.util.repeat
@@ -8,12 +9,19 @@ import net.minecraft.network.protocol.game.ClientboundEntityEventPacket
 import net.minecraft.network.protocol.game.ClientboundHurtAnimationPacket
 import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket
 import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket
+import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket
+import net.minecraft.world.entity.EquipmentSlot
 import org.bukkit.ChatColor
 import org.bukkit.Location
+import org.bukkit.Material
+import org.bukkit.craftbukkit.v1_21_R3.inventory.CraftItemStack
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import kotlin.math.floor
 
 abstract class LivingEntity(entityType: EntityType): LivingEntity, Entity(entityType) {
+
+    private val items: HashMap<Int, ItemStack> = hashMapOf()
 
     override fun moveTo(location: Location) {
         val entity = entity ?: return
@@ -56,6 +64,25 @@ abstract class LivingEntity(entityType: EntityType): LivingEntity, Entity(entity
             ClientboundHurtAnimationPacket(entity.id, 0f)
         )
     }
+    override fun getItem(slot: Int): ItemStack? = items[slot]
+    override fun setItem(slot: Int, itemStack: ItemStack) {
+        val entity = entity ?: return
+        val nmsItemStack = CraftItemStack.asNMSCopy(itemStack)
+        val equipmentSlot = LivingEntity.EquipmentSlot.entries.filter { it.slot == slot }.getOrNull(0) ?: return
+
+        if (itemStack.type == Material.AIR) items.remove(slot) else items[slot] = itemStack
+
+        sendPackets(ClientboundSetEquipmentPacket(
+            entity.id,
+            mutableListOf(
+                Pair(
+                    EquipmentSlot.valueOf(equipmentSlot.name),
+                    nmsItemStack
+                )
+            )
+        ))
+        sendEntityMetaData()
+    }
 
     private fun toRotationValue(yaw: Float): Byte = floor(yaw * 256.0f / 360.0f).toInt().toByte()
     private fun toDeltaValue(value: Double, newValue: Double) = (((newValue - value) * 32 * 128).toInt().toShort())
@@ -72,7 +99,7 @@ abstract class LivingEntity(entityType: EntityType): LivingEntity, Entity(entity
             trycatch({
                 if (e != null) return@trycatch
                 var time = 0
-                repeat(4, delayTime) {
+                repeat(6, delayTime) {
                     when(time) {
                         0 -> {
                             val location = getLocation().clone().add(0.0, 5.0, 0.0)
@@ -89,6 +116,16 @@ abstract class LivingEntity(entityType: EntityType): LivingEntity, Entity(entity
                             logger.sendMessage("${ChatColor.GRAY} LivingEntity | Damage animation {${ChatColor.GREEN}Success!${ChatColor.GRAY}}")
                         }
                         3 -> {
+                            val item = Material.entries.random()
+                            val slot = LivingEntity.EquipmentSlot.entries.random()
+                            setItem(slot, item)
+                            logger.sendMessage("${ChatColor.GRAY} LivingEntity | Set item {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}${slot.name.lowercase()}, ${item.name.lowercase()}${ChatColor.GRAY}]")
+                        }
+                        4 -> {
+                            clearItems()
+                            logger.sendMessage("${ChatColor.GRAY} LivingEntity | Clear items {${ChatColor.GREEN}Success!${ChatColor.GRAY}}")
+                        }
+                        5 -> {
                             testStage(null)
                         }
                     }
