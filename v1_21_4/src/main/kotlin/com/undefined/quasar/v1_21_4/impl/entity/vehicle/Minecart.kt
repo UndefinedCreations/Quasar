@@ -5,7 +5,7 @@ import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.entities.entity.vehicle.Minecart
 import com.undefined.quasar.util.delay
 import com.undefined.quasar.util.getPrivateField
-import com.undefined.quasar.v1_21_4.Entity
+import com.undefined.quasar.v1_21_4.impl.entity.Entity
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import com.undefined.quasar.v1_21_4.util.BlockDataUtil
 import net.minecraft.network.syncher.EntityDataAccessor

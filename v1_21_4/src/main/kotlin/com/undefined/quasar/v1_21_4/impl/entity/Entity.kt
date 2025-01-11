@@ -1,4 +1,4 @@
-package com.undefined.quasar.v1_21_4
+package com.undefined.quasar.v1_21_4.impl.entity
 
 import com.google.common.collect.ImmutableList
 import com.google.gson.JsonArray
@@ -8,6 +8,7 @@ import com.undefined.quasar.interfaces.Entity
 import com.undefined.quasar.util.getPrivateField
 import com.undefined.quasar.util.getPrivateMethod
 import com.undefined.quasar.util.repeat
+import com.undefined.quasar.v1_21_4.AbstractEntity
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import com.undefined.quasar.v1_21_4.mappings.MethodMappings
 import net.minecraft.ChatFormatting

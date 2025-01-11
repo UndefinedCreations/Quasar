@@ -20,9 +20,9 @@ interface LivingEntity : Entity {
     fun getItem(slot: Int): ItemStack?
     fun getItem(equipmentSlot: EquipmentSlot) = getItem(equipmentSlot.slot)
 
-    fun setItem(slot: Int, itemStack: ItemStack)
+    fun setItem(slot: Int, itemStack: ItemStack?)
     fun setItem(slot: Int, material: Material) = setItem(slot, ItemStack(material))
-    fun setItem(equipmentSlot: EquipmentSlot, itemStack: ItemStack) = setItem(equipmentSlot.slot, itemStack)
+    fun setItem(equipmentSlot: EquipmentSlot, itemStack: ItemStack?) = setItem(equipmentSlot.slot, itemStack)
     fun setItem(equipmentSlot: EquipmentSlot, material: Material) = setItem(equipmentSlot.slot, material)
 
     fun clearItems() = EquipmentSlot.entries.forEach { setItem(it, Material.AIR) }

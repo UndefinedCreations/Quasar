@@ -1,4 +1,4 @@
-package com.undefined.quasar.interfaces.entities.entity
+package com.undefined.quasar.interfaces.entities.entity.decoration
 
 import com.google.gson.JsonArray
 import com.undefined.quasar.interfaces.LivingEntity

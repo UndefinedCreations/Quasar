@@ -1,4 +1,4 @@
-package com.undefined.quasar.v1_21_4
+package com.undefined.quasar.v1_21_4.impl.entity
 
 import com.google.gson.JsonObject
 import com.mojang.datafixers.util.Pair
@@ -65,12 +65,13 @@ abstract class LivingEntity(entityType: EntityType): LivingEntity, Entity(entity
         )
     }
     override fun getItem(slot: Int): ItemStack? = items[slot]
-    override fun setItem(slot: Int, itemStack: ItemStack) {
+    override fun setItem(slot: Int, itemStack: ItemStack?) {
         val entity = entity ?: return
-        val nmsItemStack = CraftItemStack.asNMSCopy(itemStack)
+        val notNullItemStack = itemStack ?: ItemStack(Material.AIR)
+        val nmsItemStack = CraftItemStack.asNMSCopy(notNullItemStack)
         val equipmentSlot = LivingEntity.EquipmentSlot.entries.filter { it.slot == slot }.getOrNull(0) ?: return
 
-        if (itemStack.type == Material.AIR) items.remove(slot) else items[slot] = itemStack
+        if (notNullItemStack.type == Material.AIR) items.remove(slot) else items[slot] = notNullItemStack
 
         sendPackets(ClientboundSetEquipmentPacket(
             entity.id,
@@ -90,6 +91,14 @@ abstract class LivingEntity(entityType: EntityType): LivingEntity, Entity(entity
         val entity = entity ?: return
         sendPackets(ClientboundMoveEntityPacket.Rot(entity.id, toRotationValue(yaw), toRotationValue(pitch), true))
     }
+
+    override fun getEntityData(): JsonObject {
+        val entityJson = super.getEntityData()
+        val livingEntityJson = JsonObject()
+
+        return entityJson
+    }
+
     override fun setEntityData(jsonObject: JsonObject) {
         super<Entity>.setEntityData(jsonObject)
     }
