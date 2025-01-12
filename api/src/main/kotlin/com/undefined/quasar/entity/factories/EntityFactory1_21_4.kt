@@ -27,8 +27,8 @@ class EntityFactory1_21_4 : EntityFactory {
             EntityType.ARROW -> Arrow()
             EntityType.AXOLOTL -> Axolotl()
             EntityType.BAT -> Bat()
-            EntityType.BEE -> Bee()
-            EntityType.BLAZE -> Blaze()
+            EntityType.BEE -> Bee() // all the work for nothing rip. Next entity is a display entity...... that sounds like a problem for tomorrow wdym yay? lol. Should we keep this in the commit log? sure thing lol
+            EntityType.BLAZE -> Blaze() // Anyway, I'm going... Nice. Also paper doesn't allow for full CustomArgumentType support apparently :sad: Exactly. :(. YAY -> display entities! Bye bye. I want them. Definitely lol
             EntityType.MINECART -> Minecart()
             else -> throw EntityNotFoundException(entityType.name)
         }
