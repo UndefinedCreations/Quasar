@@ -3,14 +3,11 @@ package com.undefined.quasar.interfaces
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.undefined.quasar.enums.EntityType
-import com.undefined.quasar.interfaces.entities.entity.vehicle.Minecart
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.entity.Player
-import kotlin.random.Random
 
 interface Entity {
-
     val entityType: EntityType
 
     fun addViewer(player: Player)
@@ -26,6 +23,10 @@ interface Entity {
     fun isAlive(): Boolean
     fun teleport(location: Location)
     fun teleport(entity: org.bukkit.entity.Entity) = teleport(entity.location)
+    fun moveTo(location: Location)
+    fun moveTo(entity: org.bukkit.entity.Entity) { moveTo(entity.location) }
+    fun moveOrTeleport(location: Location) = if (getLocation().distance(location) > 8) teleport(location) else moveTo(location)
+    fun moveOrTeleport(entity: org.bukkit.entity.Entity) { moveOrTeleport(entity.location) }
     fun getLocation(): Location
     fun setVisualFire(fire: Boolean)
     fun isVisualFire(): Boolean
@@ -55,7 +56,9 @@ interface Entity {
     fun runTest(
         logger: Player,
         delayTime: Int = 10,
-        testStage: (Exception?) -> Unit = {},
-        done: (Unit) -> Unit = {}
-    ): Int
+        exception: (Exception) -> Unit = {},
+        done: () -> Unit = {},
+        sendMessage: Boolean = true
+    )
+    fun getTests(): MutableList<() -> String>
 }

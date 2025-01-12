@@ -1,9 +1,7 @@
 package com.undefined.quasar.v1_21_4.mappings
 
 object FieldMappings {
-
     object Entity {
-
         object Base {
             // net/minecraft/world/entity/Entity.html
             const val DATA_CUSTOM_NAME = "aO"
@@ -14,29 +12,22 @@ object FieldMappings {
         }
 
         object Vehicle {
-
             object Minecart {
                 // net/minecraft/world/entity/vehicle/AbstractMinecart.html
                 const val DATA_ID_DISPLAY_BLOCK = "c"
                 const val DATA_ID_DISPLAY_OFFSET = "d"
                 const val DATA_ID_CUSTOM_DISPLAY = "h"
             }
-
         }
 
         object LivingEntity {
-
             object Mob {
-
                 object Animal {
-
                     object Armadillo {
                         // net/minecraft/world/entity/animal/armadillo/Armadillo.html
                         const val ARMADILLO_STATE = "ch"
                     }
-
                 }
-
             }
 
             object ArmorStand {
@@ -49,16 +40,13 @@ object FieldMappings {
                 const val DATA_LEFT_LEG_POSE = "bN"
                 const val DATA_RIGHT_LEG_POSE = "bO"
             }
-
         }
 
         object Projectile {
-
             object ARROW {
                 // net/minecraft/world/entity/projectile/Arrow.html
                 const val ID_EFFECT_COLOR = "f"
             }
-
         }
 
         object AreaEffectCloud {

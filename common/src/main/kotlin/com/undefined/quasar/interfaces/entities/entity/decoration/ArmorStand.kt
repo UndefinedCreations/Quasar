@@ -3,7 +3,7 @@ package com.undefined.quasar.interfaces.entities.entity.decoration
 import com.google.gson.JsonArray
 import com.undefined.quasar.interfaces.LivingEntity
 
-interface ArmorStand: LivingEntity {
+interface ArmorStand : LivingEntity {
 
     fun isSmall(): Boolean
     fun setSmall(small: Boolean)
@@ -45,46 +45,46 @@ interface ArmorStand: LivingEntity {
         setRightLegRotation(Rotations(firstRot, secondRot, thridRot))
 
 
-    class Rotations(var firstRot: Float, var secondRot: Float, var thridRot: Float) {
+    class Rotations(var firstRotation: Float, var secondRotation: Float, var thirdRotation: Float) {
 
         constructor(jsonArray: JsonArray): this(jsonArray[0].asFloat, jsonArray[1].asFloat, jsonArray[2].asFloat)
 
         fun add(num: Float): Rotations {
-            firstRot += num
-            secondRot += num
-            thridRot += num
+            firstRotation += num
+            secondRotation += num
+            thirdRotation += num
             return this
         }
 
         fun subtract(num: Float): Rotations {
-            firstRot -= num
-            secondRot -= num
-            thridRot -= num
+            firstRotation -= num
+            secondRotation -= num
+            thirdRotation -= num
             return this
         }
 
         fun multiple(num: Float): Rotations {
-            firstRot *= num
-            secondRot *= num
-            thridRot *= num
+            firstRotation *= num
+            secondRotation *= num
+            thirdRotation *= num
             return this
         }
 
         fun set(rotations: Rotations): Rotations {
-            firstRot = rotations.firstRot
-            secondRot = rotations.secondRot
-            thridRot = rotations.thridRot
+            firstRotation = rotations.firstRotation
+            secondRotation = rotations.secondRotation
+            thirdRotation = rotations.thirdRotation
             return this
         }
 
-        fun clone(): Rotations = Rotations(firstRot, secondRot, thridRot)
+        fun clone(): Rotations = Rotations(firstRotation, secondRotation, thirdRotation)
 
         fun json(): JsonArray = JsonArray().apply {
-            add(firstRot)
-            add(secondRot)
-            add(thridRot)
+            add(firstRotation)
+            add(secondRotation)
+            add(thirdRotation)
         }
 
-        override fun toString(): String = "$firstRot,$secondRot,$thridRot"
+        override fun toString(): String = "$firstRotation,$secondRotation,$thirdRotation"
     }
 }

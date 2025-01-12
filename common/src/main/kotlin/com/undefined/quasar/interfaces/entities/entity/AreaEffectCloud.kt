@@ -5,7 +5,6 @@ import org.bukkit.Color
 import org.bukkit.Location
 
 interface AreaEffectCloud : Entity {
-
     fun setRadius(radius: Double) = setRadius(radius.toFloat())
     fun setRadius(float: Float)
     fun getRadius(): Float
@@ -15,5 +14,4 @@ interface AreaEffectCloud : Entity {
 
     fun isInCloud(location: Location): Boolean
     fun isInCloud(entity: org.bukkit.entity.Entity): Boolean = isInCloud(entity.location)
-
 }

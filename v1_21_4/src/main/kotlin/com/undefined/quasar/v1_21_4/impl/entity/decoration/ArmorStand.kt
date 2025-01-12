@@ -4,14 +4,11 @@ import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.entities.entity.decoration.ArmorStand
 import com.undefined.quasar.util.getPrivateField
-import com.undefined.quasar.util.repeat
 import com.undefined.quasar.v1_21_4.impl.entity.LivingEntity
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import net.minecraft.core.Rotations
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.level.Level
-import org.bukkit.ChatColor
-import org.bukkit.entity.Player
 import kotlin.random.Random
 
 class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
@@ -103,6 +100,7 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
     private var rightLegRotation = ArmorStand.Rotations(1.0f, 0.0f, 1.0f)
 
     override fun isSmall(): Boolean = small
+
     override fun setSmall(small: Boolean) {
         val armorStand = entity ?: return
         this.small = small
@@ -115,7 +113,9 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
         )
         sendEntityMetaData()
     }
+
     override fun isShowingBasePlate(): Boolean = basePlate
+
     override fun setShowingBasePlate(showing: Boolean) {
         val armorStand = entity ?: return
         this.basePlate = showing
@@ -128,7 +128,9 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
         )
         sendEntityMetaData()
     }
+
     override fun isShowingArms(): Boolean = arms
+
     override fun setShowingArms(showing: Boolean) {
         val armorStand = entity ?: return
         this.arms = showing
@@ -141,60 +143,61 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
         )
         sendEntityMetaData()
     }
+
     override fun getHeadRotation(): ArmorStand.Rotations = headRotation
+
     override fun setHeadRotation(rotations: ArmorStand.Rotations) {
         val entity = entity ?: return
         headRotation.set(rotations)
         entity.entityData.set(DATA_HEAD_POSE, rotations.toNMSRotations())
         sendEntityMetaData()
     }
+
     override fun getBodyRotation(): ArmorStand.Rotations = bodyRotation
+
     override fun setBodyRotation(rotations: ArmorStand.Rotations) {
         val entity = entity ?: return
         bodyRotation.set(rotations)
         entity.entityData.set(DATA_BODY_POSE, rotations.toNMSRotations())
         sendEntityMetaData()
     }
+
     override fun getLeftArmRotation(): ArmorStand.Rotations = leftArmRotation
+
     override fun setLeftArmRotation(rotations: ArmorStand.Rotations) {
         val entity = entity ?: return
         leftArmRotation.set(rotations)
         entity.entityData.set(DATA_LEFT_ARM_POSE, rotations.toNMSRotations())
         sendEntityMetaData()
     }
+
     override fun getRightArmRotation(): ArmorStand.Rotations = rightArmRotation
+
     override fun setRightArmRotation(rotations: ArmorStand.Rotations) {
         val entity = entity ?: return
         rightArmRotation.set(rotations)
         entity.entityData.set(DATA_RIGHT_ARM_POSE, rotations.toNMSRotations())
         sendEntityMetaData()
     }
+
     override fun getLeftLegRotation(): ArmorStand.Rotations = leftLegRotation
+
     override fun setLeftLegRotation(rotations: ArmorStand.Rotations) {
         val entity = entity ?: return
         leftLegRotation.set(rotations)
         entity.entityData.set(DATA_LEFT_LEG_POSE, rotations.toNMSRotations())
         sendEntityMetaData()
     }
+
     override fun getRightLegRotation(): ArmorStand.Rotations = rightLegRotation
+
     override fun setRightLegRotation(rotations: ArmorStand.Rotations) {
         val entity = entity ?: return
         rightLegRotation.set(rotations)
         entity.entityData.set(DATA_RIGHT_LEG_POSE, rotations.toNMSRotations())
         sendEntityMetaData()
     }
-    private fun ArmorStand.Rotations.toNMSRotations(): Rotations =
-        Rotations(firstRot, secondRot, thridRot)
-    @Suppress("NAME_SHADOWING")
-    private fun setBit(b0: Byte, i: Int, flag: Boolean): Byte {
-        var b0 = b0
-        b0 = if (flag) {
-            (b0.toInt() or i).toByte()
-        } else {
-            (b0.toInt() and i.inv()).toByte()
-        }
-        return b0
-    }
+
     override fun getEntityData(): JsonObject {
         val json = super.getEntityData()
         val armorStandJson = JsonObject()
@@ -243,213 +246,208 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
         setLeftLegRotation(leftLegRotation)
         setRightLegRotation(rightLegRotation)
     }
+    override fun getTests(): MutableList<() -> String> =
+        super.getTests().apply { addAll(mutableListOf(
+            {
+                setSmall(true)
+                getTestMessage(this@ArmorStand::class, "Set small", true)
+            },
+            {
+                setSmall(false)
+                getTestMessage(this@ArmorStand::class, "Set small", false)
+            },
+            {
+                setShowingBasePlate(false)
+                getTestMessage(this@ArmorStand::class, "Set base plate", false)
+            },
+            {
+                setShowingBasePlate(true)
+                getTestMessage(this@ArmorStand::class, "Set base plate", true)
+            },
+            {
+                setShowingArms(true)
+                getTestMessage(this@ArmorStand::class, "Set arms", true)
+            },
+            {
+                setShowingArms(false)
+                getTestMessage(this@ArmorStand::class, "Set arms", false)
+            },
+            {
+                setHeadRotation(
+                    Random.nextDouble(-180.0, 180.0).toFloat(),
+                    Random.nextDouble(-180.0, 180.0).toFloat(),
+                    Random.nextDouble(-180.0, 180.0).toFloat()
+                )
+                getTestMessage(this@ArmorStand::class,
+                    "Set head rotation",
+                    getHeadRotation().firstRotation,
+                    getHeadRotation().secondRotation,
+                    getHeadRotation().thirdRotation
+                )
+            },
+            {
+                setBodyRotation(
+                    Random.nextDouble(-180.0, 180.0).toFloat(),
+                    Random.nextDouble(-180.0, 180.0).toFloat(),
+                    Random.nextDouble(-180.0, 180.0).toFloat()
+                )
+                getTestMessage(this@ArmorStand::class,
+                    "Set body rotation",
+                    getBodyRotation().firstRotation,
+                    getBodyRotation().secondRotation,
+                    getBodyRotation().thirdRotation
+                )
+            },
+            {
+                setShowingArms(true)
+                setLeftArmRotation(
+                    Random.nextDouble(-180.0, 180.0).toFloat(),
+                    Random.nextDouble(-180.0, 180.0).toFloat(),
+                    Random.nextDouble(-180.0, 180.0).toFloat()
+                )
+                getTestMessage(this@ArmorStand::class,
+                    "Set left arm rotation",
+                    getLeftArmRotation().firstRotation,
+                    getLeftArmRotation().secondRotation,
+                    getLeftArmRotation().thirdRotation
+                )
+            }
+            ,
+            {
+                setRightArmRotation(
+                    Random.nextDouble(-180.0, 180.0).toFloat(),
+                    Random.nextDouble(-180.0, 180.0).toFloat(),
+                    Random.nextDouble(-180.0, 180.0).toFloat()
+                )
+                getTestMessage(this@ArmorStand::class,
+                    "Set right arm rotation",
+                    getRightArmRotation().firstRotation,
+                    getRightArmRotation().secondRotation,
+                    getRightArmRotation().thirdRotation
+                )
+            },
+            {
 
-    override fun runTest(logger: Player, delayTime: Int, testStage: (Exception?) -> Unit, done: (Unit) -> Unit): Int {
-        super.runTest(logger, delayTime, { e ->
-            trycatch({
-                if (e != null) return@trycatch
-                var time = 0
-
-                repeat(20, delayTime) {
-                    when (time) {
-                        0 -> {
-                            setSmall(true)
-                            logger.sendMessage("${ChatColor.GRAY} ArmorStand | Set small {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}true${ChatColor.GRAY}]")
-                        }
-
-                        1 -> {
-                            setSmall(false)
-                            logger.sendMessage("${ChatColor.GRAY} ArmorStand | Set small {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}false${ChatColor.GRAY}]")
-                        }
-
-                        2 -> {
-                            setShowingBasePlate(false)
-                            logger.sendMessage("${ChatColor.GRAY} ArmorStand | Set base plate {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}false${ChatColor.GRAY}]")
-                        }
-
-                        3 -> {
-                            setShowingBasePlate(true)
-                            logger.sendMessage("${ChatColor.GRAY} ArmorStand | Set base plate {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}true${ChatColor.GRAY}]")
-                        }
-
-                        4 -> {
-                            setShowingArms(true)
-                            logger.sendMessage("${ChatColor.GRAY} ArmorStand | Set arms {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}true${ChatColor.GRAY}]")
-                        }
-
-                        6 -> {
-                            setShowingArms(false)
-                            logger.sendMessage("${ChatColor.GRAY} ArmorStand | Set arms {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}false${ChatColor.GRAY}]")
-                        }
-
-                        7 -> {
-                            setHeadRotation(
-                                Random.nextDouble(-180.0, 180.0).toFloat(),
-                                Random.nextDouble(-180.0, 180.0).toFloat(),
-                                Random.nextDouble(-180.0, 180.0).toFloat()
-                            )
-                            logger.sendMessage(
-                                "${ChatColor.GRAY} ArmorStand | Set head rotation " +
-                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
-                                        "[${ChatColor.AQUA}${getHeadRotation().firstRot}, ${getHeadRotation().secondRot}, ${getHeadRotation().thridRot}${ChatColor.GRAY}]"
-                            )
-                        }
-
-                        8 -> {
-                            setBodyRotation(
-                                Random.nextDouble(-180.0, 180.0).toFloat(),
-                                Random.nextDouble(-180.0, 180.0).toFloat(),
-                                Random.nextDouble(-180.0, 180.0).toFloat()
-                            )
-                            logger.sendMessage(
-                                "${ChatColor.GRAY} ArmorStand | Set body rotation " +
-                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
-                                        "[${ChatColor.AQUA}${getBodyRotation().firstRot}, ${getBodyRotation().secondRot}, ${getBodyRotation().thridRot}${ChatColor.GRAY}]"
-                            )
-                        }
-
-                        9 -> {
-                            setShowingArms(true)
-                            setLeftArmRotation(
-                                Random.nextDouble(-180.0, 180.0).toFloat(),
-                                Random.nextDouble(-180.0, 180.0).toFloat(),
-                                Random.nextDouble(-180.0, 180.0).toFloat()
-                            )
-                            logger.sendMessage(
-                                "${ChatColor.GRAY} ArmorStand | Set left arm rotation " +
-                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
-                                        "[${ChatColor.AQUA}${getLeftArmRotation().firstRot}, ${getLeftArmRotation().secondRot}, ${getLeftArmRotation().thridRot}${ChatColor.GRAY}]"
-                            )
-                        }
-
-                        10 -> {
-                            setRightArmRotation(
-                                Random.nextDouble(-180.0, 180.0).toFloat(),
-                                Random.nextDouble(-180.0, 180.0).toFloat(),
-                                Random.nextDouble(-180.0, 180.0).toFloat()
-                            )
-                            logger.sendMessage(
-                                "${ChatColor.GRAY} ArmorStand | Set right arm rotation " +
-                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
-                                        "[${ChatColor.AQUA}${getRightArmRotation().firstRot}, ${getRightArmRotation().secondRot}, ${getRightArmRotation().thridRot}${ChatColor.GRAY}]"
-                            )
-                        }
-
-                        11 -> {
-                            setLeftLegRotation(
-                                Random.nextDouble(-180.0, 180.0).toFloat(),
-                                Random.nextDouble(-180.0, 180.0).toFloat(),
-                                Random.nextDouble(-180.0, 180.0).toFloat()
-                            )
-                            logger.sendMessage(
-                                "${ChatColor.GRAY} ArmorStand | Set left leg rotation " +
-                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
-                                        "[${ChatColor.AQUA}${getLeftLegRotation().firstRot}, ${getLeftLegRotation().secondRot}, ${getLeftLegRotation().thridRot}${ChatColor.GRAY}]"
-                            )
-                        }
-
-                        12 -> {
-                            setRightLegRotation(
-                                Random.nextDouble(-180.0, 180.0).toFloat(),
-                                Random.nextDouble(-180.0, 180.0).toFloat(),
-                                Random.nextDouble(-180.0, 180.0).toFloat()
-                            )
-                            logger.sendMessage(
-                                "${ChatColor.GRAY} ArmorStand | Set right leg rotation " +
-                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
-                                        "[${ChatColor.AQUA}${getRightLegRotation().firstRot}, ${getRightLegRotation().secondRot}, ${getRightLegRotation().thridRot}${ChatColor.GRAY}]"
-                            )
-                        }
-
-                        13 -> {
-                            setHeadRotation(
-                                0.0f,
-                                0.0f,
-                                0.0f
-                            )
-                            logger.sendMessage(
-                                "${ChatColor.GRAY} ArmorStand | Set head rotation " +
-                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
-                                        "[${ChatColor.AQUA}${getHeadRotation().firstRot}, ${getHeadRotation().secondRot}, ${getHeadRotation().thridRot}${ChatColor.GRAY}]"
-                            )
-                        }
-
-                        14 -> {
-                            setBodyRotation(
-                                0.0f,
-                                0.0f,
-                                0.0f
-                            )
-                            logger.sendMessage(
-                                "${ChatColor.GRAY} ArmorStand | Set body rotation " +
-                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
-                                        "[${ChatColor.AQUA}${getBodyRotation().firstRot}, ${getBodyRotation().secondRot}, ${getBodyRotation().thridRot}${ChatColor.GRAY}]"
-                            )
-                        }
-
-                        15 -> {
-                            setLeftArmRotation(
-                                0.0f,
-                                0.0f,
-                                0.0f
-                            )
-                            logger.sendMessage(
-                                "${ChatColor.GRAY} ArmorStand | Set left arm rotation " +
-                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
-                                        "[${ChatColor.AQUA}${getLeftArmRotation().firstRot}, ${getLeftArmRotation().secondRot}, ${getLeftArmRotation().thridRot}${ChatColor.GRAY}]"
-                            )
-                        }
-
-                        16 -> {
-                            setRightArmRotation(
-                                0.0f,
-                                0.0f,
-                                0.0f
-                            )
-                            logger.sendMessage(
-                                "${ChatColor.GRAY} ArmorStand | Set right arm rotation " +
-                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
-                                        "[${ChatColor.AQUA}${getRightArmRotation().firstRot}, ${getRightArmRotation().secondRot}, ${getRightArmRotation().thridRot}${ChatColor.GRAY}]"
-                            )
-                        }
-
-                        17 -> {
-                            setLeftLegRotation(
-                                0.0f,
-                                0.0f,
-                                0.0f
-                            )
-                            logger.sendMessage(
-                                "${ChatColor.GRAY} ArmorStand | Set left leg rotation " +
-                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
-                                        "[${ChatColor.AQUA}${getLeftLegRotation().firstRot}, ${getLeftLegRotation().secondRot}, ${getLeftLegRotation().thridRot}${ChatColor.GRAY}]"
-                            )
-                        }
-
-                        18 -> {
-                            setRightLegRotation(
-                                0.0f,
-                                0.0f,
-                                0.0f
-                            )
-                            logger.sendMessage(
-                                "${ChatColor.GRAY} ArmorStand | Set right leg rotation " +
-                                        "{${ChatColor.GREEN}Success!${ChatColor.GRAY}} " +
-                                        "[${ChatColor.AQUA}${getRightLegRotation().firstRot}, ${getRightLegRotation().secondRot}, ${getRightLegRotation().thridRot}${ChatColor.GRAY}]"
-                            )
-                        }
-
-                        19 -> {
-                            done(Unit)
-                        }
-                    }
-                    time++
-                }
-            }, testStage)
-        }, done)
-        return 3
-    }
+                setLeftLegRotation(
+                    Random.nextDouble(-180.0, 180.0).toFloat(),
+                    Random.nextDouble(-180.0, 180.0).toFloat(),
+                    Random.nextDouble(-180.0, 180.0).toFloat()
+                )
+                getTestMessage(this@ArmorStand::class,
+                    "Set left leg rotation",
+                    getLeftLegRotation().firstRotation,
+                    getLeftLegRotation().secondRotation,
+                    getLeftLegRotation().thirdRotation
+                )
+            },
+            {
+                setRightLegRotation(
+                    Random.nextDouble(-180.0, 180.0).toFloat(),
+                    Random.nextDouble(-180.0, 180.0).toFloat(),
+                    Random.nextDouble(-180.0, 180.0).toFloat()
+                )
+                getTestMessage(this@ArmorStand::class,
+                    "Set right leg rotation",
+                    getRightLegRotation().firstRotation,
+                    getRightLegRotation().secondRotation,
+                    getRightLegRotation().thirdRotation
+                )
+            },
+            {
+                setHeadRotation(
+                    0f,
+                    0f,
+                    0f
+                )
+                getTestMessage(this@ArmorStand::class,
+                    "Set head rotation",
+                    getHeadRotation().firstRotation,
+                    getHeadRotation().secondRotation,
+                    getHeadRotation().thirdRotation
+                )
+            },
+            {
+                setBodyRotation(
+                    0f,
+                    0f,
+                    0f
+                )
+                getTestMessage(this@ArmorStand::class,
+                    "Set body rotation",
+                    getBodyRotation().firstRotation,
+                    getBodyRotation().secondRotation,
+                    getBodyRotation().thirdRotation
+                )
+            },
+            {
+                setLeftArmRotation(
+                    0f,
+                    0f,
+                    0f
+                )
+                getTestMessage(this@ArmorStand::class,
+                    "Set left arm rotation",
+                    getLeftArmRotation().firstRotation,
+                    getLeftArmRotation().secondRotation,
+                    getLeftArmRotation().thirdRotation
+                )
+            }
+            ,
+            {
+                setRightArmRotation(
+                    0f,
+                    0f,
+                    0f
+                )
+                getTestMessage(this@ArmorStand::class,
+                    "Set right arm rotation",
+                    getRightArmRotation().firstRotation,
+                    getRightArmRotation().secondRotation,
+                    getRightArmRotation().thirdRotation
+                )
+            },
+            {
+                setLeftLegRotation(
+                    0f,
+                    0f,
+                    0f
+                )
+                getTestMessage(this@ArmorStand::class,
+                    "Set left leg rotation",
+                    getLeftLegRotation().firstRotation,
+                    getLeftLegRotation().secondRotation,
+                    getLeftLegRotation().thirdRotation
+                )
+            },
+            {
+                setRightLegRotation(
+                    0f,
+                    0f,
+                    0f
+                )
+                getTestMessage(this@ArmorStand::class,
+                    "Set right leg rotation",
+                    getRightLegRotation().firstRotation,
+                    getRightLegRotation().secondRotation,
+                    getRightLegRotation().thirdRotation
+                )
+            }
+        )) }
 
     override fun getEntityClass(level: Level): net.minecraft.world.entity.Entity =
         net.minecraft.world.entity.decoration.ArmorStand(net.minecraft.world.entity.EntityType.ARMOR_STAND, level)
+
+    private fun ArmorStand.Rotations.toNMSRotations(): Rotations =
+        Rotations(firstRotation, secondRotation, thirdRotation)
+
+    private fun setBit(b0: Byte, i: Int, flag: Boolean): Byte {
+        var b = b0
+        b = if (flag) {
+            (b.toInt() or i).toByte()
+        } else {
+            (b.toInt() and i.inv()).toByte()
+        }
+        return b
+    }
+
 }

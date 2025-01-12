@@ -4,8 +4,6 @@ import com.undefined.quasar.interfaces.Projectile
 import org.bukkit.Color
 
 interface Arrow : Projectile {
-
     fun getEffectColor(): Color?
     fun setEffectColor(color: Color?)
-
 }

@@ -3,7 +3,6 @@ package com.undefined.quasar.v1_21_4.impl.entity.vehicle
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.entities.entity.vehicle.Minecart
-import com.undefined.quasar.util.delay
 import com.undefined.quasar.util.getPrivateField
 import com.undefined.quasar.v1_21_4.impl.entity.Entity
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
@@ -11,13 +10,11 @@ import com.undefined.quasar.v1_21_4.util.BlockDataUtil
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.vehicle.AbstractMinecart
 import net.minecraft.world.level.Level
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.block.data.BlockData
-import org.bukkit.entity.Player
 import kotlin.random.Random
 
-class Minecart: Minecart, Entity(EntityType.MINECART) {
+class Minecart : Minecart, Entity(EntityType.MINECART) {
 
     private var displayBlock: BlockData? = null
     private var displayBlockOffset: Int = 0
@@ -37,7 +34,6 @@ class Minecart: Minecart, Entity(EntityType.MINECART) {
             field = entity!!.getPrivateField(AbstractMinecart::class.java, FieldMappings.Entity.Vehicle.Minecart.DATA_ID_DISPLAY_OFFSET)
             return field
         }
-
     private var DATA_ID_CUSTOM_DISPLAY: EntityDataAccessor<Boolean>? = null
         get() {
             if (field != null) return field
@@ -45,7 +41,6 @@ class Minecart: Minecart, Entity(EntityType.MINECART) {
             field = entity!!.getPrivateField(AbstractMinecart::class.java, FieldMappings.Entity.Vehicle.Minecart.DATA_ID_CUSTOM_DISPLAY)
             return field
         }
-
 
     override fun setDisplayBlock(block: BlockData) {
         if (entity == null) return
@@ -67,7 +62,9 @@ class Minecart: Minecart, Entity(EntityType.MINECART) {
     }
 
     override fun getCustomDisplay(): Boolean = customDisplay
+
     override fun getDisplayBlockOffset(): Int = displayBlockOffset
+
     override fun getDisplayBlock(): BlockData? = displayBlock
 
     override fun updateEntity() {
@@ -95,37 +92,23 @@ class Minecart: Minecart, Entity(EntityType.MINECART) {
         return json
     }
 
-    @Suppress("LABEL_NAME_CLASH")
-    override fun runTest(logger: Player, delayTime: Int, testStage: (Exception?) -> Unit, done: (Unit) -> Unit): Int {
-        super.runTest(logger,
-            delayTime, {
-            if (it != null) return@runTest
-
-            trycatch({
+    override fun getTests(): MutableList<() -> String> =
+        super.getTests().apply { addAll(mutableListOf(
+            {
                 val randomMaterial = Material.entries.filter { material -> material.isBlock }.random()
                 setDisplayBlock(randomMaterial.createBlockData())
-                logger.sendMessage("${ChatColor.GRAY} Minecart | Set display block {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}${randomMaterial.name.lowercase()}${ChatColor.GRAY}]")
-
-                delay(delayTime) {
-                    val randomOffset = Random.nextInt(50)
-                    setDisplayBlockOffset(randomOffset)
-                    logger.sendMessage("${ChatColor.GRAY} Minecart | Set display block offset {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}$randomOffset${ChatColor.GRAY}]")
-
-                    delay(delayTime) {
-                        setCustomDisplay(false)
-                        logger.sendMessage("${ChatColor.GRAY} Minecart | Set custom display {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}false${ChatColor.GRAY}]")
-
-                        delay(delayTime) {
-                            done(Unit)
-                        }
-                    }
-                }
-            }, testStage)
-
-        }, done)
-
-        return 2
-    }
+                getTestMessage(this::class, "Set display block", randomMaterial.name.lowercase())
+            },
+            {
+                val randomOffset = Random.nextInt(50)
+                setDisplayBlockOffset(randomOffset)
+                getTestMessage(this::class, "Set display block offset", randomOffset)
+            },
+            {
+               setCustomDisplay(false)
+               getTestMessage(this::class, "Set custom display", false)
+            }
+        )) }
 
     override fun getEntityClass(level: Level): net.minecraft.world.entity.Entity =
         net.minecraft.world.entity.vehicle.Minecart(net.minecraft.world.entity.EntityType.MINECART, level)

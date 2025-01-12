@@ -1,8 +1,9 @@
-package com.undefined.quasar.v1_21_4
+package com.undefined.quasar.v1_21_4.impl.entity
 
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
+import com.undefined.quasar.util.repeat
 import com.undefined.quasar.v1_21_4.util.sendPackets
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
@@ -13,10 +14,12 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.scores.PlayerTeam
 import net.minecraft.world.scores.Scoreboard
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_21_R3.CraftWorld
 import org.bukkit.entity.Player
 import java.util.*
+import kotlin.reflect.KClass
 
 abstract class AbstractEntity(
     override val entityType: EntityType
@@ -24,7 +27,6 @@ abstract class AbstractEntity(
 
     private var scoreboard: Scoreboard = Scoreboard()
     var entityTeam: PlayerTeam = scoreboard.addPlayerTeam("qausar_${UUID.randomUUID()}")
-
     var entity: net.minecraft.world.entity.Entity? = null
     private var location: Location? = null
     private var viewers: MutableList<UUID> = mutableListOf()
@@ -37,7 +39,7 @@ abstract class AbstractEntity(
         viewers.remove(player.uniqueId)
     }
 
-    override fun hasViewer(player: Player) = viewers.contains(player.uniqueId)
+    override fun hasViewer(player: Player) = player.uniqueId in viewers
 
     override fun spawn(location: Location) {
         this.location = location
@@ -82,10 +84,7 @@ abstract class AbstractEntity(
 
     override fun setEntityData(jsonObject: JsonObject) { /* In the base entity there is no data to set */ }
 
-    override fun getEntityData(): JsonObject = JsonObject().also {
-        it.addProperty("entityType", entityType.name)
-    }
-
+    override fun getEntityData(): JsonObject = JsonObject().also { it.addProperty("entityType", entityType.name) }
 
     override fun toString(): String =
         getEntityData().toString()
@@ -98,6 +97,27 @@ abstract class AbstractEntity(
     }
 
     fun setLocation(location: Location) { this.location = location }
+
+    fun getTestMessage(entity: KClass<*>, infoText: String, vararg data: Any): String =
+        "${ChatColor.GRAY} ${entity.simpleName} | $infoText {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}${
+            data.joinToString(", ") { it.toString() }
+        }${ChatColor.GRAY}]"
+
+    override fun runTest(logger: Player, delayTime: Int, exception: (Exception) -> Unit, done: () -> Unit, sendMessage: Boolean) {
+        val tests = getTests()
+        var time = 0
+        repeat(tests.size + 1, delayTime) {
+            if (time == tests.size) return@repeat done()
+
+            val test = tests[time]
+            try {
+                if (sendMessage) logger.sendMessage(test()) else test()
+            } catch (e: Exception) {
+                exception(e)
+            }
+            time++
+        }
+    }
 
     override fun getLocation(): Location = location ?: Location(Bukkit.getWorlds().first(), 0.0, 0.0, 0.0)
 }

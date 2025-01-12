@@ -7,15 +7,11 @@ import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
 import com.undefined.quasar.util.getPrivateField
 import com.undefined.quasar.util.getPrivateMethod
-import com.undefined.quasar.util.repeat
-import com.undefined.quasar.v1_21_4.AbstractEntity
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import com.undefined.quasar.v1_21_4.mappings.MethodMappings
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
-import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket
-import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket
-import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket
+import net.minecraft.network.protocol.game.*
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.PositionMoveRotation
 import net.minecraft.world.scores.Team
@@ -24,6 +20,7 @@ import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_21_R3.util.CraftChatMessage
 import org.bukkit.entity.Player
 import java.util.*
+import kotlin.math.floor
 
 abstract class Entity(
     override val entityType: EntityType
@@ -102,8 +99,11 @@ abstract class Entity(
         entity.entityData.set(DATA_CUSTOM_NAME, Optional.ofNullable(CraftChatMessage.fromStringOrNull(name)))
         sendEntityMetaData()
     }
+
     override fun getCustomName(): String? = customName
+
     override fun isCustomNameVisible(): Boolean = isCustomNameVisible
+
     override fun setCustomNameVisibility(visible: Boolean) {
         val entity = entity ?: return
         if (!visible) setCustomName(null)
@@ -111,6 +111,7 @@ abstract class Entity(
         entity.entityData.set(DATA_CUSTOM_NAME_VISIBLE, visible)
         sendEntityMetaData()
     }
+
     override fun teleport(location: Location) {
         val entity = entity ?: return
 
@@ -126,13 +127,46 @@ abstract class Entity(
 
         sendPackets(ClientboundTeleportEntityPacket(entity.id, PositionMoveRotation.of(entity), setOf(), false))
     }
+
+    override fun moveTo(location: Location) {
+        val entity = entity ?: return
+
+        if (getLocation().distance(location) > 8) return
+
+        val deltaX = toDeltaValue(getLocation().x, location.x)
+        val deltaY = toDeltaValue(getLocation().y, location.y)
+        val deltaZ = toDeltaValue(getLocation().z, location.z)
+        val isOnGround = location.clone().subtract(0.0, 1.0, 0.0).block.type.isSolid
+
+        val headRotationYaw = toRotationValue(location.yaw)
+        val headRotationPitch = toRotationValue(location.pitch)
+
+        sendPackets(
+            ClientboundMoveEntityPacket.PosRot(
+            entity.id,
+            deltaX,
+            deltaY,
+            deltaZ,
+            headRotationYaw,
+            headRotationPitch,
+            isOnGround
+        ), ClientboundRotateHeadPacket(
+            entity,
+            headRotationYaw
+        )
+        )
+        setLocation(location)
+    }
+
     override fun setVisualFire(fire: Boolean) {
         val entity = entity ?: return
         this.fire = fire
         entity.setSharedFlag(FLAG_ONFIRE, fire)
         sendEntityMetaData()
     }
+
     override fun isVisualFire(): Boolean = fire
+
     override fun setVisualFreezing(freezing: Boolean) {
         val entity = entity ?: return
         this.freezing = freezing
@@ -140,14 +174,18 @@ abstract class Entity(
         entity.isInPowderSnow = freezing
         sendEntityMetaData()
     }
+
     override fun isFreezing(): Boolean = freezing
+
     override fun setVisible(visible: Boolean) {
         val entity = entity ?: return
         this.visible = visible
         entity.setSharedFlag(FLAG_INVISIBLE, !visible)
         sendEntityMetaData()
     }
+
     override fun isVisible(): Boolean = visible
+
     override fun setCollidable(collidable: Boolean) {
         entity ?: return
         this.collidable = collidable
@@ -156,7 +194,9 @@ abstract class Entity(
             ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(entityTeam, true)
         )
     }
+
     override fun isCollidable(): Boolean = collidable
+
     override fun setRotation(yaw: Float, pitch: Float) {
         val entity = entity ?: return
 
@@ -168,6 +208,7 @@ abstract class Entity(
 
         sendPackets(ClientboundTeleportEntityPacket(entity.id, PositionMoveRotation.of(entity), setOf(), false))
     }
+
     override fun addPassenger(passenger: Entity) {
         val entity = this.entity ?: return
         val passengerEntity = (passenger as AbstractEntity).entity ?: return
@@ -189,6 +230,7 @@ abstract class Entity(
         }
         sendPackets(ClientboundSetPassengersPacket(entity))
     }
+
     override fun removePassenger(passenger: Entity) {
         val entity = entity ?: return
         val passengerEntity = (passenger as AbstractEntity).entity ?: return
@@ -201,17 +243,21 @@ abstract class Entity(
             sendPackets(ClientboundSetPassengersPacket(entity))
         }
     }
+
     override fun clearPassenger() {
         passengers.forEach { removePassenger(it) }
         passengers.clear()
     }
+
     override fun getPassengers(): List<Entity> = passengers
+
     override fun setGlowing(glow: Boolean) {
         val entity = entity ?: return
         this.glowing = glow
         entity.setSharedFlag(FLAG_GLOWING, glow)
         sendEntityMetaData()
     }
+
     override fun setGlowingColor(chatColor: ChatColor) {
         entity ?: return
         glowingColor = chatColor
@@ -220,22 +266,33 @@ abstract class Entity(
             ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(entityTeam, true)
         )
     }
+
     override fun getGlowingColor(): ChatColor = glowingColor
+
     override fun isGlowing(): Boolean = glowing
+
     override fun setGravity(gravity: Boolean) {
         val entity = entity ?: return
         this.gravity = gravity
         entity.entityData.set(DATA_NO_GRAVITY, !gravity)
         sendEntityMetaData()
     }
+
     override fun hasGravity(): Boolean = gravity
+
     override fun setSilent(silent: Boolean) {
         val entity = entity ?: return
         this.silent = silent
         entity.entityData.set(DATA_SILENT, silent)
         sendEntityMetaData()
     }
+
     override fun isSilent(): Boolean = silent
+
+    fun toRotationValue(yaw: Float): Byte = floor(yaw * 256.0f / 360.0f).toInt().toByte()
+
+    private fun toDeltaValue(value: Double, newValue: Double) = (((newValue - value) * 32 * 128).toInt().toShort())
+
     override fun getEntityData(): JsonObject {
         val json = super.getEntityData()
         val entityJson = JsonObject()
@@ -261,6 +318,7 @@ abstract class Entity(
         json.add("entity", entityJson)
         return json
     }
+
     override fun setEntityData(jsonObject: JsonObject) {
         val entityJson = jsonObject["entity"].asJsonObject
 
@@ -278,6 +336,7 @@ abstract class Entity(
         glowing = entityJson["glowing"].asBoolean
         glowingColor = ChatColor.valueOf(entityJson["glowingColor"].asString)
     }
+
     override fun updateEntity() {
         customName?.let { setCustomName(it) }
         setCustomNameVisibility(isCustomNameVisible)
@@ -291,127 +350,113 @@ abstract class Entity(
         setGlowing(gravity)
         setGlowingColor(glowingColor)
     }
-    override fun runTest(logger: Player, delayTime: Int, testStage: (Exception?) -> Unit, done: (Unit) -> Unit): Int {
-        trycatch({
-            var time = 0
-            repeat(22, delayTime) {
-                when(time) {
-                    0 -> {
-                        val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
-                        val name = (1..10)
-                            .map { allowedChars.random() }
-                            .joinToString("")
-                        setCustomName(name)
-                        setCustomNameVisibility(true)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Set custom name {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}${name}${ChatColor.GRAY}]")
-                    }
-                    1 -> {
-                        setCustomNameVisibility(false)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Set custom name visibility {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}false${ChatColor.GRAY}]")
-                    }
-                    2 -> {
-                        setVisualFreezing(true)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Set visual freezing {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}true${ChatColor.GRAY}]")
-                    }
-                    3 -> {
-                        setVisualFreezing(false)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Set visual freezing {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}false${ChatColor.GRAY}]")
-                    }
-                    4 -> {
-                        setVisualFire(true)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Set visual fire {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}true${ChatColor.GRAY}]")
-                    }
-                    5 -> {
-                        setVisualFire(false)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Set visual fire {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}false${ChatColor.GRAY}]")
-                    }
-                    6 -> {
-                        setVisible(false)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Set visibility {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}false${ChatColor.GRAY}]")
-                    }
-                    7 -> {
-                        setVisible(true)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Set visibility {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}true${ChatColor.GRAY}]")
-                    }
-                    8 -> {
-                        setGravity(true)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Set gravity {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}true${ChatColor.GRAY}]")
-                    }
-                    9 -> {
-                        setGravity(false)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Set gravity {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}false${ChatColor.GRAY}]")
-                    }
-                    10 -> {
-                        setCollidable(true)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Set collidable {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}true${ChatColor.GRAY}]")
-                    }
-                    11 -> {
-                        setCollidable(false)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Set collidable {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}false${ChatColor.GRAY}]")
-                    }
-                    12 -> {
-                        setGlowing(true)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Set glowing {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}true${ChatColor.GRAY}]")
-                    }
-                    13 -> {
-                        val color = ChatColor.entries.filter { it.isColor }.random()
-                        setGlowingColor(color)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Set glowing color {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}${color.name.lowercase()}${ChatColor.GRAY}]")
-                    }
-                    14 -> {
-                        setGlowing(false)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Set glowing {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}false${ChatColor.GRAY}]")
-                    }
-                    15 -> {
-                        setSilent(true)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Set silent {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}true${ChatColor.GRAY}]")
-                    }
-                    16 -> {
-                        setSilent(false)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Set silent {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}false${ChatColor.GRAY}]")
-                    }
-                    17 -> {
-                        val location = getLocation().clone().add(0.0, 5.0, 0.0)
-                        teleport(location)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Teleport {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}${Math.round(location.x)}, ${Math.round(location.y)}, ${Math.round(location.z)}]${ChatColor.GRAY}]")
-                    }
-                    18 -> {
-                        val location = getLocation().clone().subtract(0.0, 5.0, 0.0)
-                        teleport(location)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Teleport {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}${Math.round(location.x)}, ${Math.round(location.y)}, ${Math.round(location.z)}]${ChatColor.GRAY}]")
-                    }
-                    19 -> {
-                        val yaw = Random().nextFloat(-180f, 180f)
-                        val pitch = Random().nextFloat(-180f, 180f)
-                        setRotation(yaw, pitch)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Set rotation {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}$yaw, $pitch]${ChatColor.GRAY}]")
-                    }
-                    20 -> {
-                        setRotation(0f, 0f)
-                        logger.sendMessage("${ChatColor.GRAY} Entity | Set rotation {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}0, 0]${ChatColor.GRAY}]")
-                    }
-                    21 -> {
-                        testStage(null)
-                    }
-                }
-                time++
+
+    override fun getTests(): MutableList<() -> String> =
+        mutableListOf(
+            {
+                val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
+                val name = (1..10)
+                    .map { allowedChars.random() }
+                    .joinToString("")
+                setCustomName(name)
+                setCustomNameVisibility(true)
+                getTestMessage(this::class, "Set custom name", name)
+            },
+            {
+                setCustomNameVisibility(false)
+                getTestMessage(this::class, "Set custom name visibility", false)
+            },
+            {
+                setVisualFreezing(true)
+                getTestMessage(this::class, "Set visual freezing", true)
+            },
+            {
+                setVisualFreezing(false)
+                getTestMessage(this::class, "Set visual freezing", false)
+            },
+            {
+                setVisualFire(true)
+                getTestMessage(this::class, "Set visual fire", true)
+            },
+            {
+                setVisualFire(false)
+                getTestMessage(this::class, "Set visual fire", false)
+            },
+            {
+                setVisible(false)
+                getTestMessage(this::class, "Set visible", false)
+            },
+            {
+                setVisible(true)
+                getTestMessage(this::class, "Set visible", true)
+            },
+            {
+                setGravity(true)
+                getTestMessage(this::class, "Set gravity", true)
+            },
+            {
+                setGravity(false)
+                getTestMessage(this::class, "Set gravity", false)
+            },
+            {
+                setCollidable(true)
+                getTestMessage(this::class, "Set collidable", true)
+            },
+            {
+                setCollidable(false)
+                getTestMessage(this::class, "Set collidable", false)
+            },
+            {
+                setGlowing(true)
+                getTestMessage(this::class, "Set glowing", true)
+            },
+            {
+                val color = ChatColor.entries.filter { it.isColor }.random()
+                setGlowingColor(color)
+                getTestMessage(this::class, "Set glowing color", color.name.lowercase())
+            },
+            {
+                setGlowing(false)
+                getTestMessage(this::class, "Set glowing", false)
+            },
+            {
+                setSilent(true)
+                getTestMessage(this::class, "Set silent", true)
+            },
+            {
+                setSilent(false)
+                getTestMessage(this::class, "Set silent", false)
+            },
+            {
+                val location = getLocation().clone().add(0.0, 5.0, 0.0)
+                teleport(location)
+                getTestMessage(this::class, "Teleport", Math.round(location.x), Math.round(location.y), Math.round(location.z))
+            },
+            {
+                val location = getLocation().clone().subtract(0.0, 5.0, 0.0)
+                teleport(location)
+                getTestMessage(this::class, "Teleport", Math.round(location.x), Math.round(location.y), Math.round(location.z))
+            },
+            {
+                val yaw = Random().nextFloat(-180f, 180f)
+                val pitch = Random().nextFloat(-180f, 180f)
+                setRotation(yaw, pitch)
+                getTestMessage(this::class, "Set Rotation", pitch, yaw)
+            },
+            {
+                setRotation(0f, 0f)
+                getTestMessage(this::class, "Set Rotation", 0f, 0f)
+            },
+            {
+                val location = getLocation().clone().add(0.0, 5.0, 0.0)
+                moveTo(location)
+                getTestMessage(this::class, "Move to", Math.round(location.x), Math.round(location.y), Math.round(location.z))
+            },
+            {
+                val location = getLocation().clone().subtract(0.0, 5.0, 0.0)
+                moveTo(location)
+                getTestMessage(this::class, "Move to", Math.round(location.x), Math.round(location.y), Math.round(location.z))
             }
-        }, testStage)
+        )
 
-        return 1
-    }
-
-    fun trycatch(runnable: (Unit) -> Unit, exception: (Exception?) -> Unit) {
-        try {
-            runnable(Unit)
-        }catch (e: Exception) {
-            exception(e)
-        }
-    }
-
-    enum class Tests(action: (Entity) -> Exception?, failMessage: String, successMessage: String) {
-
-
-
-    }
 }

@@ -7,10 +7,6 @@ import com.undefined.quasar.exception.EntityNotFoundException
 import com.undefined.quasar.exception.UnsupportedVersionException
 import com.undefined.quasar.interfaces.Entity
 import com.undefined.quasar.util.NMSVersion
-import org.bukkit.NamespacedKey
-import org.bukkit.entity.Player
-import org.bukkit.persistence.PersistentDataContainer
-import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 
 class Quasar(plugin: JavaPlugin) {

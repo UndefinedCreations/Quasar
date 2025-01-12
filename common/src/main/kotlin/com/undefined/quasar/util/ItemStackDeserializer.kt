@@ -17,7 +17,6 @@ fun ItemStack.serializer(): String {
 }
 
 object ItemStackDeserializer {
-
     fun deserializer(string: String): ItemStack {
         val inputStream = ByteArrayInputStream(Base64Coder.decodeLines(string))
         val dataInput = BukkitObjectInputStream(inputStream)
@@ -25,6 +24,5 @@ object ItemStackDeserializer {
         dataInput.close()
         return itemStack
     }
-
 }
 
