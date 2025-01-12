@@ -27,6 +27,27 @@ object FieldMappings {
                         // net/minecraft/world/entity/animal/armadillo/Armadillo.html
                         const val ARMADILLO_STATE = "ch"
                     }
+                    object Axolotl {
+                        // net/minecraft/world/entity/animal/axolotl/Axolotl.html
+                        const val DATA_VARIANT = "ck"
+                    }
+                    object Bee {
+                        // net/minecraft/world/entity/animal/Bee.html
+                        const val DATA_FLAGS_ID = "ci"
+                        const val DATA_REMAINING_ANGER_TIME = "cj"
+                    }
+                }
+                object Monster {
+                    object Blaze {
+                        // net/minecraft/world/entity/monster/Blaze.html
+                        const val DATA_FLAGS_ID = "c"
+                    }
+                }
+                object AmbientCreature {
+                    object Bat {
+                        // net/minecraft/world/entity/ambient/Bat.html
+                        const val DATA_ID_FLAGS = "bX"
+                    }
                 }
             }
 

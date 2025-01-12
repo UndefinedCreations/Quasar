@@ -109,7 +109,7 @@ class Main : JavaPlugin() {
         )
     }
 
-    fun finishTest(logger: Player, entity: Entity) {
+    private fun finishTest(logger: Player, entity: Entity) {
         entity.kill()
         logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | {${ChatColor.GREEN}Tests Passed!${ChatColor.GRAY}}")
     }
@@ -117,6 +117,4 @@ class Main : JavaPlugin() {
     override fun onDisable() {
 
     }
-
-
 }

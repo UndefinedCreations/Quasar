@@ -55,8 +55,8 @@ class Armadillo : LivingEntity(EntityType.ARMADILLO), Armadillo {
     override fun getTests(): MutableList<() -> String> =
         super.getTests().apply { addAll(Armadillo.State.entries.map {
             {
-                setState(state)
-                getTestMessage(this@Armadillo::class, "Set state", state)
+                setState(it)
+                getTestMessage(this@Armadillo::class, "Set state", it)
             }
         }) }
 
