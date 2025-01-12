@@ -12,11 +12,8 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
 class Allay : Allay, LivingEntity(EntityType.ALLAY) {
-
     override fun setItem(slot: Int, itemStack: ItemStack?) =
         super<LivingEntity>.setItem(0, itemStack)
-
-
     override fun runTest(logger: Player, delayTime: Int, testStage: (Exception?) -> Unit, done: (Unit) -> Unit): Int {
         super.runTest(logger, delayTime, { e ->
             trycatch({
@@ -44,7 +41,6 @@ class Allay : Allay, LivingEntity(EntityType.ALLAY) {
 
         return 4
     }
-
     override fun getEntityClass(level: Level): Entity =
         net.minecraft.world.entity.animal.allay.Allay(net.minecraft.world.entity.EntityType.ALLAY, level)
 }

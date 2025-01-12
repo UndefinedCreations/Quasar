@@ -1,10 +1,13 @@
 package com.undefined.quasar.v1_21_4.impl.entity
 
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.mojang.datafixers.util.Pair
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.LivingEntity
+import com.undefined.quasar.util.ItemStackDeserializer
 import com.undefined.quasar.util.repeat
+import com.undefined.quasar.util.serializer
 import net.minecraft.network.protocol.game.ClientboundEntityEventPacket
 import net.minecraft.network.protocol.game.ClientboundHurtAnimationPacket
 import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket
@@ -84,25 +87,37 @@ abstract class LivingEntity(entityType: EntityType): LivingEntity, Entity(entity
         ))
         sendEntityMetaData()
     }
-
     private fun toRotationValue(yaw: Float): Byte = floor(yaw * 256.0f / 360.0f).toInt().toByte()
     private fun toDeltaValue(value: Double, newValue: Double) = (((newValue - value) * 32 * 128).toInt().toShort())
     override fun setRotation(yaw: Float, pitch: Float) {
         val entity = entity ?: return
         sendPackets(ClientboundMoveEntityPacket.Rot(entity.id, toRotationValue(yaw), toRotationValue(pitch), true))
     }
-
     override fun getEntityData(): JsonObject {
         val entityJson = super.getEntityData()
         val livingEntityJson = JsonObject()
-
+        val itemArray = JsonArray()
+        items.forEach { (slot, item) ->
+            itemArray.add("$slot@${item.serializer()}")
+        }
+        livingEntityJson.add("items", itemArray)
+        entityJson.add("livingEntity", livingEntityJson)
         return entityJson
     }
-
     override fun setEntityData(jsonObject: JsonObject) {
         super<Entity>.setEntityData(jsonObject)
+        val livingEntityJson = jsonObject["livingEntity"].asJsonObject
+        val itemArray = livingEntityJson["items"].asJsonArray
+        itemArray.forEach {
+            val split = it.asString.split("@")
+            val slot = split[0].toInt()
+            val item = ItemStackDeserializer.deserializer(split[1])
+            items[slot] = item
+        }
     }
-
+    override fun updateEntity() {
+        items.forEach { setItem(it.key, it.value) }
+    }
     override fun runTest(logger: Player, delayTime: Int, testStage: (Exception?) -> Unit, done: (Unit) -> Unit): Int {
         super.runTest(logger, delayTime, { e ->
             trycatch({

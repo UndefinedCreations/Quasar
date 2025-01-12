@@ -26,7 +26,7 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
             if (entity == null) return null
             field = entity!!.getPrivateField(
                 net.minecraft.world.entity.decoration.ArmorStand::class.java,
-                FieldMappings.Entity.ArmorStand.DATA_CLIENT_FLAGS
+                FieldMappings.Entity.LivingEntity.ArmorStand.DATA_CLIENT_FLAGS
             )
             return field
         }
@@ -36,7 +36,7 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
             if (entity == null) return null
             field = entity!!.getPrivateField(
                 net.minecraft.world.entity.decoration.ArmorStand::class.java,
-                FieldMappings.Entity.ArmorStand.DATA_HEAD_POSE
+                FieldMappings.Entity.LivingEntity.ArmorStand.DATA_HEAD_POSE
             )
             return field
         }
@@ -46,7 +46,7 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
             if (entity == null) return null
             field = entity!!.getPrivateField(
                 net.minecraft.world.entity.decoration.ArmorStand::class.java,
-                FieldMappings.Entity.ArmorStand.DATA_BODY_POSE
+                FieldMappings.Entity.LivingEntity.ArmorStand.DATA_BODY_POSE
             )
             return field
         }
@@ -56,7 +56,7 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
             if (entity == null) return null
             field = entity!!.getPrivateField(
                 net.minecraft.world.entity.decoration.ArmorStand::class.java,
-                FieldMappings.Entity.ArmorStand.DATA_LEFT_ARM_POSE
+                FieldMappings.Entity.LivingEntity.ArmorStand.DATA_LEFT_ARM_POSE
             )
             return field
         }
@@ -66,7 +66,7 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
             if (entity == null) return null
             field = entity!!.getPrivateField(
                 net.minecraft.world.entity.decoration.ArmorStand::class.java,
-                FieldMappings.Entity.ArmorStand.DATA_RIGHT_ARM_POSE
+                FieldMappings.Entity.LivingEntity.ArmorStand.DATA_RIGHT_ARM_POSE
             )
             return field
         }
@@ -76,7 +76,7 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
             if (entity == null) return null
             field = entity!!.getPrivateField(
                 net.minecraft.world.entity.decoration.ArmorStand::class.java,
-                FieldMappings.Entity.ArmorStand.DATA_LEFT_LEG_POSE
+                FieldMappings.Entity.LivingEntity.ArmorStand.DATA_LEFT_LEG_POSE
             )
             return field
         }
@@ -86,7 +86,7 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
             if (entity == null) return null
             field = entity!!.getPrivateField(
                 net.minecraft.world.entity.decoration.ArmorStand::class.java,
-                FieldMappings.Entity.ArmorStand.DATA_RIGHT_LEG_POSE
+                FieldMappings.Entity.LivingEntity.ArmorStand.DATA_RIGHT_LEG_POSE
             )
             return field
         }

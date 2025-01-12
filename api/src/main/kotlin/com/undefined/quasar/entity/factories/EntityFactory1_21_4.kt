@@ -4,17 +4,23 @@ import com.undefined.quasar.entity.EntityFactory
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.exception.EntityNotFoundException
 import com.undefined.quasar.interfaces.Entity
+import com.undefined.quasar.v1_21_4.impl.entity.AreaEffectCloud
 import com.undefined.quasar.v1_21_4.impl.entity.animal.Allay
+import com.undefined.quasar.v1_21_4.impl.entity.animal.Armadillo
 import com.undefined.quasar.v1_21_4.impl.entity.decoration.ArmorStand
+import com.undefined.quasar.v1_21_4.impl.entity.projectile.Arrow
 import com.undefined.quasar.v1_21_4.impl.entity.vehicle.Minecart
 
 class EntityFactory1_21_4 : EntityFactory {
 
     override fun createEntity(entityType: EntityType): Entity =
         when(entityType) {
-            EntityType.MINECART -> Minecart()
-            EntityType.ARMORSTAND -> ArmorStand()
             EntityType.ALLAY -> Allay()
+            EntityType.AREA_EFFECT_CLOUD -> AreaEffectCloud()
+            EntityType.ARMADILLO -> Armadillo()
+            EntityType.ARMORSTAND -> ArmorStand()
+            EntityType.ARROW -> Arrow()
+            EntityType.MINECART -> Minecart()
             else -> throw EntityNotFoundException(entityType.name)
         }
 
