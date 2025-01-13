@@ -3,12 +3,15 @@ package com.undefined.quasar.v1_21_4.impl.entity
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
+import com.undefined.quasar.util.getPrivateField
 import com.undefined.quasar.util.repeat
+import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import com.undefined.quasar.v1_21_4.util.sendPackets
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket
+import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.server.level.ServerEntity
 import net.minecraft.world.level.Level
 import net.minecraft.world.scores.PlayerTeam
@@ -18,6 +21,7 @@ import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_21_R3.CraftWorld
 import org.bukkit.entity.Player
+import java.lang.reflect.Field
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -25,11 +29,15 @@ abstract class AbstractEntity(
     override val entityType: EntityType
 ) : Entity {
 
+    private val uuid = UUID.randomUUID()
+
     private var scoreboard: Scoreboard = Scoreboard()
     var entityTeam: PlayerTeam = scoreboard.addPlayerTeam("qausar_${UUID.randomUUID()}")
     var entity: net.minecraft.world.entity.Entity? = null
     private var location: Location? = null
     private var viewers: MutableList<UUID> = mutableListOf()
+
+    override fun getUUID(): UUID = uuid
 
     override fun addViewer(player: Player) {
         viewers.add(player.uniqueId)
@@ -46,6 +54,8 @@ abstract class AbstractEntity(
 
         val craftWorld = location.world as CraftWorld
         val entity = getEntityClass(craftWorld.handle)
+
+        entity.uuid = uuid
 
         entity.setPos(location.x, location.y, location.z)
 
@@ -69,13 +79,6 @@ abstract class AbstractEntity(
         updateEntity()
     }
 
-    fun sendEntityMetaData() {
-        if (entity == null) return
-        val data = entity!!.entityData.packDirty() ?: return
-        val packet = ClientboundSetEntityDataPacket(entity!!.id, data)
-        sendPackets(packet)
-    }
-
     override fun kill() {
         entity?.let { sendPackets(ClientboundRemoveEntitiesPacket(it.id)) }
     }
@@ -94,6 +97,22 @@ abstract class AbstractEntity(
     fun sendPackets(vararg packet: Packet<*>) {
         for (viewer in viewers)
             Bukkit.getOfflinePlayer(viewer).player?.sendPackets(packet.toList())
+    }
+
+    fun sendEntityMetaData() {
+        if (entity == null) return
+        val data = entity!!.entityData.packDirty() ?: return
+        val packet = ClientboundSetEntityDataPacket(entity!!.id, data)
+        sendPackets(packet)
+    }
+
+    fun <T> getEntityDataAccessor(field: EntityDataAccessor<*>?, clazz: Class<*>, name: String): T? {
+        if (field != null) return field as T
+        if (entity == null) return null
+        return entity!!.getPrivateField(
+            clazz,
+            name
+        )
     }
 
     fun setLocation(location: Location) { this.location = location }

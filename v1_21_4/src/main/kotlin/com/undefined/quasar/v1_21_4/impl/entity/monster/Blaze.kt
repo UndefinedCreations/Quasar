@@ -15,15 +15,10 @@ class Blaze : LivingEntity(EntityType.BLAZE), Blaze {
     private var charged = false
 
     private var DATA_FLAGS_ID: EntityDataAccessor<Byte>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.monster.Blaze::class.java,
-                FieldMappings.Entity.LivingEntity.Mob.Monster.Blaze.DATA_FLAGS_ID
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.monster.Blaze::class.java,
+            FieldMappings.Entity.LivingEntity.Mob.Monster.Blaze.DATA_FLAGS_ID
+        )
 
     override fun isCharged(): Boolean = charged
 

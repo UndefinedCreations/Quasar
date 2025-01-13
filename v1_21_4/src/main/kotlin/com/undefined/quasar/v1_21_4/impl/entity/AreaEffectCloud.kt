@@ -18,25 +18,15 @@ class AreaEffectCloud : Entity(EntityType.AREA_EFFECT_CLOUD), AreaEffectCloud {
     private var radius = 3f
     private var color = Color.PURPLE
     private var DATA_RADIUS: EntityDataAccessor<Float>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.AreaEffectCloud::class.java,
-                FieldMappings.Entity.AreaEffectCloud.DATA_RADIUS
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.AreaEffectCloud::class.java,
+            FieldMappings.Entity.AreaEffectCloud.DATA_RADIUS
+        )
     private var DATA_PARTICLE: EntityDataAccessor<ParticleOptions>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.AreaEffectCloud::class.java,
-                FieldMappings.Entity.AreaEffectCloud.DATA_PARTICLE
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.AreaEffectCloud::class.java,
+            FieldMappings.Entity.AreaEffectCloud.DATA_PARTICLE
+        )
 
     override fun isInCloud(location: Location): Boolean = if (getLocation().distance(location) <= radius) true else false
 

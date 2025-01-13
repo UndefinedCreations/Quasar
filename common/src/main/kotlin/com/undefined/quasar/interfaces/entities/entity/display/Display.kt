@@ -29,31 +29,34 @@ interface Display : Entity {
     fun setRightRotation(w: Float, x: Float, y: Float, z: Float) = setRightRotation(Quaternionf(w,x,y,z))
     fun getRightRatation(): Quaternionf
 
-    fun setBrightness(brightness: Brightness)
+    fun setBrightness(brightness: Brightness?)
     fun getBrightness(): Brightness
 
     fun setViewRange(range: Float)
     fun setViewRange(range: Double) = setViewRange(range.toFloat())
-    fun getViewRange(): Double
+    fun getViewRange(): Float
 
     fun setShadowRadius(radius: Float)
     fun setShadowRadius(radius: Double) = setShadowRadius(radius.toFloat())
-    fun getShadowRadius(): Double
+    fun getShadowRadius(): Float
 
     fun setShadowStrength(strength: Float)
     fun setShadowStrength(strength: Double) = setShadowStrength(strength.toFloat())
-    fun getShadowStrength(): Double
+    fun getShadowStrength(): Float
 
     fun setWidth(width: Float)
     fun setWidth(width: Double) = setWidth(width.toFloat())
-    fun getWidth(): Double
+    fun getWidth(): Float
 
     fun setHeight(height: Float)
     fun setHeight(height: Double) = setHeight(height.toFloat())
-    fun getHeight(): Double
+    fun getHeight(): Float
 
     fun setGlowColorOverride(color: Color)
     fun getGlowColorOverride(): Color
+
+    fun setBillboardConstraints(billboardConstraints: BillboardConstraints)
+    fun getBillboardConstraints(): BillboardConstraints
 
     enum class BillboardConstraints(val id: Byte) {
         FIXED(0),
@@ -66,11 +69,15 @@ interface Display : Entity {
         fun pack(): Int {
             return this.block shl 4 or (this.sky shl 20)
         }
-        fun unpack(var0: Int): Brightness {
-            val var1 = var0 shr 4 and '\uffff'.code
-            val var2 = var0 shr 20 and '\uffff'.code
-            return Brightness(var1, var2)
+
+        companion object {
+            fun unpack(var0: Int): Brightness {
+                val var1 = var0 shr 4 and '\uffff'.code
+                val var2 = var0 shr 20 and '\uffff'.code
+                return Brightness(var1, var2)
+            }
         }
+
     }
 
 }

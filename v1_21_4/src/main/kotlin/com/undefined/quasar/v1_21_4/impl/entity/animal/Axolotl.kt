@@ -15,15 +15,10 @@ class Axolotl : LivingEntity(EntityType.AXOLOTL), Axolotl {
 
     private var variant = Axolotl.Variant.LUCY
     private var DATA_VARIANT: EntityDataAccessor<Int>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.animal.axolotl.Axolotl::class.java,
-                FieldMappings.Entity.LivingEntity.Mob.Animal.Axolotl.DATA_VARIANT
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.animal.axolotl.Axolotl::class.java,
+            FieldMappings.Entity.LivingEntity.Mob.Animal.Axolotl.DATA_VARIANT
+        )
 
     override fun setVariant(variant: Axolotl.Variant) {
         val entity = entity ?: return

@@ -27,55 +27,30 @@ abstract class Entity(
 ) : AbstractEntity(entityType), Entity {
 
     private var DATA_CUSTOM_NAME: EntityDataAccessor<Optional<Component>>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.Entity::class.java,
-                FieldMappings.Entity.Base.DATA_CUSTOM_NAME
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.Entity::class.java,
+            FieldMappings.Entity.Base.DATA_CUSTOM_NAME
+        )
     private var DATA_CUSTOM_NAME_VISIBLE: EntityDataAccessor<Boolean>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.Entity::class.java,
-                FieldMappings.Entity.Base.DATA_CUSTOM_NAME_VISIBLE
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.Entity::class.java,
+            FieldMappings.Entity.Base.DATA_CUSTOM_NAME_VISIBLE
+        )
     private var DATA_SILENT: EntityDataAccessor<Boolean>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.Entity::class.java,
-                FieldMappings.Entity.Base.DATA_SILENT
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.Entity::class.java,
+            FieldMappings.Entity.Base.DATA_SILENT
+        )
     private var DATA_NO_GRAVITY: EntityDataAccessor<Boolean>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.Entity::class.java,
-                FieldMappings.Entity.Base.DATA_NO_GRAVITY
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.Entity::class.java,
+            FieldMappings.Entity.Base.DATA_NO_GRAVITY
+        )
     private var DATA_TICKS_FROZEN: EntityDataAccessor<Int>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.Entity::class.java,
-                FieldMappings.Entity.Base.DATA_TICKS_FROZEN
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.Entity::class.java,
+            FieldMappings.Entity.Base.DATA_TICKS_FROZEN
+        )
 
     private var FLAG_ONFIRE = 0
     private var FLAG_INVISIBLE = 5

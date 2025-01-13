@@ -15,15 +15,10 @@ class Bat : LivingEntity(EntityType.BAT), Bat {
     private var resting = false
 
     private var DATA_ID_FLAGS: EntityDataAccessor<Byte>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.ambient.Bat::class.java,
-                FieldMappings.Entity.LivingEntity.Mob.AmbientCreature.Bat.DATA_ID_FLAGS
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.ambient.Bat::class.java,
+            FieldMappings.Entity.LivingEntity.Mob.AmbientCreature.Bat.DATA_ID_FLAGS
+        )
 
     override fun isResting(): Boolean = resting
 

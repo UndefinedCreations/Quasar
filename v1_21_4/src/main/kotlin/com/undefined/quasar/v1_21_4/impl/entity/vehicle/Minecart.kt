@@ -21,26 +21,20 @@ class Minecart : Minecart, Entity(EntityType.MINECART) {
     private var customDisplay = false
 
     private var DATA_ID_DISPLAY_BLOCK: EntityDataAccessor<Int>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(AbstractMinecart::class.java, FieldMappings.Entity.Vehicle.Minecart.DATA_ID_DISPLAY_BLOCK)
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            AbstractMinecart::class.java,
+            FieldMappings.Entity.Vehicle.Minecart.DATA_ID_DISPLAY_BLOCK
+        )
     private var DATA_ID_DISPLAY_OFFSET: EntityDataAccessor<Int>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(AbstractMinecart::class.java, FieldMappings.Entity.Vehicle.Minecart.DATA_ID_DISPLAY_OFFSET)
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            AbstractMinecart::class.java,
+            FieldMappings.Entity.Vehicle.Minecart.DATA_ID_DISPLAY_OFFSET
+        )
     private var DATA_ID_CUSTOM_DISPLAY: EntityDataAccessor<Boolean>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(AbstractMinecart::class.java, FieldMappings.Entity.Vehicle.Minecart.DATA_ID_CUSTOM_DISPLAY)
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            AbstractMinecart::class.java,
+            FieldMappings.Entity.Vehicle.Minecart.DATA_ID_CUSTOM_DISPLAY
+        )
 
     override fun setDisplayBlock(block: BlockData) {
         if (entity == null) return

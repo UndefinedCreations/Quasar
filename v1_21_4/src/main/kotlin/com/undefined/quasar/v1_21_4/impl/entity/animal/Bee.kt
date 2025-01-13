@@ -18,25 +18,19 @@ class Bee : LivingEntity(EntityType.BEE), Bee {
     private var rolling = false
 
     private var DATA_FLAGS_ID: EntityDataAccessor<Byte>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.animal.Bee::class.java,
-                FieldMappings.Entity.LivingEntity.Mob.Animal.Bee.DATA_FLAGS_ID
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.animal.Bee::class.java,
+            FieldMappings.Entity.LivingEntity.Mob.Animal.Bee.DATA_FLAGS_ID
+        )
     private var DATA_REMAINING_ANGER_TIME: EntityDataAccessor<Int>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.animal.Bee::class.java,
-                FieldMappings.Entity.LivingEntity.Mob.Animal.Bee.DATA_REMAINING_ANGER_TIME
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.animal.Bee::class.java,
+            FieldMappings.Entity.LivingEntity.Mob.Animal.Bee.DATA_REMAINING_ANGER_TIME
+        )
+
+    private val NECTOR_ID = 8
+    private val STUNG_ID = 4
+    private val ROLLING_ID = 2
 
     override fun isAngy(): Boolean = angy
 
@@ -52,7 +46,7 @@ class Bee : LivingEntity(EntityType.BEE), Bee {
     override fun setNector(nector: Boolean) {
         entity ?: return
         this.nector = nector
-        setFlag(8, nector)
+        setFlag(NECTOR_ID, nector)
         sendEntityMetaData()
     }
 
@@ -61,7 +55,7 @@ class Bee : LivingEntity(EntityType.BEE), Bee {
     override fun setHasStung(stung: Boolean) {
         entity ?: return
         this.stung = stung
-        setFlag(4, stung)
+        setFlag(STUNG_ID, stung)
         sendEntityMetaData()
     }
 
@@ -70,7 +64,7 @@ class Bee : LivingEntity(EntityType.BEE), Bee {
     override fun setRolling(rolling: Boolean) {
         entity ?: return
         this.rolling = rolling
-        setFlag(2, rolling)
+        setFlag(ROLLING_ID, rolling)
         sendEntityMetaData()
     }
 

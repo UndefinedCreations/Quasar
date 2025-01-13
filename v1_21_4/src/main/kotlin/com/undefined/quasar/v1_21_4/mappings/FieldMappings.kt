@@ -71,7 +71,7 @@ object FieldMappings {
         }
 
         object Display {
-
+            // net/minecraft/world/entity/Display.html
             const val DATA_TRANSFORMATION_INTERPOLATION_DURATION_ID = "q"
             const val DATA_POS_ROT_INTERPOLATION_DURATION_ID = "r"
             const val DATA_TRANSLATION_ID = "s"
@@ -86,6 +86,11 @@ object FieldMappings {
             const val DATA_WIDTH_ID = "aE"
             const val DATA_HEIGHT_ID = "aF"
             const val DATA_GLOW_COLOR_OVERRIDE_ID = "aG"
+
+            object BlockDisplay {
+                // net/minecraft/world/entity/Display$BlockDisplay.html
+                const val DATA_BLOCK_STATE_ID = "p"
+            }
 
         }
 

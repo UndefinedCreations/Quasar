@@ -14,15 +14,10 @@ import net.minecraft.world.level.Level
 class Armadillo : LivingEntity(EntityType.ARMADILLO), Armadillo {
     private var state = Armadillo.State.IDLE
     private var ARMADILLO_STATE: EntityDataAccessor<ArmadilloState>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.animal.armadillo.Armadillo::class.java,
-                FieldMappings.Entity.LivingEntity.Mob.Animal.Armadillo.ARMADILLO_STATE
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.animal.armadillo.Armadillo::class.java,
+            FieldMappings.Entity.LivingEntity.Mob.Animal.Armadillo.ARMADILLO_STATE
+        )
 
     override fun setState(state: Armadillo.State) {
         val entity = entity ?: return

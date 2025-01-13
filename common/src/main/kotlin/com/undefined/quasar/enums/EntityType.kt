@@ -8,6 +8,7 @@ import com.undefined.quasar.interfaces.entities.entity.animal.Armadillo
 import com.undefined.quasar.interfaces.entities.entity.animal.Axolotl
 import com.undefined.quasar.interfaces.entities.entity.animal.Bee
 import com.undefined.quasar.interfaces.entities.entity.decoration.ArmorStand
+import com.undefined.quasar.interfaces.entities.entity.display.BlockDisplay
 import com.undefined.quasar.interfaces.entities.entity.monster.Blaze
 import com.undefined.quasar.interfaces.entities.entity.projectile.Arrow
 import com.undefined.quasar.interfaces.entities.entity.vehicle.Minecart
@@ -23,6 +24,7 @@ enum class EntityType(val clazz: KClass<out Entity>) {
     BAT(Bat::class),
     BEE(Bee::class),
     BLAZE(Blaze::class),
+    BLOCK_DISPLAY(BlockDisplay::class),
     MINECART(Minecart::class)
 
 }

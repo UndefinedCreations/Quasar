@@ -6,10 +6,12 @@ import com.undefined.quasar.enums.EntityType
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.entity.Player
+import java.util.UUID
 
 interface Entity {
     val entityType: EntityType
 
+    fun getUUID(): UUID
     fun addViewer(player: Player)
     fun removeViewer(player: Player)
     fun hasViewer(player: Player): Boolean

@@ -18,75 +18,40 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
     private val CLIENT_FLAG_NO_BASEPLATE = 8
 
     private var DATA_CLIENT_FLAGS: EntityDataAccessor<Byte>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.decoration.ArmorStand::class.java,
-                FieldMappings.Entity.LivingEntity.ArmorStand.DATA_CLIENT_FLAGS
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.decoration.ArmorStand::class.java,
+            FieldMappings.Entity.LivingEntity.ArmorStand.DATA_CLIENT_FLAGS
+        )
     private var DATA_HEAD_POSE: EntityDataAccessor<Rotations>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.decoration.ArmorStand::class.java,
-                FieldMappings.Entity.LivingEntity.ArmorStand.DATA_HEAD_POSE
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.decoration.ArmorStand::class.java,
+            FieldMappings.Entity.LivingEntity.ArmorStand.DATA_HEAD_POSE
+        )
     private var DATA_BODY_POSE: EntityDataAccessor<Rotations>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.decoration.ArmorStand::class.java,
-                FieldMappings.Entity.LivingEntity.ArmorStand.DATA_BODY_POSE
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.decoration.ArmorStand::class.java,
+            FieldMappings.Entity.LivingEntity.ArmorStand.DATA_BODY_POSE
+        )
     private var DATA_LEFT_ARM_POSE: EntityDataAccessor<Rotations>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.decoration.ArmorStand::class.java,
-                FieldMappings.Entity.LivingEntity.ArmorStand.DATA_LEFT_ARM_POSE
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.decoration.ArmorStand::class.java,
+            FieldMappings.Entity.LivingEntity.ArmorStand.DATA_LEFT_ARM_POSE
+        )
     private var DATA_RIGHT_ARM_POSE: EntityDataAccessor<Rotations>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.decoration.ArmorStand::class.java,
-                FieldMappings.Entity.LivingEntity.ArmorStand.DATA_RIGHT_ARM_POSE
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.decoration.ArmorStand::class.java,
+            FieldMappings.Entity.LivingEntity.ArmorStand.DATA_RIGHT_ARM_POSE
+        )
     private var DATA_LEFT_LEG_POSE: EntityDataAccessor<Rotations>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.decoration.ArmorStand::class.java,
-                FieldMappings.Entity.LivingEntity.ArmorStand.DATA_LEFT_LEG_POSE
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.decoration.ArmorStand::class.java,
+            FieldMappings.Entity.LivingEntity.ArmorStand.DATA_LEFT_LEG_POSE
+        )
     private var DATA_RIGHT_LEG_POSE: EntityDataAccessor<Rotations>? = null
-        get() {
-            if (field != null) return field
-            if (entity == null) return null
-            field = entity!!.getPrivateField(
-                net.minecraft.world.entity.decoration.ArmorStand::class.java,
-                FieldMappings.Entity.LivingEntity.ArmorStand.DATA_RIGHT_LEG_POSE
-            )
-            return field
-        }
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.decoration.ArmorStand::class.java,
+            FieldMappings.Entity.LivingEntity.ArmorStand.DATA_RIGHT_LEG_POSE
+        )
 
     private var small = false
     private var basePlate = false

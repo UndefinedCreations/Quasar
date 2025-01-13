@@ -1,5 +1,7 @@
 package com.undefined.quasar.util
 
+import com.google.gson.JsonObject
+
 class Vector(
     var x: Double,
     var y: Double,
@@ -42,6 +44,19 @@ class Vector(
         this.z *= vector.z
     }
 
-
     fun clone(): Vector = Vector(x, y, z)
+
+    fun json(): JsonObject = JsonObject().apply {
+        addProperty("x", x)
+        addProperty("y", y)
+        addProperty("z", z)
+    }
+
+    companion object {
+        fun deserialize(jsonObject: JsonObject): Vector = jsonObject.run { Vector(
+            jsonObject["x"].asDouble,
+            jsonObject["y"].asDouble,
+            jsonObject["z"].asDouble
+        ) }
+    }
 }
