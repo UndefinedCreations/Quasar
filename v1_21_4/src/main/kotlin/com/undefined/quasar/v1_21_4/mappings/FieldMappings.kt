@@ -70,6 +70,25 @@ object FieldMappings {
             }
         }
 
+        object Display {
+
+            const val DATA_TRANSFORMATION_INTERPOLATION_DURATION_ID = "q"
+            const val DATA_POS_ROT_INTERPOLATION_DURATION_ID = "r"
+            const val DATA_TRANSLATION_ID = "s"
+            const val DATA_SCALE_ID = "t"
+            const val DATA_LEFT_ROTATION_ID = "u"
+            const val DATA_RIGHT_ROTATION_ID = "ay"
+            const val DATA_BILLBOARD_RENDER_CONSTRAINTS_ID = "az"
+            const val DATA_BRIGHTNESS_OVERRIDE_ID = "aA"
+            const val DATA_VIEW_RANGE_ID = "aB"
+            const val DATA_SHADOW_RADIUS_ID = "aC"
+            const val DATA_SHADOW_STRENGTH_ID = "aD"
+            const val DATA_WIDTH_ID = "aE"
+            const val DATA_HEIGHT_ID = "aF"
+            const val DATA_GLOW_COLOR_OVERRIDE_ID = "aG"
+
+        }
+
         object AreaEffectCloud {
             // net/minecraft/world/entity/AreaEffectCloud.html
             const val DATA_RADIUS = "e"
