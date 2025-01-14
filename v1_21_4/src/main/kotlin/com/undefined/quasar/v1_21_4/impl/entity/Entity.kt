@@ -68,24 +68,21 @@ abstract class Entity(
     private var glowingColor: ChatColor = ChatColor.WHITE
     private var passengers: MutableList<Entity> = mutableListOf()
 
-    override fun setCustomName(name: String?) {
-        val entity = entity ?: return
-        customName = name
-        entity.entityData.set(DATA_CUSTOM_NAME, Optional.ofNullable(CraftChatMessage.fromStringOrNull(name)))
-        sendEntityMetaData()
-    }
+    override fun setCustomName(name: String?) =
+        setEntityDataAccessor(DATA_CUSTOM_NAME, Optional.ofNullable(CraftChatMessage.fromStringOrNull(name))) {
+            customName = name
+        }
 
     override fun getCustomName(): String? = customName
 
     override fun isCustomNameVisible(): Boolean = isCustomNameVisible
 
-    override fun setCustomNameVisibility(visible: Boolean) {
-        val entity = entity ?: return
-        if (!visible) setCustomName(null)
-        isCustomNameVisible = visible
-        entity.entityData.set(DATA_CUSTOM_NAME_VISIBLE, visible)
-        sendEntityMetaData()
-    }
+    override fun setCustomNameVisibility(visible: Boolean) =
+        setEntityDataAccessor(DATA_CUSTOM_NAME_VISIBLE, visible) {
+            if (!visible) setCustomName(null)
+            isCustomNameVisible = visible
+        }
+
 
     override fun teleport(location: Location) {
         val entity = entity ?: return
@@ -133,31 +130,24 @@ abstract class Entity(
         setLocation(location)
     }
 
-    override fun setVisualFire(fire: Boolean) {
-        val entity = entity ?: return
-        this.fire = fire
-        entity.setSharedFlag(FLAG_ONFIRE, fire)
-        sendEntityMetaData()
-    }
+    override fun setVisualFire(fire: Boolean) =
+        setSharedFlag(FLAG_ONFIRE, fire) {
+            this.fire = fire
+        }
 
     override fun isVisualFire(): Boolean = fire
 
-    override fun setVisualFreezing(freezing: Boolean) {
-        val entity = entity ?: return
-        this.freezing = freezing
-        if (freezing) entity.entityData.set(DATA_TICKS_FROZEN, Int.MAX_VALUE) else entity.entityData.set(DATA_TICKS_FROZEN, 0)
-        entity.isInPowderSnow = freezing
-        sendEntityMetaData()
-    }
+    override fun setVisualFreezing(freezing: Boolean) =
+        setEntityDataAccessor(DATA_TICKS_FROZEN, if(freezing) Int.MAX_VALUE else -1) {
+            this.freezing = freezing
+        }
 
     override fun isFreezing(): Boolean = freezing
 
-    override fun setVisible(visible: Boolean) {
-        val entity = entity ?: return
-        this.visible = visible
-        entity.setSharedFlag(FLAG_INVISIBLE, !visible)
-        sendEntityMetaData()
-    }
+    override fun setVisible(visible: Boolean) =
+        setSharedFlag(FLAG_INVISIBLE, !visible) {
+            this.visible = visible
+        }
 
     override fun isVisible(): Boolean = visible
 
@@ -226,12 +216,10 @@ abstract class Entity(
 
     override fun getPassengers(): List<Entity> = passengers
 
-    override fun setGlowing(glow: Boolean) {
-        val entity = entity ?: return
-        this.glowing = glow
-        entity.setSharedFlag(FLAG_GLOWING, glow)
-        sendEntityMetaData()
-    }
+    override fun setGlowing(glow: Boolean) =
+        setSharedFlag(FLAG_GLOWING, glow) {
+            this.glowing = glow
+        }
 
     override fun setGlowingColor(chatColor: ChatColor) {
         entity ?: return
@@ -246,21 +234,17 @@ abstract class Entity(
 
     override fun isGlowing(): Boolean = glowing
 
-    override fun setGravity(gravity: Boolean) {
-        val entity = entity ?: return
-        this.gravity = gravity
-        entity.entityData.set(DATA_NO_GRAVITY, !gravity)
-        sendEntityMetaData()
-    }
+    override fun setGravity(gravity: Boolean) =
+        setEntityDataAccessor(DATA_NO_GRAVITY, !gravity) {
+            this.gravity = gravity
+        }
 
     override fun hasGravity(): Boolean = gravity
 
-    override fun setSilent(silent: Boolean) {
-        val entity = entity ?: return
-        this.silent = silent
-        entity.entityData.set(DATA_SILENT, silent)
-        sendEntityMetaData()
-    }
+    override fun setSilent(silent: Boolean) =
+        setEntityDataAccessor(DATA_SILENT, silent) {
+            this.silent = silent
+        }
 
     override fun isSilent(): Boolean = silent
 

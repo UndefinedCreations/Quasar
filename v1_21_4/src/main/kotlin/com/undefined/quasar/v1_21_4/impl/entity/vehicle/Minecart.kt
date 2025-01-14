@@ -36,24 +36,17 @@ class Minecart : Minecart, Entity(EntityType.MINECART) {
             FieldMappings.Entity.Vehicle.Minecart.DATA_ID_CUSTOM_DISPLAY
         )
 
-    override fun setDisplayBlock(block: BlockData) {
-        if (entity == null) return
-        entity!!.entityData.set(DATA_ID_DISPLAY_BLOCK, BlockDataUtil.getID(block))
-        this.displayBlock = block
-        setCustomDisplay(true)
-    }
+    override fun setDisplayBlock(block: BlockData) =
+        setEntityDataAccessor(DATA_ID_DISPLAY_BLOCK, BlockDataUtil.getID(block)) {
+            this.displayBlock = block
+            setCustomDisplay(true)
+        }
 
-    override fun setDisplayBlockOffset(offset: Int) {
-        entity!!.entityData.set(DATA_ID_DISPLAY_OFFSET, offset)
-        this.displayBlockOffset = offset
-        setCustomDisplay(true)
-    }
+    override fun setDisplayBlockOffset(offset: Int) =
+        setEntityDataAccessor(DATA_ID_DISPLAY_OFFSET, offset) { this.displayBlockOffset = offset }
 
-    override fun setCustomDisplay(customDisplay: Boolean) {
-        entity!!.entityData.set(DATA_ID_CUSTOM_DISPLAY, customDisplay)
-        this.customDisplay = customDisplay
-        sendEntityMetaData()
-    }
+    override fun setCustomDisplay(customDisplay: Boolean) =
+        setEntityDataAccessor(DATA_ID_CUSTOM_DISPLAY, customDisplay) { this.customDisplay = customDisplay }
 
     override fun getCustomDisplay(): Boolean = customDisplay
 

@@ -115,6 +115,20 @@ abstract class AbstractEntity(
         )
     }
 
+    fun <T> setEntityDataAccessor(accessor: EntityDataAccessor<T>?, data: T?, runnable: (Unit) -> Unit) {
+        if (entity == null) return
+        entity!!.entityData.set(accessor, data)
+        sendEntityMetaData()
+        runnable(Unit)
+    }
+
+    fun setSharedFlag(flag: Int, boolean: Boolean, runnable: (Unit) -> Unit) {
+        if (entity == null) return
+        entity!!.setSharedFlag(flag, boolean)
+        sendEntityMetaData()
+        runnable(Unit)
+    }
+
     fun setLocation(location: Location) { this.location = location }
 
     fun getTestMessage(entity: KClass<*>, infoText: String, vararg data: Any): String =

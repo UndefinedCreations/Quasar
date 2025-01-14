@@ -25,12 +25,10 @@ class BlockDisplay : Display(EntityType.BLOCK_DISPLAY), BlockDisplay {
             FieldMappings.Entity.Display.BlockDisplay.DATA_BLOCK_STATE_ID
         )
 
-    override fun setBlock(blockData: BlockData) {
-        val entity = entity ?: return
-        this.blockData = blockData
-        entity.entityData.set(DATA_BLOCK_STATE_ID, (blockData as CraftBlockData).state)
-        sendEntityMetaData()
-    }
+    override fun setBlock(blockData: BlockData) =
+        setEntityDataAccessor(DATA_BLOCK_STATE_ID, (blockData as CraftBlockData).state) {
+            this.blockData = blockData
+        }
 
     override fun getBlock(): BlockData = blockData
 

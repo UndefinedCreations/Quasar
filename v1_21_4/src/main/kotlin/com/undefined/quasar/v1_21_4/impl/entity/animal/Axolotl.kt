@@ -20,12 +20,10 @@ class Axolotl : LivingEntity(EntityType.AXOLOTL), Axolotl {
             FieldMappings.Entity.LivingEntity.Mob.Animal.Axolotl.DATA_VARIANT
         )
 
-    override fun setVariant(variant: Axolotl.Variant) {
-        val entity = entity ?: return
-        this.variant = variant
-        entity.entityData.set(DATA_VARIANT, variant.id)
-        sendEntityMetaData()
-    }
+    override fun setVariant(variant: Axolotl.Variant) =
+         setEntityDataAccessor(DATA_VARIANT, variant.id) {
+             this.variant = variant
+         }
 
     override fun getVariant(): Axolotl.Variant = variant
 

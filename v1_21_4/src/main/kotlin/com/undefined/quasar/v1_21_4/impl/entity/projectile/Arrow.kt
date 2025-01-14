@@ -22,12 +22,10 @@ class Arrow : Entity(EntityType.ARROW), Arrow {
 
     override fun getEffectColor(): Color? = color
 
-    override fun setEffectColor(color: Color?) {
-        val entity = entity ?: return
-        this.color = color
-        entity.entityData.set(ID_EFFECT_COLOR, color?.asARGB() ?: -1)
-        sendEntityMetaData()
-    }
+    override fun setEffectColor(color: Color?) =
+        setEntityDataAccessor(ID_EFFECT_COLOR, color?.asARGB() ?: -1) {
+            this.color = color
+        }
 
     override fun getEntityData(): JsonObject {
         val projectileJson = super.getEntityData()

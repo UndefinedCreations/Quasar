@@ -19,12 +19,10 @@ class Armadillo : LivingEntity(EntityType.ARMADILLO), Armadillo {
             FieldMappings.Entity.LivingEntity.Mob.Animal.Armadillo.ARMADILLO_STATE
         )
 
-    override fun setState(state: Armadillo.State) {
-        val entity = entity ?: return
-        this.state = state
-        entity.entityData.set(ARMADILLO_STATE, getNMSState())
-        sendEntityMetaData()
-    }
+    override fun setState(state: Armadillo.State) =
+        setEntityDataAccessor(ARMADILLO_STATE, getNMSState()) {
+            this.state = state
+        }
 
     override fun getState(): Armadillo.State = state
 

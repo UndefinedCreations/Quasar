@@ -30,29 +30,20 @@ class AreaEffectCloud : Entity(EntityType.AREA_EFFECT_CLOUD), AreaEffectCloud {
 
     override fun isInCloud(location: Location): Boolean = if (getLocation().distance(location) <= radius) true else false
 
-    override fun setParticleColor(color: Color) {
-        val entity = entity ?: return
-        this.color = color
-        entity.entityData.set(DATA_PARTICLE,
+    override fun setParticleColor(color: Color) =
+        setEntityDataAccessor(DATA_PARTICLE,
             ColorParticleOption.create(
                 ParticleTypes.ENTITY_EFFECT, color.red.toFloat(), color.green.toFloat(), color.blue.toFloat()
-            )
-        )
-        sendEntityMetaData()
-    }
+            )) { this.color = color }
 
     override fun getParticleColor(): Color? = color
 
     override fun getRadius(): Float = radius
 
-    override fun setRadius(float: Float) {
-        val entity = entity ?: return
-        this.radius = float
-        entity.entityData.set(DATA_RADIUS,
-            float
-        )
-        sendEntityMetaData()
-    }
+    override fun setRadius(float: Float) =
+        setEntityDataAccessor(DATA_RADIUS, float) {
+            this.radius = float
+        }
 
     override fun getEntityData(): JsonObject {
         val entityJson = super.getEntityData()

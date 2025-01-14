@@ -111,57 +111,45 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
 
     override fun getHeadRotation(): ArmorStand.Rotations = headRotation
 
-    override fun setHeadRotation(rotations: ArmorStand.Rotations) {
-        val entity = entity ?: return
-        headRotation.set(rotations)
-        entity.entityData.set(DATA_HEAD_POSE, rotations.toNMSRotations())
-        sendEntityMetaData()
-    }
+    override fun setHeadRotation(rotations: ArmorStand.Rotations) =
+        setEntityDataAccessor(DATA_HEAD_POSE, rotations.toNMSRotations()) {
+            this.headRotation = rotations
+        }
 
     override fun getBodyRotation(): ArmorStand.Rotations = bodyRotation
 
-    override fun setBodyRotation(rotations: ArmorStand.Rotations) {
-        val entity = entity ?: return
-        bodyRotation.set(rotations)
-        entity.entityData.set(DATA_BODY_POSE, rotations.toNMSRotations())
-        sendEntityMetaData()
-    }
+    override fun setBodyRotation(rotations: ArmorStand.Rotations) =
+        setEntityDataAccessor(DATA_BODY_POSE, rotations.toNMSRotations()) {
+            this.bodyRotation = rotations
+        }
 
     override fun getLeftArmRotation(): ArmorStand.Rotations = leftArmRotation
 
-    override fun setLeftArmRotation(rotations: ArmorStand.Rotations) {
-        val entity = entity ?: return
-        leftArmRotation.set(rotations)
-        entity.entityData.set(DATA_LEFT_ARM_POSE, rotations.toNMSRotations())
-        sendEntityMetaData()
-    }
+    override fun setLeftArmRotation(rotations: ArmorStand.Rotations) =
+        setEntityDataAccessor(DATA_LEFT_ARM_POSE, rotations.toNMSRotations()) {
+            this.leftArmRotation = rotations
+        }
 
     override fun getRightArmRotation(): ArmorStand.Rotations = rightArmRotation
 
-    override fun setRightArmRotation(rotations: ArmorStand.Rotations) {
-        val entity = entity ?: return
-        rightArmRotation.set(rotations)
-        entity.entityData.set(DATA_RIGHT_ARM_POSE, rotations.toNMSRotations())
-        sendEntityMetaData()
-    }
+    override fun setRightArmRotation(rotations: ArmorStand.Rotations) =
+        setEntityDataAccessor(DATA_RIGHT_ARM_POSE, rotations.toNMSRotations()) {
+            this.rightArmRotation = rotations
+        }
 
     override fun getLeftLegRotation(): ArmorStand.Rotations = leftLegRotation
 
-    override fun setLeftLegRotation(rotations: ArmorStand.Rotations) {
-        val entity = entity ?: return
-        leftLegRotation.set(rotations)
-        entity.entityData.set(DATA_LEFT_LEG_POSE, rotations.toNMSRotations())
-        sendEntityMetaData()
-    }
+    override fun setLeftLegRotation(rotations: ArmorStand.Rotations) =
+        setEntityDataAccessor(DATA_LEFT_LEG_POSE, rotations.toNMSRotations()) {
+            this.leftLegRotation = rotations
+        }
 
     override fun getRightLegRotation(): ArmorStand.Rotations = rightLegRotation
 
-    override fun setRightLegRotation(rotations: ArmorStand.Rotations) {
-        val entity = entity ?: return
-        rightLegRotation.set(rotations)
-        entity.entityData.set(DATA_RIGHT_LEG_POSE, rotations.toNMSRotations())
-        sendEntityMetaData()
-    }
+    override fun setRightLegRotation(rotations: ArmorStand.Rotations) =
+        setEntityDataAccessor(DATA_RIGHT_LEG_POSE, rotations.toNMSRotations()) {
+            this.rightLegRotation = rotations
+        }
 
     override fun getEntityData(): JsonObject {
         val json = super.getEntityData()

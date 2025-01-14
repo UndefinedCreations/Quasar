@@ -100,128 +100,101 @@ abstract class Display(entityType: EntityType) : Entity(entityType), Display {
             FieldMappings.Entity.Display.DATA_GLOW_COLOR_OVERRIDE_ID
         )
 
-    override fun setInterpolationDurtation(duration: Int) {
-        val entity = entity ?: return
-        this.interpolationDuration = duration
-        entity.entityData.set(DATA_TRANSFORMATION_INTERPOLATION_DURATION_ID, duration)
-        sendEntityMetaData()
-    }
+    override fun setInterpolationDurtation(duration: Int) =
+        setEntityDataAccessor(DATA_TRANSFORMATION_INTERPOLATION_DURATION_ID, duration) {
+            this.interpolationDuration = duration
+        }
 
     override fun getInterpolationDuration(): Int = interpolationDuration
 
-    override fun setRotationInterpolationDurtation(duration: Int) {
-        val entity = entity ?: return
-        this.rotationInterpolationDuration = duration
-        entity.entityData.set(DATA_POS_ROT_INTERPOLATION_DURATION_ID, duration)
-        sendEntityMetaData()
-    }
+    override fun setRotationInterpolationDurtation(duration: Int) =
+        setEntityDataAccessor(DATA_POS_ROT_INTERPOLATION_DURATION_ID, duration) {
+            this.rotationInterpolationDuration = duration
+        }
 
     override fun getRotationInterpolationDuration(): Int = rotationInterpolationDuration
 
-    override fun setTranslation(vector: Vector) {
-        val entity = entity ?: return
-        this.translation = vector
-        entity.entityData.set(DATA_TRANSLATION_ID, vector.toNMS())
-        sendEntityMetaData()
-    }
+    override fun setTranslation(vector: Vector) =
+        setEntityDataAccessor(DATA_TRANSLATION_ID, vector.toNMS()) {
+            this.translation = vector
+        }
 
     override fun getTranslation(): Vector = translation
 
-    override fun setScale(vector: Vector) {
-        val entity = entity ?: return
-        this.scale = vector
-        entity.entityData.set(DATA_SCALE_ID, vector.toNMS())
-        sendEntityMetaData()
-    }
+    override fun setScale(vector: Vector) =
+        setEntityDataAccessor(DATA_SCALE_ID, vector.toNMS()) {
+            this.scale = vector
+        }
 
     override fun getScale(): Vector = scale
 
-    override fun setLeftRotation(rotation: Quaternionf) {
-        val entity = entity ?: return
-        this.leftRotation = rotation
-        entity.entityData.set(DATA_LEFT_ROTATION_ID, rotation)
-        sendEntityMetaData()
-    }
+    override fun setLeftRotation(rotation: Quaternionf) =
+        setEntityDataAccessor(DATA_LEFT_ROTATION_ID, rotation) {
+            this.leftRotation = rotation
+        }
 
     override fun getLeftRatation(): Quaternionf = leftRotation
 
-    override fun setRightRotation(rotation: Quaternionf) {
-        val entity = entity ?: return
-        this.rightRotation = rotation
-        entity.entityData.set(DATA_RIGHT_ROTATION_ID, rotation)
-        sendEntityMetaData()
-    }
+    override fun setRightRotation(rotation: Quaternionf) =
+        setEntityDataAccessor(DATA_RIGHT_ROTATION_ID, rotation) {
+            this.rightRotation = rotation
+        }
 
     override fun getRightRatation(): Quaternionf = rightRotation
 
-    override fun setBrightness(brightness: Display.Brightness?) {
-        val entity = entity ?: return
-        this.brightness = brightness ?: Display.Brightness(-1, -1)
-        entity.entityData.set(DATA_BRIGHTNESS_OVERRIDE_ID, brightness?.pack() ?: -1)
-        sendEntityMetaData()
-    }
+    override fun setBrightness(brightness: Display.Brightness?) =
+        setEntityDataAccessor(DATA_BRIGHTNESS_OVERRIDE_ID, brightness?.pack() ?: -1) {
+            this.brightness = brightness ?: Display.Brightness(-1, -1)
+        }
 
     override fun getBrightness(): Display.Brightness = brightness
 
-    override fun setViewRange(range: Float) {
-        val entity = entity ?: return
-        this.viewRange = range
-        entity.entityData.set(DATA_VIEW_RANGE_ID, range)
-        sendEntityMetaData()
-    }
+    override fun setViewRange(range: Float) =
+        setEntityDataAccessor(DATA_VIEW_RANGE_ID, range) {
+            this.viewRange = range
+        }
 
     override fun getViewRange(): Float = viewRange
 
-    override fun setShadowRadius(radius: Float) {
-        val entity = entity ?: return
-        this.shadowRadius = radius
-        entity.entityData.set(DATA_SHADOW_RADIUS_ID, radius)
-        sendEntityMetaData()
-    }
+    override fun setShadowRadius(radius: Float) =
+        setEntityDataAccessor(DATA_SHADOW_RADIUS_ID, radius) {
+            this.shadowRadius = radius
+        }
 
     override fun getShadowRadius(): Float = shadowRadius
 
-    override fun setShadowStrength(strength: Float) {
-        val entity = entity ?: return
-        this.shadowStrength = strength
-        entity.entityData.set(DATA_SHADOW_STRENGTH_ID, strength)
-        sendEntityMetaData()
-    }
+    override fun setShadowStrength(strength: Float) =
+        setEntityDataAccessor(DATA_SHADOW_STRENGTH_ID, strength) {
+            this.shadowStrength = strength
+        }
 
     override fun getShadowStrength(): Float = shadowStrength
 
-    override fun setWidth(width: Float) {
-        val entity = entity ?: return
-        this.width = width
-        entity.entityData.set(DATA_WIDTH_ID, width)
-        sendEntityMetaData()
-    }
+    override fun setWidth(width: Float) =
+        setEntityDataAccessor(DATA_WIDTH_ID, width) {
+            this.width = width
+        }
 
     override fun getWidth(): Float = width
 
-    override fun setHeight(height: Float) {
-        val entity = entity ?: return
-        this.height = height
-        entity.entityData.set(DATA_HEIGHT_ID, height)
-        sendEntityMetaData()
-    }
+    override fun setHeight(height: Float) =
+        setEntityDataAccessor(DATA_HEIGHT_ID, height) {
+            this.height = height
+        }
 
     override fun getHeight(): Float = height
 
-    override fun setGlowColorOverride(color: Color) {
-        val entity = entity ?: return
-        this.colorOverride = color
-        entity.entityData.set(DATA_GLOW_COLOR_OVERRIDE_ID, color.asARGB())
-    }
+    override fun setGlowColorOverride(color: Color) =
+        setEntityDataAccessor(DATA_GLOW_COLOR_OVERRIDE_ID, color.asARGB()) {
+            this.colorOverride = color
+        }
 
     override fun getGlowColorOverride(): Color = colorOverride
 
-    override fun setBillboardConstraints(billboardConstraints: Display.BillboardConstraints) {
-        val entity = entity ?: return
-        this.billboardConstraints = billboardConstraints
-        entity.entityData.set(DATA_BILLBOARD_RENDER_CONSTRAINTS_ID, billboardConstraints.id)
-        sendEntityMetaData()
-    }
+    override fun setBillboardConstraints(billboardConstraints: Display.BillboardConstraints) =
+        setEntityDataAccessor(DATA_BILLBOARD_RENDER_CONSTRAINTS_ID, billboardConstraints.id) {
+            this.billboardConstraints = billboardConstraints
+        }
 
     override fun getBillboardConstraints(): Display.BillboardConstraints = billboardConstraints
 

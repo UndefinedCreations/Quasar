@@ -3,7 +3,6 @@ package com.undefined.quasar.v1_21_4.impl.entity.animal
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.entities.entity.animal.Bee
-import com.undefined.quasar.util.getPrivateField
 import com.undefined.quasar.v1_21_4.impl.entity.LivingEntity
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import net.minecraft.network.syncher.EntityDataAccessor
@@ -34,44 +33,36 @@ class Bee : LivingEntity(EntityType.BEE), Bee {
 
     override fun isAngy(): Boolean = angy
 
-    override fun setAngy(angy: Boolean) {
-        val entity = entity ?: return
-        this.angy = angy
-        entity.entityData.set(DATA_REMAINING_ANGER_TIME, if (angy) Int.MAX_VALUE else -1)
-        sendEntityMetaData()
-    }
+    override fun setAngy(angy: Boolean) =
+        setEntityDataAccessor(DATA_REMAINING_ANGER_TIME, if (angy) Int.MAX_VALUE else -1) {
+            this.angy = angy
+        }
 
     override fun hasNector(): Boolean = nector
 
-    override fun setNector(nector: Boolean) {
-        entity ?: return
-        this.nector = nector
-        setFlag(NECTOR_ID, nector)
-        sendEntityMetaData()
-    }
+    override fun setNector(nector: Boolean) =
+        setSharedFlag(NECTOR_ID, nector) {
+            this.nector = nector
+        }
 
     override fun hasStung(): Boolean = stung
 
-    override fun setHasStung(stung: Boolean) {
-        entity ?: return
-        this.stung = stung
-        setFlag(STUNG_ID, stung)
-        sendEntityMetaData()
-    }
+    override fun setHasStung(stung: Boolean) =
+        setFlag(STUNG_ID, stung) {
+            this.stung = stung
+        }
 
     override fun isRolling(): Boolean = rolling
 
-    override fun setRolling(rolling: Boolean) {
-        entity ?: return
-        this.rolling = rolling
-        setFlag(ROLLING_ID, rolling)
-        sendEntityMetaData()
-    }
+    override fun setRolling(rolling: Boolean) =
+        setFlag(ROLLING_ID, rolling) {
+            this.rolling = rolling
+        }
 
-    private fun setFlag(i: Int, flag: Boolean) {
+    private fun setFlag(i: Int, flag: Boolean, runnable: (Unit) -> Unit) {
         val entity = entity ?: return
         if (flag) {
-            entity.entityData.set<Byte>(
+            entity.entityData.set(
                 DATA_FLAGS_ID, ((entity.entityData.get(DATA_FLAGS_ID) as Byte).toInt() or i).toByte()
             )
         } else {
@@ -79,6 +70,8 @@ class Bee : LivingEntity(EntityType.BEE), Bee {
                 DATA_FLAGS_ID, ((entity.entityData.get(DATA_FLAGS_ID) as Byte).toInt() and i.inv()).toByte()
             )
         }
+        sendEntityMetaData()
+        runnable(Unit)
     }
 
     override fun getEntityData(): JsonObject {
