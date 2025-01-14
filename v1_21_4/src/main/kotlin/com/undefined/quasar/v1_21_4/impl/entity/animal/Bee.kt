@@ -3,13 +3,13 @@ package com.undefined.quasar.v1_21_4.impl.entity.animal
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.entities.entity.animal.Bee
-import com.undefined.quasar.v1_21_4.impl.entity.LivingEntity
+import com.undefined.quasar.v1_21_4.impl.entity.Animal
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 
-class Bee : LivingEntity(EntityType.BEE), Bee {
+class Bee : Animal(EntityType.BEE), Bee {
 
     private var angy = false
     private var nector = false
@@ -86,7 +86,7 @@ class Bee : LivingEntity(EntityType.BEE), Bee {
     }
 
     override fun setEntityData(jsonObject: JsonObject) {
-        super<LivingEntity>.setEntityData(jsonObject)
+        super<Animal>.setEntityData(jsonObject)
         val beeJson = jsonObject["bee"].asJsonObject
         angy = beeJson["angy"].asBoolean
         nector = beeJson["nector"].asBoolean

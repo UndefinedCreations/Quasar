@@ -3,7 +3,6 @@ package com.undefined.quasar.v1_21_4.impl.entity.projectile
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.entities.entity.projectile.Arrow
-import com.undefined.quasar.util.getPrivateField
 import com.undefined.quasar.v1_21_4.impl.entity.Entity
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import net.minecraft.network.syncher.EntityDataAccessor

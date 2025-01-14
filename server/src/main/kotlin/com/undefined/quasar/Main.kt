@@ -101,7 +101,7 @@ class Main : JavaPlugin() {
             time,
             {
                 logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | ERROR ${ChatColor.RED} Tests failed! ${ChatColor.GRAY}[${ChatColor.AQUA}${it::class.java.simpleName}${ChatColor.GRAY}] Check console for more.")
-                Bukkit.getLogger().log(Level.SEVERE, it.message.toString())
+                Bukkit.getLogger().log(Level.SEVERE, it.stackTraceToString())
             }, {
                 finishTest(logger, entity)
             },

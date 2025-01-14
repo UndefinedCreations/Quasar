@@ -5,7 +5,6 @@ import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
 import com.undefined.quasar.util.getPrivateField
 import com.undefined.quasar.util.repeat
-import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import com.undefined.quasar.v1_21_4.util.sendPackets
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
@@ -21,7 +20,6 @@ import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_21_R3.CraftWorld
 import org.bukkit.entity.Player
-import java.lang.reflect.Field
 import java.util.*
 import kotlin.reflect.KClass
 

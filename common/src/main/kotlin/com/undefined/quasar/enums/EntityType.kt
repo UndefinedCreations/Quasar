@@ -7,10 +7,14 @@ import com.undefined.quasar.interfaces.entities.entity.animal.Allay
 import com.undefined.quasar.interfaces.entities.entity.animal.Armadillo
 import com.undefined.quasar.interfaces.entities.entity.animal.Axolotl
 import com.undefined.quasar.interfaces.entities.entity.animal.Bee
+import com.undefined.quasar.interfaces.entities.entity.animal.camel.Camel
 import com.undefined.quasar.interfaces.entities.entity.decoration.ArmorStand
 import com.undefined.quasar.interfaces.entities.entity.display.BlockDisplay
 import com.undefined.quasar.interfaces.entities.entity.monster.Blaze
+import com.undefined.quasar.interfaces.entities.entity.monster.Bogged
+import com.undefined.quasar.interfaces.entities.entity.monster.Breeze
 import com.undefined.quasar.interfaces.entities.entity.projectile.Arrow
+import com.undefined.quasar.interfaces.entities.entity.projectile.BreezeWindCharge
 import com.undefined.quasar.interfaces.entities.entity.vehicle.Minecart
 import kotlin.reflect.KClass
 
@@ -25,6 +29,10 @@ enum class EntityType(val clazz: KClass<out Entity>) {
     BEE(Bee::class),
     BLAZE(Blaze::class),
     BLOCK_DISPLAY(BlockDisplay::class),
+    BOGGED(Bogged::class),
+    BREEZE(Breeze::class),
+    BREEZE_WIND_CHARGE(BreezeWindCharge::class),
+    CAMEL(Camel::class),
     MINECART(Minecart::class)
 
 }

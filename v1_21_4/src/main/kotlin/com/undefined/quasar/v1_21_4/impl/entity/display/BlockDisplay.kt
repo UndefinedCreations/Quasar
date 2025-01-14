@@ -2,7 +2,6 @@ package com.undefined.quasar.v1_21_4.impl.entity.display
 
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
-import com.undefined.quasar.interfaces.LivingEntity
 import com.undefined.quasar.interfaces.entities.entity.display.BlockDisplay
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import com.undefined.quasar.v1_21_4.util.BlockDataUtil
@@ -12,7 +11,6 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import org.bukkit.Material
 import org.bukkit.block.data.BlockData
-import org.bukkit.craftbukkit.v1_21_R3.block.CraftBlockState
 import org.bukkit.craftbukkit.v1_21_R3.block.data.CraftBlockData
 
 class BlockDisplay : Display(EntityType.BLOCK_DISPLAY), BlockDisplay {

@@ -4,6 +4,11 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
 interface LivingEntity : Entity {
+
+    fun useItem(offhand: Boolean)
+    fun stopUsingItem()
+    fun isUsingItem(offhand: Boolean): Boolean
+
     fun deathAnimation()
     fun damageAnimation()
 

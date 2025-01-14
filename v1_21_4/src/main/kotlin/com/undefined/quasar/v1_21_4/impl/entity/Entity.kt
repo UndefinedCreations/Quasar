@@ -5,7 +5,6 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
-import com.undefined.quasar.util.getPrivateField
 import com.undefined.quasar.util.getPrivateMethod
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import com.undefined.quasar.v1_21_4.mappings.MethodMappings
@@ -13,6 +12,7 @@ import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.*
 import net.minecraft.network.syncher.EntityDataAccessor
+import net.minecraft.world.entity.Pose
 import net.minecraft.world.entity.PositionMoveRotation
 import net.minecraft.world.scores.Team
 import org.bukkit.ChatColor
@@ -50,6 +50,11 @@ abstract class Entity(
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.Entity::class.java,
             FieldMappings.Entity.Base.DATA_TICKS_FROZEN
+        )
+    var DATA_POSE: EntityDataAccessor<Pose>? = null
+        get() = getEntityDataAccessor(field,
+            net.minecraft.world.entity.Entity::class.java,
+            FieldMappings.Entity.Base.DATA_POSE
         )
 
     private var FLAG_ONFIRE = 0
@@ -122,10 +127,10 @@ abstract class Entity(
             headRotationYaw,
             headRotationPitch,
             isOnGround
-        ), ClientboundRotateHeadPacket(
-            entity,
-            headRotationYaw
-        )
+            ), ClientboundRotateHeadPacket(
+                entity,
+                headRotationYaw
+            )
         )
         setLocation(location)
     }

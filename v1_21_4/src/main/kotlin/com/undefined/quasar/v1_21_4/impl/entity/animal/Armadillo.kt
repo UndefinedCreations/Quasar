@@ -3,15 +3,14 @@ package com.undefined.quasar.v1_21_4.impl.entity.animal
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.entities.entity.animal.Armadillo
-import com.undefined.quasar.util.getPrivateField
-import com.undefined.quasar.v1_21_4.impl.entity.LivingEntity
+import com.undefined.quasar.v1_21_4.impl.entity.Animal
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.animal.armadillo.Armadillo.ArmadilloState
 import net.minecraft.world.level.Level
 
-class Armadillo : LivingEntity(EntityType.ARMADILLO), Armadillo {
+class Armadillo : Animal(EntityType.ARMADILLO), Armadillo {
     private var state = Armadillo.State.IDLE
     private var ARMADILLO_STATE: EntityDataAccessor<ArmadilloState>? = null
         get() = getEntityDataAccessor(field,
@@ -35,7 +34,7 @@ class Armadillo : LivingEntity(EntityType.ARMADILLO), Armadillo {
     }
 
     override fun setEntityData(jsonObject: JsonObject) {
-        super<LivingEntity>.setEntityData(jsonObject)
+        super<Animal>.setEntityData(jsonObject)
         val armadilloJson = jsonObject["armadillo"].asJsonObject
         state = Armadillo.State.valueOf(armadilloJson["state"].asString)
     }

@@ -9,6 +9,7 @@ object FieldMappings {
             const val DATA_SILENT = "aQ"
             const val DATA_NO_GRAVITY = "aR"
             const val DATA_TICKS_FROZEN = "aS"
+            const val DATA_POSE = "aq"
         }
 
         object Vehicle {
@@ -21,8 +22,12 @@ object FieldMappings {
         }
 
         object LivingEntity {
+            const val DATA_LIVING_ENTITY_FLAGS = "aC"
+
             object Mob {
                 object Animal {
+                    const val DATA_BABY_ID = "bY"
+
                     object Armadillo {
                         // net/minecraft/world/entity/animal/armadillo/Armadillo.html
                         const val ARMADILLO_STATE = "ch"
@@ -36,11 +41,21 @@ object FieldMappings {
                         const val DATA_FLAGS_ID = "ci"
                         const val DATA_REMAINING_ANGER_TIME = "cj"
                     }
+                    object AbstractHorse {
+                        object Camel {
+                            // net/minecraft/world/entity/animal/camel/Camel.html
+                            const val DASH = "cc"
+                        }
+                    }
                 }
                 object Monster {
                     object Blaze {
                         // net/minecraft/world/entity/monster/Blaze.html
                         const val DATA_FLAGS_ID = "c"
+                    }
+                    object Bogged {
+                        // net/minecraft/world/entity/monster/Bogged.html
+                        const val DATA_SHEARED = "d"
                     }
                 }
                 object AmbientCreature {
