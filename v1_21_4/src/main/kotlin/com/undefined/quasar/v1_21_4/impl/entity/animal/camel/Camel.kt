@@ -3,14 +3,14 @@ package com.undefined.quasar.v1_21_4.impl.entity.animal.camel
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.entities.entity.animal.camel.Camel
-import com.undefined.quasar.v1_21_4.impl.entity.Animal
+import com.undefined.quasar.v1_21_4.impl.entity.abstracts.AbstractHorse
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.Pose
 import net.minecraft.world.level.Level
 
-class Camel : Animal(EntityType.CAMEL), Camel {
+class Camel : AbstractHorse(EntityType.CAMEL), Camel {
 
     private var dashing = false
     private var animation = Camel.Animation.STANDING
@@ -44,7 +44,7 @@ class Camel : Animal(EntityType.CAMEL), Camel {
     }
 
     override fun setEntityData(jsonObject: JsonObject) {
-        super<Animal>.setEntityData(jsonObject)
+        super<AbstractHorse>.setEntityData(jsonObject)
         val camelJson = jsonObject["camel"].asJsonObject
         dashing = camelJson["dashing"].asBoolean
     }

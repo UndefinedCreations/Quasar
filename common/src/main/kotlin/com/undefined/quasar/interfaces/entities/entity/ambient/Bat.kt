@@ -1,6 +1,6 @@
 package com.undefined.quasar.interfaces.entities.entity.ambient
 
-import com.undefined.quasar.interfaces.AmbientCreature
+import com.undefined.quasar.interfaces.abstracts.AmbientCreature
 
 interface Bat : AmbientCreature {
 

@@ -1,6 +1,6 @@
 package com.undefined.quasar.interfaces.entities.entity.animal.camel
 
-import com.undefined.quasar.interfaces.AbstractHorse
+import com.undefined.quasar.interfaces.abstracts.AbstractHorse
 
 interface Camel : AbstractHorse {
     fun setDashing(dashing: Boolean)

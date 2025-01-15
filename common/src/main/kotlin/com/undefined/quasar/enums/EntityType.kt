@@ -3,10 +3,7 @@ package com.undefined.quasar.enums
 import com.undefined.quasar.interfaces.Entity
 import com.undefined.quasar.interfaces.entities.entity.AreaEffectCloud
 import com.undefined.quasar.interfaces.entities.entity.ambient.Bat
-import com.undefined.quasar.interfaces.entities.entity.animal.Allay
-import com.undefined.quasar.interfaces.entities.entity.animal.Armadillo
-import com.undefined.quasar.interfaces.entities.entity.animal.Axolotl
-import com.undefined.quasar.interfaces.entities.entity.animal.Bee
+import com.undefined.quasar.interfaces.entities.entity.animal.*
 import com.undefined.quasar.interfaces.entities.entity.animal.camel.Camel
 import com.undefined.quasar.interfaces.entities.entity.decoration.ArmorStand
 import com.undefined.quasar.interfaces.entities.entity.display.BlockDisplay
@@ -33,6 +30,7 @@ enum class EntityType(val clazz: KClass<out Entity>) {
     BREEZE(Breeze::class),
     BREEZE_WIND_CHARGE(BreezeWindCharge::class),
     CAMEL(Camel::class),
+    CAT(Cat::class),
     MINECART(Minecart::class)
 
 }

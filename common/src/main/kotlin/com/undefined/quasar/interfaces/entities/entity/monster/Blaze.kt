@@ -1,6 +1,6 @@
 package com.undefined.quasar.interfaces.entities.entity.monster
 
-import com.undefined.quasar.interfaces.Monster
+import com.undefined.quasar.interfaces.abstracts.Monster
 
 interface Blaze : Monster {
     fun isCharged(): Boolean

@@ -27,7 +27,17 @@ object FieldMappings {
             object Mob {
                 object Animal {
                     const val DATA_BABY_ID = "bY"
-
+                    object TamableAnimal {
+                        // net/minecraft/world/entity/TamableAnimal.html
+                        const val DATA_FLAGS_ID = "bZ"
+                        object Cat {
+                            // net/minecraft/world/entity/animal/Cat.html
+                            const val DATA_VARIANT_ID = "cf"
+                            const val IS_LYING = "cg"
+                            const val RELAX_STATE_ONE = "ch"
+                            const val DATA_COLLAR_COLOR = "ci"
+                        }
+                    }
                     object Armadillo {
                         // net/minecraft/world/entity/animal/armadillo/Armadillo.html
                         const val ARMADILLO_STATE = "ch"

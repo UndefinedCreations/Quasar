@@ -6,6 +6,7 @@ import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
 import com.undefined.quasar.util.getPrivateMethod
+import com.undefined.quasar.v1_21_4.impl.entity.abstracts.AbstractEntity
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import com.undefined.quasar.v1_21_4.mappings.MethodMappings
 import net.minecraft.ChatFormatting

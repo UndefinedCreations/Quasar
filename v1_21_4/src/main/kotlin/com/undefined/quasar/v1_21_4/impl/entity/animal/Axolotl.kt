@@ -3,7 +3,7 @@ package com.undefined.quasar.v1_21_4.impl.entity.animal
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.entities.entity.animal.Axolotl
-import com.undefined.quasar.v1_21_4.impl.entity.Animal
+import com.undefined.quasar.v1_21_4.impl.entity.abstracts.Animal
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.Entity

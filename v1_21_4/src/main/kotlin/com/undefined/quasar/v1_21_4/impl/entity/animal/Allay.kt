@@ -2,7 +2,7 @@ package com.undefined.quasar.v1_21_4.impl.entity.animal
 
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.entities.entity.animal.Allay
-import com.undefined.quasar.v1_21_4.impl.entity.Animal
+import com.undefined.quasar.v1_21_4.impl.entity.abstracts.Animal
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 import org.bukkit.Material

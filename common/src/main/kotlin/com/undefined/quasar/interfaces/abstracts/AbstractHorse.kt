@@ -1,4 +1,4 @@
-package com.undefined.quasar.interfaces
+package com.undefined.quasar.interfaces.abstracts
 
 import org.bukkit.Material
 

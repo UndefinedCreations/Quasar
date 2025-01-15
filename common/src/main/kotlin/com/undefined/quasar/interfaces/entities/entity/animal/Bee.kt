@@ -1,6 +1,6 @@
 package com.undefined.quasar.interfaces.entities.entity.animal
 
-import com.undefined.quasar.interfaces.Animal
+import com.undefined.quasar.interfaces.abstracts.Animal
 
 interface Bee : Animal {
 
