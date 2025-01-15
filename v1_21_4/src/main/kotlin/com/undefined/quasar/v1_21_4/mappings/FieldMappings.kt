@@ -19,6 +19,12 @@ object FieldMappings {
                 const val DATA_ID_DISPLAY_OFFSET = "d"
                 const val DATA_ID_CUSTOM_DISPLAY = "h"
             }
+            object Boat {
+                // net/minecraft/world/entity/vehicle/AbstractBoat.html
+                const val DATA_ID_PADDLE_LEFT = "h"
+                const val DATA_ID_PADDLE_RIGHT = "i"
+                const val DATA_ID_BUBBLE_TIME = "j"
+            }
         }
 
         object LivingEntity {
@@ -38,6 +44,11 @@ object FieldMappings {
                             const val DATA_COLLAR_COLOR = "ci"
                         }
                     }
+                    object WaterAnimal {
+                        // net/minecraft/world/entity/animal/Dolphin.html
+                        const val GOT_FISH = "cc"
+                        const val MOISTNESS_LEVEL = "cd"
+                    }
                     object Armadillo {
                         // net/minecraft/world/entity/animal/armadillo/Armadillo.html
                         const val ARMADILLO_STATE = "ch"
@@ -56,6 +67,10 @@ object FieldMappings {
                             // net/minecraft/world/entity/animal/camel/Camel.html
                             const val DASH = "cc"
                         }
+                        object AbstractChestHorse {
+                            //
+                            const val DATA_ID_CHEST = "bY"
+                        }
                     }
                 }
                 object Monster {
@@ -66,6 +81,25 @@ object FieldMappings {
                     object Bogged {
                         // net/minecraft/world/entity/monster/Bogged.html
                         const val DATA_SHEARED = "d"
+                    }
+                    object Spider {
+                        // net/minecraft/world/entity/monster/Spider.html
+                        const val DATA_FLAGS_ID = "a"
+                    }
+                    object Creaking {
+                        // net/minecraft/world/entity/monster/creaking/Creaking.html
+                        const val IS_ACTIVE = "ce"
+                        const val IS_TEARING_DOWN = "cf"
+                    }
+                    object Creeper {
+                        // net/minecraft/world/entity/monster/Creeper.html
+                        const val DATA_SWELL_DIR = "a"
+                        const val DATA_IS_IGNITED = "c"
+                    }
+                    object Zombie {
+                        // net/minecraft/world/entity/monster/Zombie.html
+                        const val DATA_BABY_ID = "ce"
+                        const val DATA_DROWNED_CONVERSION_ID = "cg"
                     }
                 }
                 object AmbientCreature {

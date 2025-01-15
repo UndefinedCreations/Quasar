@@ -3,6 +3,7 @@ package com.undefined.quasar
 import com.google.gson.GsonBuilder
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
+import com.undefined.quasar.interfaces.entities.entity.display.BlockDisplay
 import com.undefined.stellar.StellarCommand
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -10,6 +11,8 @@ import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Level
+import kotlin.math.floor
+import kotlin.math.sqrt
 
 class Main : JavaPlugin() {
 
@@ -80,9 +83,10 @@ class Main : JavaPlugin() {
     private fun runAllTests(logger: Player, location: Location, time: Int = 10, perRow: Int = 5) {
         var inRow = 1.0
         var row = 0.0
+        val peR = if (perRow == 5) floor(sqrt(EntityType.entries.size.toDouble())).toInt() else perRow
         EntityType.entries.forEach {
             val testLocation = location.clone().add(5*inRow, 0.0, 5*row)
-            if (inRow.toInt() == perRow) {
+            if (inRow.toInt() == peR) {
                 inRow = 1.0
                 row++
             } else {
@@ -96,6 +100,7 @@ class Main : JavaPlugin() {
         logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | {${ChatColor.GREEN}Tests Started!${ChatColor.GRAY}}")
         entity.addViewer(logger)
         entity.spawn(location)
+        entity.setGlowing(false)
         if (sendMessage) logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Spawning {${ChatColor.GREEN}Success!${ChatColor.GRAY}}")
         entity.runTest(logger,
             time,

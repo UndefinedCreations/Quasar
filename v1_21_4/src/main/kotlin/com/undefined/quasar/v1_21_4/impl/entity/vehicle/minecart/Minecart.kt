@@ -1,8 +1,8 @@
-package com.undefined.quasar.v1_21_4.impl.entity.vehicle
+package com.undefined.quasar.v1_21_4.impl.entity.vehicle.minecart
 
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
-import com.undefined.quasar.interfaces.entities.entity.vehicle.Minecart
+import com.undefined.quasar.interfaces.entities.entity.vehicle.minecart.Minecart
 import com.undefined.quasar.v1_21_4.impl.entity.Entity
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import com.undefined.quasar.v1_21_4.util.BlockDataUtil
@@ -13,7 +13,7 @@ import org.bukkit.Material
 import org.bukkit.block.data.BlockData
 import kotlin.random.Random
 
-class Minecart : Minecart, Entity(EntityType.MINECART) {
+open class Minecart(entityType: EntityType = EntityType.MINECART) : Minecart, Entity(entityType) {
 
     private var displayBlock: BlockData? = null
     private var displayBlockOffset: Int = 0

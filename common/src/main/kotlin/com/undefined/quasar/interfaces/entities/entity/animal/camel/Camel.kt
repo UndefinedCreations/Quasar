@@ -11,7 +11,7 @@ interface Camel : AbstractHorse {
 
     enum class Animation(val id: Int) {
         STANDING(0),
-        SIT(2),
+        SIT(2), //TODO Fixed the sitting
         CROUCHING(5),
 //        IDLE()
     }

@@ -9,7 +9,7 @@ import net.minecraft.network.syncher.EntityDataAccessor
 
 abstract class Animal(entityType: EntityType) : LivingEntity(entityType), Animal {
 
-    private var bady = false
+    private var baby = false
 
     private var DATA_BABY_ID: EntityDataAccessor<Boolean>? = null
         get() = getEntityDataAccessor(field,
@@ -17,9 +17,9 @@ abstract class Animal(entityType: EntityType) : LivingEntity(entityType), Animal
             FieldMappings.Entity.LivingEntity.Mob.Animal.DATA_BABY_ID
         )
 
-    override fun setBady(bady: Boolean) =
+    override fun setBaby(bady: Boolean) =
         setEntityDataAccessor(DATA_BABY_ID, bady) {
-            this.bady = bady
+            this.baby = bady
         }
 
     override fun isBady(): Boolean = false
@@ -27,7 +27,7 @@ abstract class Animal(entityType: EntityType) : LivingEntity(entityType), Animal
     override fun getEntityData(): JsonObject {
         val livingEntityJson = super.getEntityData()
         val animalJson = JsonObject()
-        animalJson.addProperty("bady", bady)
+        animalJson.addProperty("bady", baby)
         livingEntityJson.add("animal", animalJson)
         return livingEntityJson
     }
@@ -39,6 +39,18 @@ abstract class Animal(entityType: EntityType) : LivingEntity(entityType), Animal
 
     override fun updateEntity() {
         super.updateEntity()
-        setBady(bady)
+        setBaby(baby)
     }
+
+    override fun getTests(): MutableList<() -> String> =
+        super.getTests().apply { addAll(mutableListOf(
+            {
+                setBaby(true)
+                getTestMessage(this@Animal::class, "Set baby", true)
+            },
+            {
+                setBaby(false)
+                getTestMessage(this@Animal::class, "Set baby", false)
+            }
+        )) }
 }

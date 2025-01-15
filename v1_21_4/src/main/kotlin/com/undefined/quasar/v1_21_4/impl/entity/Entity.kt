@@ -12,6 +12,7 @@ import com.undefined.quasar.v1_21_4.mappings.MethodMappings
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.*
+import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket.Pos
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.Pose
 import net.minecraft.world.entity.PositionMoveRotation
@@ -254,6 +255,16 @@ abstract class Entity(
 
     override fun isSilent(): Boolean = silent
 
+    override fun isStanding(): Boolean = entity?.entityData?.get(DATA_POSE) == Pose.STANDING
+
+    override fun setStanding() =
+        setEntityDataAccessor(DATA_POSE, Pose.STANDING) {}
+
+    override fun isSleeping(): Boolean = entity?.entityData?.get(DATA_POSE) == Pose.SLEEPING
+
+    override fun setSleeping() =
+        setEntityDataAccessor(DATA_POSE, Pose.SLEEPING) {}
+
     fun toRotationValue(yaw: Float): Byte = floor(yaw * 256.0f / 360.0f).toInt().toByte()
 
     private fun toDeltaValue(value: Double, newValue: Double) = (((newValue - value) * 32 * 128).toInt().toShort())
@@ -421,6 +432,15 @@ abstract class Entity(
                 val location = getLocation().clone().subtract(0.0, 5.0, 0.0)
                 moveTo(location)
                 getTestMessage(this::class, "Move to", Math.round(location.x), Math.round(location.y), Math.round(location.z))
+            },
+            {
+                setSleeping()
+                getTestMessage(this::class, "Set sleeping")
+            }
+            ,
+            {
+                setStanding()
+                getTestMessage(this::class, "Set standing")
             }
         )
 

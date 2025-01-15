@@ -51,6 +51,10 @@ interface Entity {
     fun hasGravity(): Boolean
     fun isSilent(): Boolean
     fun setSilent(silent: Boolean)
+    fun setSleeping()
+    fun isSleeping(): Boolean
+    fun setStanding()
+    fun isStanding(): Boolean
     fun setEntityData(string: String) = setEntityData(JsonParser.parseString(string).asJsonObject)
     fun setEntityData(jsonObject: JsonObject)
     fun getEntityData(): JsonObject
