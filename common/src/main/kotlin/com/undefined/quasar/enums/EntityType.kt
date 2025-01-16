@@ -14,6 +14,7 @@ import com.undefined.quasar.interfaces.entities.entity.monster.*
 import com.undefined.quasar.interfaces.entities.entity.projectile.Arrow
 import com.undefined.quasar.interfaces.entities.entity.projectile.BreezeWindCharge
 import com.undefined.quasar.interfaces.entities.entity.projectile.DragonFireball
+import com.undefined.quasar.interfaces.entities.entity.projectile.ThrownEgg
 import com.undefined.quasar.interfaces.entities.entity.vehicle.minecart.Minecart
 import com.undefined.quasar.interfaces.entities.entity.vehicle.boat.*
 import com.undefined.quasar.interfaces.entities.entity.vehicle.minecart.MinecartChest
@@ -56,8 +57,10 @@ enum class EntityType(val clazz: KClass<out Entity>) {
     DONKEY(Donkey::class),
     DRAGON_FIREBALL(DragonFireball::class),
     DROWNED(Drowned::class),
+    EGG(ThrownEgg::class),
+    ELDER_GUARDIAN(ElderGuardian::class),
 
-
+    GUARDIAN(Guardian::class),
     ZOMBIE(Zombie::class),
     SPIDER(Spider::class),
     MINECART(Minecart::class)

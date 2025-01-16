@@ -101,6 +101,11 @@ object FieldMappings {
                         const val DATA_BABY_ID = "ce"
                         const val DATA_DROWNED_CONVERSION_ID = "cg"
                     }
+                    object Guardian {
+                        // net/minecraft/world/entity/monster/Guardian.html
+                        const val DATA_ID_MOVING = "a"
+                        const val DATA_ID_ATTACK_TARGET = "d"
+                    }
                 }
                 object AmbientCreature {
                     object Bat {
@@ -126,6 +131,10 @@ object FieldMappings {
             object ARROW {
                 // net/minecraft/world/entity/projectile/Arrow.html
                 const val ID_EFFECT_COLOR = "f"
+            }
+            object ThrowableItemProjectile {
+                // net/minecraft/world/entity/projectile/ThrowableItemProjectile.html
+                const val DATA_ITEM_STACK = "a"
             }
         }
 

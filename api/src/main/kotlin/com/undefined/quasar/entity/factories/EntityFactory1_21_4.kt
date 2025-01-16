@@ -20,6 +20,7 @@ import com.undefined.quasar.v1_21_4.impl.entity.monster.*
 import com.undefined.quasar.v1_21_4.impl.entity.projectile.Arrow
 import com.undefined.quasar.v1_21_4.impl.entity.projectile.BreezeWindCharge
 import com.undefined.quasar.v1_21_4.impl.entity.projectile.DragonFireball
+import com.undefined.quasar.v1_21_4.impl.entity.projectile.ThrownEgg
 import com.undefined.quasar.v1_21_4.impl.entity.vehicle.minecart.Minecart
 import com.undefined.quasar.v1_21_4.impl.entity.vehicle.boats.*
 import com.undefined.quasar.v1_21_4.impl.entity.vehicle.minecart.MinecartChest
@@ -64,7 +65,10 @@ class EntityFactory1_21_4 : EntityFactory {
             EntityType.DONKEY -> Donkey()
             EntityType.DRAGON_FIREBALL -> DragonFireball()
             EntityType.DROWNED -> Drowned()
+            EntityType.EGG -> ThrownEgg()
+            EntityType.ELDER_GUARDIAN -> ElderGuardian()
 
+            EntityType.GUARDIAN -> Guardian()
             EntityType.ZOMBIE -> Zombie()
             EntityType.SPIDER -> Spider()
             EntityType.MINECART -> Minecart()
