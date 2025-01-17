@@ -11,6 +11,7 @@ import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Level
+import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.sqrt
 
@@ -83,7 +84,8 @@ class Main : JavaPlugin() {
     private fun runAllTests(logger: Player, location: Location, time: Int = 10, perRow: Int = 5) {
         var inRow = 1.0
         var row = 0.0
-        val peR = if (perRow == 5) floor(sqrt(EntityType.entries.size.toDouble())).toInt() else perRow
+        val peR = if (perRow == 5) ceil(sqrt(EntityType.entries.size.toDouble())).toInt() else perRow
+        println(peR)
         EntityType.entries.forEach {
             val testLocation = location.clone().add(5*inRow, 0.0, 5*row)
             if (inRow.toInt() == peR) {

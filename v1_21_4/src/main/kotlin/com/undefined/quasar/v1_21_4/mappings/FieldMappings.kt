@@ -10,6 +10,8 @@ object FieldMappings {
             const val DATA_NO_GRAVITY = "aR"
             const val DATA_TICKS_FROZEN = "aS"
             const val DATA_POSE = "aq"
+            const val POSITION = "t"
+            const val LEVEL = "s"
         }
 
         object Vehicle {
@@ -18,6 +20,12 @@ object FieldMappings {
                 const val DATA_ID_DISPLAY_BLOCK = "c"
                 const val DATA_ID_DISPLAY_OFFSET = "d"
                 const val DATA_ID_CUSTOM_DISPLAY = "h"
+
+                object MinecartFurnace {
+                    // net/minecraft/world/entity/vehicle/MinecartFurnace.html
+                    const val DATA_ID_FUEL = "c"
+                }
+
             }
             object Boat {
                 // net/minecraft/world/entity/vehicle/AbstractBoat.html
@@ -49,6 +57,10 @@ object FieldMappings {
                         const val GOT_FISH = "cc"
                         const val MOISTNESS_LEVEL = "cd"
                     }
+                    object Allay {
+                        // net/minecraft/world/entity/animal/allay/Allay.html
+                        const val DATA_DANCING = "cf"
+                    }
                     object Armadillo {
                         // net/minecraft/world/entity/animal/armadillo/Armadillo.html
                         const val ARMADILLO_STATE = "ch"
@@ -62,6 +74,16 @@ object FieldMappings {
                         const val DATA_FLAGS_ID = "ci"
                         const val DATA_REMAINING_ANGER_TIME = "cj"
                     }
+                    object Fox {
+                        // net/minecraft/world/entity/animal/Fox.html
+                        const val DATA_TYPE_ID = "cc"
+                        const val DATA_FLAGS_ID = "cd"
+                    }
+                    object Frog {
+                        // net/minecraft/world/entity/animal/frog/Frog.html
+                        const val DATA_VARIANT_ID = "cg"
+                        const val DATA_TONGUE_TARGET_ID = "ch"
+                    }
                     object AbstractHorse {
                         object Camel {
                             // net/minecraft/world/entity/animal/camel/Camel.html
@@ -73,7 +95,26 @@ object FieldMappings {
                         }
                     }
                 }
+                object Boss {
+                    object EnderDragon {
+                        // net/minecraft/world/entity/boss/enderdragon/EnderDragon.html
+                        const val DATA_PHASE = "a"
+                    }
+                    object EndCrystal {
+                        // net/minecraft/world/entity/boss/enderdragon/EndCrystal.html
+                        const val DATA_BEAM_TARGET = "b"
+                        const val DATA_SHOW_BOTTOM = "c"
+                    }
+                }
                 object Monster {
+                    object Raider {
+                        // net/minecraft/world/entity/raid/Raider.html
+                        const val IS_CELEBRATING = "c"
+                        object SpellcasterIllager {
+                            // net/minecraft/world/entity/monster/SpellcasterIllager.html
+                            const val DATA_SPELL_CASTING_ID = "a"
+                        }
+                    }
                     object Blaze {
                         // net/minecraft/world/entity/monster/Blaze.html
                         const val DATA_FLAGS_ID = "c"
@@ -106,6 +147,16 @@ object FieldMappings {
                         const val DATA_ID_MOVING = "a"
                         const val DATA_ID_ATTACK_TARGET = "d"
                     }
+                    object EnderMan {
+                        // net/minecraft/world/entity/monster/EnderMan.html
+                        const val DATA_CARRY_STATE = "ca"
+                        const val DATA_CREEPY = "cb"
+                        const val DATA_STARED_AT = "cc"
+                    }
+                    object Ghast {
+                        // net/minecraft/world/entity/monster/Ghast.html
+                        const val DATA_IS_CHARGING = "a"
+                    }
                 }
                 object AmbientCreature {
                     object Bat {
@@ -128,13 +179,26 @@ object FieldMappings {
         }
 
         object Projectile {
-            object ARROW {
+            object Arrow {
                 // net/minecraft/world/entity/projectile/Arrow.html
                 const val ID_EFFECT_COLOR = "f"
             }
             object ThrowableItemProjectile {
                 // net/minecraft/world/entity/projectile/ThrowableItemProjectile.html
                 const val DATA_ITEM_STACK = "a"
+            }
+            object EyeOfEnder {
+                // net/minecraft/world/entity/projectile/EyeOfEnder.html
+                const val DATA_ITEM_STACK = "b"
+            }
+            object FireBall {
+                // net/minecraft/world/entity/projectile/Fireball.html
+                const val DATA_ITEM_STACK = "e"
+            }
+            object FireworkRocketEntity {
+                // net/minecraft/world/entity/projectile/FireworkRocketEntity.html
+                const val DATA_ID_FIREWORKS_ITEM = "a"
+                const val DATA_SHOT_AT_ANGLE = "c"
             }
         }
 

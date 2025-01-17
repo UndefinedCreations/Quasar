@@ -51,7 +51,7 @@ abstract class AbstractEntity(
         this.location = location
 
         val craftWorld = location.world as CraftWorld
-        val entity = getEntityClass(craftWorld.handle)
+        val entity = if (this.entity == null) getEntityClass(craftWorld.handle) else this.entity!!
 
         entity.uuid = uuid
 
@@ -78,7 +78,10 @@ abstract class AbstractEntity(
     }
 
     override fun kill() {
-        entity?.let { sendPackets(ClientboundRemoveEntitiesPacket(it.id)) }
+        entity?.let {
+            this.entity = null
+            sendPackets(ClientboundRemoveEntitiesPacket(it.id))
+        }
     }
 
     override fun isAlive(): Boolean = entity != null

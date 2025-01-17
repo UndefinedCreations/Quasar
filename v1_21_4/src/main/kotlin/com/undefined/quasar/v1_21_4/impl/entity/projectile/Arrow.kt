@@ -16,7 +16,7 @@ class Arrow : Entity(EntityType.ARROW), Arrow {
     private var ID_EFFECT_COLOR: EntityDataAccessor<Int>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.projectile.Arrow::class.java,
-            FieldMappings.Entity.Projectile.ARROW.ID_EFFECT_COLOR
+            FieldMappings.Entity.Projectile.Arrow.ID_EFFECT_COLOR
         )
 
     override fun getEffectColor(): Color? = color

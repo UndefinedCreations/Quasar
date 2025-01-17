@@ -17,6 +17,10 @@ interface Entity {
     fun hasViewer(player: Player): Boolean
     fun spawn(location: Location)
     fun kill()
+    fun respawn() {
+        kill()
+        spawn(getLocation())
+    }
     fun setCustomName(name: String?)
     fun getCustomName(): String?
     fun hasCustomName(): Boolean { return getCustomName() != null }
