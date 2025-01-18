@@ -8,14 +8,10 @@ import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
-import net.minecraft.world.level.block.state.BlockState
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
-import java.util.*
 
 class Allay : Allay, Animal(EntityType.ALLAY) {
-
-    private var dancing = false
 
     private var DATA_DANCING: EntityDataAccessor<Boolean>? = null
         get() = getEntityDataAccessor(field,
@@ -23,20 +19,17 @@ class Allay : Allay, Animal(EntityType.ALLAY) {
             FieldMappings.Entity.LivingEntity.Mob.Animal.Allay.DATA_DANCING
         )
 
-    override fun isDancing(): Boolean = dancing
+    override fun isDancing(): Boolean = getEntityDataValue(DATA_DANCING) ?: false
 
     override fun setDancing(dancing: Boolean) =
-        setEntityDataAccessor(DATA_DANCING, dancing) {
-            this.dancing = dancing
-        }
-
+        setEntityDataAccessor(DATA_DANCING, dancing)
     override fun setItem(slot: Int, itemStack: ItemStack?) =
         super<Animal>.setItem(0, itemStack)
 
     override fun getEntityData(): JsonObject {
         val animalJson = super.getEntityData()
         val allayJson = JsonObject()
-        allayJson.addProperty("dancing", dancing)
+        allayJson.addProperty("dancing", isDancing())
         animalJson.add("allay", allayJson)
         return animalJson
     }
@@ -44,12 +37,12 @@ class Allay : Allay, Animal(EntityType.ALLAY) {
     override fun setEntityData(jsonObject: JsonObject) {
         super<Animal>.setEntityData(jsonObject)
         val allayJson = jsonObject["allay"].asJsonObject
-        dancing = jsonObject["dancing"].asBoolean
+        setDancing(allayJson["dancing"].asBoolean)
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setDancing(dancing)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setDancing(false)
     }
 
     override fun getTests(): MutableList<() -> String> =
@@ -57,19 +50,19 @@ class Allay : Allay, Animal(EntityType.ALLAY) {
             {
                 val item = ItemStack(Material.entries.random())
                 setHoldingItem(item)
-                getTestMessage(this@Allay::class, "Set holding", item.type.name.lowercase())
+                getTestMessage(this@Allay::class, "Set holding", getHoldingItem()?.type?.name?.lowercase())
             },
             {
                 setHoldingItem(null)
-                getTestMessage(this@Allay::class, "Set holding", "EMPTY")
+                getTestMessage(this@Allay::class, "Set holding", getHoldingItem()?.type?.name?.lowercase())
             },
             {
                 setDancing(true)
-                getTestMessage(this@Allay::class, "Set dancing", true)
+                getTestMessage(this@Allay::class, "Set dancing", isDancing())
             },
             {
                 setDancing(false)
-                getTestMessage(this@Allay::class, "Set dancing", false)
+                getTestMessage(this@Allay::class, "Set dancing", isDancing())
             }
         )) }
 

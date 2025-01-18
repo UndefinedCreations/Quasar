@@ -5,9 +5,7 @@ import com.undefined.quasar.interfaces.entities.entity.vehicle.boat.AcaciaBoat
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.BoatItem
 import net.minecraft.world.item.Item
-import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
-import java.util.function.Supplier
 
 class AcaciaBoat : Boat(EntityType.ACACIA_BOAT), AcaciaBoat  {
     override fun getEntityClass(level: Level): Entity =

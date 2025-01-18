@@ -86,5 +86,9 @@ interface ArmorStand : LivingEntity {
         }
 
         override fun toString(): String = "$firstRotation,$secondRotation,$thirdRotation"
+
+        companion object {
+            fun EMPTY(): Rotations = Rotations(0.0f, 0.0f, 0.0f)
+        }
     }
 }

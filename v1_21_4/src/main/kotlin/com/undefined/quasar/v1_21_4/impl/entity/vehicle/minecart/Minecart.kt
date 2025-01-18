@@ -15,10 +15,6 @@ import kotlin.random.Random
 
 open class Minecart(entityType: EntityType = EntityType.MINECART) : Minecart, Entity(entityType) {
 
-    private var displayBlock: BlockData? = null
-    private var displayBlockOffset: Int = 0
-    private var customDisplay = false
-
     private var DATA_ID_DISPLAY_BLOCK: EntityDataAccessor<Int>? = null
         get() = getEntityDataAccessor(field,
             AbstractMinecart::class.java,
@@ -35,45 +31,38 @@ open class Minecart(entityType: EntityType = EntityType.MINECART) : Minecart, En
             FieldMappings.Entity.Vehicle.Minecart.DATA_ID_CUSTOM_DISPLAY
         )
 
-    override fun setDisplayBlock(block: BlockData) =
-        setEntityDataAccessor(DATA_ID_DISPLAY_BLOCK, BlockDataUtil.getID(block)) {
-            this.displayBlock = block
-            setCustomDisplay(true)
-        }
+    override fun setDisplayBlock(block: BlockData?) = setEntityDataAccessor(DATA_ID_DISPLAY_BLOCK, BlockDataUtil.getID(block))
 
-    override fun setDisplayBlockOffset(offset: Int) =
-        setEntityDataAccessor(DATA_ID_DISPLAY_OFFSET, offset) { this.displayBlockOffset = offset }
+    override fun setDisplayBlockOffset(offset: Int) = setEntityDataAccessor(DATA_ID_DISPLAY_OFFSET, offset)
 
-    override fun setCustomDisplay(customDisplay: Boolean) =
-        setEntityDataAccessor(DATA_ID_CUSTOM_DISPLAY, customDisplay) { this.customDisplay = customDisplay }
+    override fun setCustomDisplay(customDisplay: Boolean) = setEntityDataAccessor(DATA_ID_CUSTOM_DISPLAY, customDisplay)
 
-    override fun getCustomDisplay(): Boolean = customDisplay
+    override fun getCustomDisplay(): Boolean = getEntityDataValue(DATA_ID_CUSTOM_DISPLAY) ?: false
 
-    override fun getDisplayBlockOffset(): Int = displayBlockOffset
+    override fun getDisplayBlockOffset(): Int = getEntityDataValue(DATA_ID_DISPLAY_OFFSET) ?: 0
 
-    override fun getDisplayBlock(): BlockData? = displayBlock
+    override fun getDisplayBlock(): BlockData? = getEntityDataValue(DATA_ID_DISPLAY_BLOCK)?.let { BlockDataUtil.getBlockData(it) }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        displayBlock?.run { setDisplayBlock(this) }
-        setDisplayBlockOffset(displayBlockOffset)
-        setCustomDisplay(customDisplay)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setDisplayBlockOffset(0)
+        setCustomDisplay(false)
     }
 
     override fun setEntityData(jsonObject: JsonObject) {
         val minecartJson = jsonObject["minecartData"].asJsonObject
         val blockID = minecartJson["displayBlock"].asInt
-        displayBlock = if (blockID == -1) null else BlockDataUtil.getBlockData(blockID)
-        displayBlockOffset = minecartJson["displayBlockOffset"].asInt
-        customDisplay = minecartJson["customDisplay"].asBoolean
+        setDisplayBlock(if (blockID == -1) null else BlockDataUtil.getBlockData(blockID))
+        setDisplayBlockOffset(minecartJson["displayBlockOffset"].asInt)
+        setCustomDisplay(minecartJson["customDisplay"].asBoolean)
     }
 
     override fun getEntityData(): JsonObject {
         val json = super.getEntityData()
         val minecartJson = JsonObject()
-        minecartJson.addProperty("displayBlock", BlockDataUtil.getID(displayBlock))
-        minecartJson.addProperty("displayBlockOffset", displayBlockOffset)
-        minecartJson.addProperty("customDisplay", customDisplay)
+        minecartJson.addProperty("displayBlock", BlockDataUtil.getID(getDisplayBlock()))
+        minecartJson.addProperty("displayBlockOffset", getDisplayBlockOffset())
+        minecartJson.addProperty("customDisplay", getCustomDisplay())
         json.add("minecartData", minecartJson)
         return json
     }
@@ -83,16 +72,16 @@ open class Minecart(entityType: EntityType = EntityType.MINECART) : Minecart, En
             {
                 val randomMaterial = Material.entries.filter { material -> material.isBlock }.random()
                 setDisplayBlock(randomMaterial.createBlockData())
-                getTestMessage(this::class, "Set display block", randomMaterial.name.lowercase())
+                getTestMessage(this::class, "Set display block", getDisplayBlock()?.material?.name?.lowercase())
             },
             {
                 val randomOffset = Random.nextInt(50)
                 setDisplayBlockOffset(randomOffset)
-                getTestMessage(this::class, "Set display block offset", randomOffset)
+                getTestMessage(this::class, "Set display block offset", getDisplayBlockOffset())
             },
             {
                setCustomDisplay(false)
-               getTestMessage(this::class, "Set custom display", false)
+               getTestMessage(this::class, "Set custom display", getCustomDisplay())
             }
         )) }
 

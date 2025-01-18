@@ -64,6 +64,11 @@ object FieldMappings {
                     object Armadillo {
                         // net/minecraft/world/entity/animal/armadillo/Armadillo.html
                         const val ARMADILLO_STATE = "ch"
+
+                        object State {
+                            // net/minecraft/world/entity/animal/armadillo/Armadillo$ArmadilloState.html
+                            const val ID = "k"
+                        }
                     }
                     object Axolotl {
                         // net/minecraft/world/entity/animal/axolotl/Axolotl.html
@@ -226,10 +231,35 @@ object FieldMappings {
 
         }
 
+        object Decoration {
+
+            object BlockAttackedEntity {
+                // net/minecraft/world/entity/decoration/BlockAttachedEntity.html
+                const val POS = "a"
+            }
+
+            object HangingEntity {
+                // net/minecraft/world/entity/decoration/HangingEntity.html
+                const val DIRECTION = "c"
+            }
+
+            object ItemFrame {
+                // net/minecraft/world/entity/decoration/ItemFrame.html
+                const val DATA_ITEM = "e"
+                const val DATA_ROTATION = "f"
+            }
+
+        }
+
         object AreaEffectCloud {
             // net/minecraft/world/entity/AreaEffectCloud.html
             const val DATA_RADIUS = "e"
             const val DATA_PARTICLE = "g"
+        }
+
+        object FallingBlockEntity {
+            // net/minecraft/world/entity/item/FallingBlockEntity.html
+            const val BLOCK = "g"
         }
 
     }

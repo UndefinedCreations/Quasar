@@ -15,25 +15,20 @@ import org.bukkit.inventory.ItemStack
 
 class EyeOfEnder : Entity(EntityType.EYE_OF_ENDER), EyeOfEnder {
 
-    private var item = ItemStack(Material.ENDER_EYE)
-
     private var DATA_ITEM_STACK: EntityDataAccessor<net.minecraft.world.item.ItemStack>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.projectile.EyeOfEnder::class.java,
             FieldMappings.Entity.Projectile.EyeOfEnder.DATA_ITEM_STACK
         )
 
-    override fun setItem(item: ItemStack) =
-        setEntityDataAccessor(DATA_ITEM_STACK, CraftItemStack.asNMSCopy(item)) {
-            this.item = item
-        }
+    override fun setItem(item: ItemStack) = setEntityDataAccessor(DATA_ITEM_STACK, CraftItemStack.asNMSCopy(item))
 
-    override fun getItem(): ItemStack = item
+    override fun getItem(): ItemStack = getEntityDataValue(DATA_ITEM_STACK)?.let { CraftItemStack.asBukkitCopy(it) } ?: ItemStack(Material.ENDER_EYE)
 
     override fun getEntityData(): JsonObject {
         val entityJson = super.getEntityData()
         val eyeOfEnderJson = JsonObject()
-        eyeOfEnderJson.addProperty("item", item.serializer())
+        eyeOfEnderJson.addProperty("item", getItem().serializer())
         entityJson.add("eyeOfEnder", eyeOfEnderJson)
         return entityJson
     }
@@ -41,12 +36,12 @@ class EyeOfEnder : Entity(EntityType.EYE_OF_ENDER), EyeOfEnder {
     override fun setEntityData(jsonObject: JsonObject) {
         super<Entity>.setEntityData(jsonObject)
         val eyeOfEnderJson = jsonObject["eyeOfEnder"].asJsonObject
-        item = ItemStackDeserializer.deserializer(eyeOfEnderJson["item"].asString)
+        setItem(ItemStackDeserializer.deserializer(eyeOfEnderJson["item"].asString))
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setItem(item)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setItem(ItemStack(Material.ENDER_EYE))
     }
 
     override fun getEntityClass(level: Level): net.minecraft.world.entity.Entity =

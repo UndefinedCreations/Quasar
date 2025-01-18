@@ -9,9 +9,6 @@ import net.minecraft.network.syncher.EntityDataAccessor
 
 abstract class TamableAnimal(entityType: EntityType) : Animal(entityType), TamableAnimal {
 
-    private var tamed = false
-    private var sitting = false
-
     private var DATA_FLAGS_ID: EntityDataAccessor<Byte>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.TamableAnimal::class.java,
@@ -26,11 +23,13 @@ abstract class TamableAnimal(entityType: EntityType) : Animal(entityType), Tamab
         } else {
             entity.entityData.set(DATA_FLAGS_ID, (b0.toInt() and -5).toByte())
         }
-        this.tamed = tamed
         sendEntityMetaData()
     }
 
-    override fun isTamed(): Boolean = tamed
+    override fun isTamed(): Boolean {
+        val entity = entity ?: return false
+        return ((entity.entityData.get(DATA_FLAGS_ID) as Byte).toInt() and 4) != 0;
+    }
 
     override fun setSitting(sitting: Boolean) {
         val entity = entity ?: return
@@ -40,17 +39,19 @@ abstract class TamableAnimal(entityType: EntityType) : Animal(entityType), Tamab
         } else {
             entity.entityData.set(DATA_FLAGS_ID, (b0.toInt() and -2).toByte())
         }
-        this.sitting = sitting
         sendEntityMetaData()
     }
 
-    override fun isSitting(): Boolean = sitting
+    override fun isSitting(): Boolean {
+        val entity = entity ?: return false
+        return ((entity.entityData.get(DATA_FLAGS_ID) as Byte).toInt() and 1) != 0;
+    }
 
     override fun getEntityData(): JsonObject {
         val animalJson = super.getEntityData()
         val tamableJson = JsonObject()
-        tamableJson.addProperty("tamed", tamed)
-        tamableJson.addProperty("sitting", sitting)
+        tamableJson.addProperty("tamed", isTamed())
+        tamableJson.addProperty("sitting", isSitting())
         animalJson.add("tamable", tamableJson)
         return animalJson
     }
@@ -58,33 +59,33 @@ abstract class TamableAnimal(entityType: EntityType) : Animal(entityType), Tamab
     override fun setEntityData(jsonObject: JsonObject) {
         super<Animal>.setEntityData(jsonObject)
         val tamableJson = jsonObject["tamable"].asJsonObject
-        tamed = tamableJson["tamed"].asBoolean
-        sitting = tamableJson["sitting"].asBoolean
+        setTamed(tamableJson["tamed"].asBoolean)
+        setSitting(tamableJson["sitting"].asBoolean)
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setTamed(tamed)
-        setSitting(sitting)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setTamed(false)
+        setSitting(false)
     }
 
     override fun getTests(): MutableList<() -> String> =
         super.getTests().apply { addAll(mutableListOf(
             {
                 setTamed(true)
-                getTestMessage(this@TamableAnimal::class, "Set tamed", true)
+                getTestMessage(this@TamableAnimal::class, "Set tamed", isTamed())
             },
             {
                 setTamed(false)
-                getTestMessage(this@TamableAnimal::class, "Set tamed", false)
+                getTestMessage(this@TamableAnimal::class, "Set tamed", isTamed())
             },
             {
                 setSitting(true)
-                getTestMessage(this@TamableAnimal::class, "Set sitting", true)
+                getTestMessage(this@TamableAnimal::class, "Set sitting", isSitting())
             },
             {
                 setSitting(false)
-                getTestMessage(this@TamableAnimal::class, "Set sitting", false)
+                getTestMessage(this@TamableAnimal::class, "Set sitting", isSitting())
             }
         )) }
 }

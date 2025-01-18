@@ -62,7 +62,9 @@ interface Entity {
     fun setEntityData(string: String) = setEntityData(JsonParser.parseString(string).asJsonObject)
     fun setEntityData(jsonObject: JsonObject)
     fun getEntityData(): JsonObject
-    fun updateEntity()
+    fun setDefaultValues()
+    fun resendPackets()
+    fun resendPackets(player: Player)
     fun runTest(
         logger: Player,
         delayTime: Int = 10,

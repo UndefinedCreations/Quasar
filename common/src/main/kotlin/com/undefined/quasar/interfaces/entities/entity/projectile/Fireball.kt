@@ -6,6 +6,6 @@ import org.bukkit.inventory.ItemStack
 interface Fireball : Projectile {
 
     fun setItem(item: ItemStack?)
-    fun getItem(): ItemStack?
+    fun getItem(): ItemStack
 
 }

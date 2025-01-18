@@ -4,10 +4,6 @@ import com.undefined.quasar.entity.EntityFactory
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.exception.EntityNotFoundException
 import com.undefined.quasar.interfaces.Entity
-import com.undefined.quasar.interfaces.entities.entity.monster.Drowned
-import com.undefined.quasar.interfaces.entities.entity.monster.Evoker
-import com.undefined.quasar.interfaces.entities.entity.vehicle.boat.DarkOakBoat
-
 import com.undefined.quasar.v1_21_4.impl.entity.AreaEffectCloud
 import com.undefined.quasar.v1_21_4.impl.entity.ExperienceOrb
 import com.undefined.quasar.v1_21_4.impl.entity.ambient.Bat
@@ -17,14 +13,16 @@ import com.undefined.quasar.v1_21_4.impl.entity.animal.horse.Donkey
 import com.undefined.quasar.v1_21_4.impl.entity.animal.water.Cod
 import com.undefined.quasar.v1_21_4.impl.entity.animal.water.Dolphin
 import com.undefined.quasar.v1_21_4.impl.entity.decoration.ArmorStand
+import com.undefined.quasar.v1_21_4.impl.entity.decoration.GlowItemFrame
+import com.undefined.quasar.v1_21_4.impl.entity.decoration.ItemFrame
 import com.undefined.quasar.v1_21_4.impl.entity.display.BlockDisplay
 import com.undefined.quasar.v1_21_4.impl.entity.item.FallingBlockEntity
 import com.undefined.quasar.v1_21_4.impl.entity.monster.*
 import com.undefined.quasar.v1_21_4.impl.entity.monster.boss.EndCrystal
 import com.undefined.quasar.v1_21_4.impl.entity.monster.boss.EnderDragon
 import com.undefined.quasar.v1_21_4.impl.entity.projectile.*
-import com.undefined.quasar.v1_21_4.impl.entity.vehicle.minecart.Minecart
 import com.undefined.quasar.v1_21_4.impl.entity.vehicle.boats.*
+import com.undefined.quasar.v1_21_4.impl.entity.vehicle.minecart.Minecart
 import com.undefined.quasar.v1_21_4.impl.entity.vehicle.minecart.MinecartChest
 import com.undefined.quasar.v1_21_4.impl.entity.vehicle.minecart.MinecartCommandBlock
 import com.undefined.quasar.v1_21_4.impl.entity.vehicle.minecart.MinecartFurnace
@@ -88,8 +86,9 @@ class EntityFactory1_21_4 : EntityFactory {
             EntityType.FURNACE_MINECART -> MinecartFurnace()
             EntityType.GHAST -> Ghast()
             EntityType.GIANT -> Giant()
+            EntityType.GLOW_ITEM_FRAME -> GlowItemFrame()
 
-
+            EntityType.ITEM_FRAME -> ItemFrame()
             EntityType.GUARDIAN -> Guardian()
             EntityType.ZOMBIE -> Zombie()
             EntityType.SPIDER -> Spider()

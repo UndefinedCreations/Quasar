@@ -9,11 +9,11 @@ abstract class AbstractHorse(entityType: EntityType) : Animal(entityType), Abstr
         super.getTests().apply { addAll(mutableListOf(
             {
                 setSaddle(true)
-                getTestMessage(this@AbstractHorse::class, "Set saddle", true)
+                getTestMessage(this@AbstractHorse::class, "Set saddle", hasSaddle())
             },
             {
                 setSaddle(false)
-                getTestMessage(this@AbstractHorse::class, "Set saddle", false)
+                getTestMessage(this@AbstractHorse::class, "Set saddle", hasSaddle())
             }
         )) }
 }

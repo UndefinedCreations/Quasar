@@ -4,7 +4,7 @@ import com.undefined.quasar.interfaces.abstracts.VehicleEntity
 import org.bukkit.block.data.BlockData
 
 interface Minecart : VehicleEntity {
-    fun setDisplayBlock(block: BlockData)
+    fun setDisplayBlock(block: BlockData?)
     fun getDisplayBlock(): BlockData?
     fun setDisplayBlockOffset(offset: Int)
     fun getDisplayBlockOffset(): Int

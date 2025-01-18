@@ -10,14 +10,16 @@ import com.undefined.quasar.interfaces.entities.entity.animal.horse.Donkey
 import com.undefined.quasar.interfaces.entities.entity.animal.water.Cod
 import com.undefined.quasar.interfaces.entities.entity.animal.water.Dolphin
 import com.undefined.quasar.interfaces.entities.entity.decoration.ArmorStand
+import com.undefined.quasar.interfaces.entities.entity.decoration.GlowItemFrame
+import com.undefined.quasar.interfaces.entities.entity.decoration.ItemFrame
 import com.undefined.quasar.interfaces.entities.entity.display.BlockDisplay
 import com.undefined.quasar.interfaces.entities.entity.item.FallingBlockEntity
 import com.undefined.quasar.interfaces.entities.entity.monster.*
 import com.undefined.quasar.interfaces.entities.entity.monster.boss.EndCrystal
 import com.undefined.quasar.interfaces.entities.entity.monster.boss.EnderDragon
 import com.undefined.quasar.interfaces.entities.entity.projectile.*
-import com.undefined.quasar.interfaces.entities.entity.vehicle.minecart.Minecart
 import com.undefined.quasar.interfaces.entities.entity.vehicle.boat.*
+import com.undefined.quasar.interfaces.entities.entity.vehicle.minecart.Minecart
 import com.undefined.quasar.interfaces.entities.entity.vehicle.minecart.MinecartChest
 import com.undefined.quasar.interfaces.entities.entity.vehicle.minecart.MinecartCommandBlock
 import com.undefined.quasar.interfaces.entities.entity.vehicle.minecart.MinecartFurnace
@@ -79,8 +81,9 @@ enum class EntityType(val clazz: KClass<out Entity>) {
     FURNACE_MINECART(MinecartFurnace::class),
     GHAST(Ghast::class),
     GIANT(Giant::class),
+    GLOW_ITEM_FRAME(GlowItemFrame::class),
 
-
+    ITEM_FRAME(ItemFrame::class),
     GUARDIAN(Guardian::class),
     ZOMBIE(Zombie::class),
     SPIDER(Spider::class),

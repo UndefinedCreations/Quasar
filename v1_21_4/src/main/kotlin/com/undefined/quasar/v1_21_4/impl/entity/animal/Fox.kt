@@ -11,8 +11,6 @@ import net.minecraft.world.level.Level
 
 class Fox : Animal(EntityType.FOX), Fox {
 
-    private var variant = Fox.Variant.RED
-
     private val FLAG_SITTING = 1
     private val FLAG_CROUCHING = 4
     private val FLAG_INTERESTED = 8
@@ -33,12 +31,11 @@ class Fox : Animal(EntityType.FOX), Fox {
             FieldMappings.Entity.LivingEntity.Mob.Animal.Fox.DATA_FLAGS_ID
         )
 
-    override fun setVariant(variant: Fox.Variant) =
-        setEntityDataAccessor(DATA_TYPE_ID, variant.id) {
-            this.variant = variant
-        }
+    override fun setVariant(variant: Fox.Variant) = setEntityDataAccessor(DATA_TYPE_ID, variant.id)
 
-    override fun getVariant(): Fox.Variant = variant
+    override fun getVariant(): Fox.Variant = getEntityDataValue(DATA_TYPE_ID)?.let {
+        data -> Fox.Variant.entries.first { it.id == data }
+    } ?: Fox.Variant.RED
 
     override fun setSitting(sitting: Boolean) = setFlag(FLAG_SITTING, sitting) {}
 
@@ -88,7 +85,7 @@ class Fox : Animal(EntityType.FOX), Fox {
     override fun getEntityData(): JsonObject {
         val animalJson = super.getEntityData()
         val foxJson = JsonObject()
-        foxJson.addProperty("variant", variant.id)
+        foxJson.addProperty("variant", getVariant().id)
         foxJson.addProperty("sitting", isSitting())
         foxJson.addProperty("interested", isInterested())
         foxJson.addProperty("pouncing", isPouncing())
@@ -102,7 +99,7 @@ class Fox : Animal(EntityType.FOX), Fox {
     override fun setEntityData(jsonObject: JsonObject) {
         super<Animal>.setEntityData(jsonObject)
         val foxJson = jsonObject["fox"].asJsonObject
-        variant = Fox.Variant.entries.first { it.id == foxJson["variant"].asInt }
+        setVariant(Fox.Variant.entries.first { it.id == foxJson["variant"].asInt })
         setSitting(foxJson["sitting"].asBoolean)
         setInterested(foxJson["interested"].asBoolean)
         setPouncing(foxJson["pouncing"].asBoolean)
@@ -111,9 +108,15 @@ class Fox : Animal(EntityType.FOX), Fox {
         setDefending(foxJson["defending"].asBoolean)
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setVariant(variant)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setVariant(Fox.Variant.RED)
+        setSitting(false)
+        setInterested(false)
+        setPouncing(false)
+        setFoxSleeping(false)
+        setFacePlanted(false)
+        setDefending(false)
     }
 
     override fun getEntityClass(level: Level): Entity =
@@ -123,63 +126,63 @@ class Fox : Animal(EntityType.FOX), Fox {
         super.getTests().apply { addAll(mutableListOf(
             {
                 setVariant(Fox.Variant.SNOW)
-                getTestMessage(this@Fox::class, "Set variant", "snow")
+                getTestMessage(this@Fox::class, "Set variant", getVariant().name.lowercase())
             },
             {
                 setSitting(true)
-                getTestMessage(this@Fox::class, "Set sitting", true)
+                getTestMessage(this@Fox::class, "Set sitting", isSitting())
             },
             {
                 setSitting(false)
-                getTestMessage(this@Fox::class, "Set sitting", false)
+                getTestMessage(this@Fox::class, "Set sitting", isSitting())
             },
             {
                 setCrouching(true)
-                getTestMessage(this@Fox::class, "Set crouching", true)
+                getTestMessage(this@Fox::class, "Set crouching", isCrouching())
             },
             {
                 setCrouching(false)
-                getTestMessage(this@Fox::class, "Set crouching", false)
+                getTestMessage(this@Fox::class, "Set crouching", isCrouching())
             },
             {
                 setInterested(true)
-                getTestMessage(this@Fox::class, "Set interested", true)
+                getTestMessage(this@Fox::class, "Set interested", isInterested())
             },
             {
                 setInterested(false)
-                getTestMessage(this@Fox::class, "Set interested", false)
+                getTestMessage(this@Fox::class, "Set interested", isInterested())
             },
             {
                 setPouncing(true)
-                getTestMessage(this@Fox::class, "Set pouncing", true)
+                getTestMessage(this@Fox::class, "Set pouncing", isPouncing())
             },
             {
                 setPouncing(false)
-                getTestMessage(this@Fox::class, "Set pouncing", false)
+                getTestMessage(this@Fox::class, "Set pouncing", isPouncing())
             },
             {
                 setFoxSleeping(true)
-                getTestMessage(this@Fox::class, "Set fox sleeping", true)
+                getTestMessage(this@Fox::class, "Set fox sleeping", isFoxSleeping())
             },
             {
                 setFoxSleeping(false)
-                getTestMessage(this@Fox::class, "Set fox sleeping", false)
+                getTestMessage(this@Fox::class, "Set fox sleeping", isFoxSleeping())
             },
             {
                 setFacePlanted(true)
-                getTestMessage(this@Fox::class, "Set face planted", true)
+                getTestMessage(this@Fox::class, "Set face planted", isFacePlanted())
             },
             {
                 setFacePlanted(false)
-                getTestMessage(this@Fox::class, "Set face planted", false)
+                getTestMessage(this@Fox::class, "Set face planted", isFacePlanted())
             },
             {
                 setDefending(true)
-                getTestMessage(this@Fox::class, "Set defending", true)
+                getTestMessage(this@Fox::class, "Set defending", isDefending())
             },
             {
                 setDefending(false)
-                getTestMessage(this@Fox::class, "Set defending", false)
+                getTestMessage(this@Fox::class, "Set defending", isDefending())
             }
         )) }
 }

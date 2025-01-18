@@ -14,25 +14,20 @@ import org.bukkit.inventory.ItemStack
 
 abstract class Fireball(entityType: EntityType) : Entity(entityType), Fireball {
 
-    private var item: ItemStack = ItemStack(Material.FIRE_CHARGE)
-
     private var DATA_ITEM_STACK: EntityDataAccessor<net.minecraft.world.item.ItemStack>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.projectile.Fireball::class.java,
             FieldMappings.Entity.Projectile.FireBall.DATA_ITEM_STACK
         )
 
-    override fun setItem(item: ItemStack?) =
-        setEntityDataAccessor(DATA_ITEM_STACK, CraftItemStack.asNMSCopy(item ?: ItemStack(Material.FIRE_CHARGE))) {
-            this.item = item ?: ItemStack(Material.FIRE_CHARGE)
-        }
+    override fun setItem(item: ItemStack?) = setEntityDataAccessor(DATA_ITEM_STACK, CraftItemStack.asNMSCopy(item ?: ItemStack(Material.FIRE_CHARGE)))
 
-    override fun getItem(): ItemStack? = item
+    override fun getItem(): ItemStack = getEntityDataValue(DATA_ITEM_STACK)?.let { CraftItemStack.asBukkitCopy(it) } ?: ItemStack(Material.FIRE_CHARGE)
 
     override fun getEntityData(): JsonObject {
         val projectileJson = super.getEntityData()
         val fireBallJson = JsonObject()
-        fireBallJson.addProperty("item", item.serializer())
+        fireBallJson.addProperty("item", getItem().serializer())
         projectileJson.add("fireball", fireBallJson)
         return projectileJson
     }
@@ -40,19 +35,19 @@ abstract class Fireball(entityType: EntityType) : Entity(entityType), Fireball {
     override fun setEntityData(jsonObject: JsonObject) {
         super<Entity>.setEntityData(jsonObject)
         val fireBallJson = jsonObject["fireball"].asJsonObject
-        item = ItemStackDeserializer.deserializer(fireBallJson["item"].asString)
+        setItem(ItemStackDeserializer.deserializer(fireBallJson["item"].asString))
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setItem(item)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setItem(ItemStack(Material.FIRE_CHARGE))
     }
 
     override fun getTests(): MutableList<() -> String> =
         super.getTests().apply { addAll(mutableListOf(
             {
                 setItem(ItemStack(Material.entries.filter { it.isBlock }.random()))
-                getTestMessage(this@Fireball::class, "Set item", getItem()?.type?.name?.lowercase()!!)
+                getTestMessage(this@Fireball::class, "Set item", getItem().type.name.lowercase())
             }
         )) }
 }

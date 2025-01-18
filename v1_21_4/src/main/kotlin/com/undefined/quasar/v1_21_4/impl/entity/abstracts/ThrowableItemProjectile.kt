@@ -14,8 +14,6 @@ import org.bukkit.inventory.ItemStack
 
 abstract class ThrowableItemProjectile(entityType: EntityType) : Entity(entityType), ThrowableItemProjectile {
 
-    private var item: ItemStack = ItemStack(Material.STONE)
-
     private var DATA_ITEM_STACK: EntityDataAccessor<net.minecraft.world.item.ItemStack>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.projectile.ThrowableItemProjectile::class.java,
@@ -23,16 +21,14 @@ abstract class ThrowableItemProjectile(entityType: EntityType) : Entity(entityTy
         )
 
     override fun setItem(item: ItemStack) =
-        setEntityDataAccessor(DATA_ITEM_STACK, CraftItemStack.asNMSCopy(item)) {
-            this.item = item
-        }
+        setEntityDataAccessor(DATA_ITEM_STACK, CraftItemStack.asNMSCopy(item))
 
-    override fun getItem(): ItemStack? = item
+    override fun getItem(): ItemStack? = CraftItemStack.asBukkitCopy(getEntityDataValue(DATA_ITEM_STACK))
 
     override fun getEntityData(): JsonObject {
         val projectileJson = super.getEntityData()
         val throwableItemProjectileJson = JsonObject()
-        throwableItemProjectileJson.addProperty("items", item.serializer())
+        throwableItemProjectileJson.addProperty("items", getItem()?.serializer())
         projectileJson.add("throwableItemProjectile", throwableItemProjectileJson)
         return projectileJson
     }
@@ -40,12 +36,12 @@ abstract class ThrowableItemProjectile(entityType: EntityType) : Entity(entityTy
     override fun setEntityData(jsonObject: JsonObject) {
         super<Entity>.setEntityData(jsonObject)
         val throwableItemProjectileJson = jsonObject["throwableItemProjectile"].asJsonObject
-        item = ItemStackDeserializer.deserializer(throwableItemProjectileJson["item"].asString)
+        setItem(ItemStackDeserializer.deserializer(throwableItemProjectileJson["item"].asString))
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setItem(item)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setItem(ItemStack(Material.STONE))
     }
 
     override fun getTests(): MutableList<() -> String> =

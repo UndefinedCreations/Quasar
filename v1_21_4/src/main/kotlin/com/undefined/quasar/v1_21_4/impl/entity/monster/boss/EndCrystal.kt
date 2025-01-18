@@ -9,13 +9,9 @@ import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import net.minecraft.core.BlockPos
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.level.Level
-import org.bukkit.Location
-import java.util.Optional
+import java.util.*
 
 class EndCrystal : Entity(EntityType.END_CRYSTAL), EndCrystal {
-
-    private var showingBottom = true
-    private var beamTarget: EndCrystal.BlockPos? = null
 
     private var DATA_SHOW_BOTTOM: EntityDataAccessor<Boolean>? = null
         get() = getEntityDataAccessor(field,
@@ -28,25 +24,21 @@ class EndCrystal : Entity(EntityType.END_CRYSTAL), EndCrystal {
             FieldMappings.Entity.LivingEntity.Mob.Boss.EndCrystal.DATA_BEAM_TARGET
         )
 
-    override fun setShowingBottom(showing: Boolean) =
-        setEntityDataAccessor(DATA_SHOW_BOTTOM, showing) {
-            this.showingBottom = showing
-        }
+    override fun setShowingBottom(showing: Boolean) = setEntityDataAccessor(DATA_SHOW_BOTTOM, showing)
 
-    override fun isShowingBottom(): Boolean = showingBottom
+    override fun isShowingBottom(): Boolean = getEntityDataValue(DATA_SHOW_BOTTOM) ?: false
 
-    override fun setBeamTarget(target: EndCrystal.BlockPos?) =
-        setEntityDataAccessor(DATA_BEAM_TARGET, if (target == null) Optional.empty() else Optional.of(target.let { BlockPos(it.x, it.y, it.z) })) {
-            this.beamTarget = target
-        }
+    override fun setBeamTarget(target: com.undefined.quasar.util.BlockPos?) = setEntityDataAccessor(DATA_BEAM_TARGET, if (target == null) Optional.empty() else Optional.of(target.let { BlockPos(it.x, it.y, it.z) }))
 
-    override fun getBeamTarget(): EndCrystal.BlockPos? = beamTarget
+    override fun getBeamTarget(): com.undefined.quasar.util.BlockPos? = getEntityDataValue(DATA_BEAM_TARGET)?.let { data ->
+        if (data.isPresent) com.undefined.quasar.util.BlockPos(data.get().x, data.get().y, data.get().z) else null
+    }
 
     override fun getEntityData(): JsonObject {
         val bossJson = super.getEntityData()
         val endCrystalJson = JsonObject()
-        endCrystalJson.addProperty("showingBottom", showingBottom)
-        val locationJson = beamTarget?.toJson()
+        endCrystalJson.addProperty("showingBottom", isShowingBottom())
+        val locationJson = getBeamTarget()?.toJson()
         if (locationJson == null) endCrystalJson.addProperty("beamTarget", "EMPTY") else endCrystalJson.add("beamTarget", locationJson)
         bossJson.add("endCrystal", endCrystalJson)
         return bossJson
@@ -55,15 +47,15 @@ class EndCrystal : Entity(EntityType.END_CRYSTAL), EndCrystal {
     override fun setEntityData(jsonObject: JsonObject) {
         super<Entity>.setEntityData(jsonObject)
         val endCrystalJson = jsonObject["endCrystal"].asJsonObject
-        showingBottom = endCrystalJson["showingBottom"].asBoolean
+        setShowingBottom(endCrystalJson["showingBottom"].asBoolean)
         val locationJson = if (jsonObject["beamTarget"].asString == "EMPTY") null else jsonObject["beamTarget"].asJsonObject
-        beamTarget = if (locationJson == null) null else EndCrystal.BlockPos(locationJson)
+        setBeamTarget(if (locationJson == null) null else com.undefined.quasar.util.BlockPos(locationJson))
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setBeamTarget(beamTarget)
-        setShowingBottom(showingBottom)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setBeamTarget(null)
+        setShowingBottom(true)
     }
 
     override fun getEntityClass(level: Level): net.minecraft.world.entity.Entity =
@@ -73,11 +65,11 @@ class EndCrystal : Entity(EntityType.END_CRYSTAL), EndCrystal {
         super.getTests().apply { addAll(mutableListOf(
             {
                 setShowingBottom(false)
-                getTestMessage(this@EndCrystal::class, "Set showingBottom", false)
+                getTestMessage(this@EndCrystal::class, "Set showingBottom", isShowingBottom())
             },
             {
                 setShowingBottom(true)
-                getTestMessage(this@EndCrystal::class, "Set showingBottom", true)
+                getTestMessage(this@EndCrystal::class, "Set showingBottom", isShowingBottom())
             },
             {
                 setBeamTarget(getLocation().clone().add(0.0, 10.0, 0.0).toBlockPos())
@@ -85,7 +77,7 @@ class EndCrystal : Entity(EntityType.END_CRYSTAL), EndCrystal {
             },
             {
                 setBeamTarget(null)
-                getTestMessage(this@EndCrystal::class, "Set beam target", "null")
+                getTestMessage(this@EndCrystal::class, "Set beam target", getBeamTarget())
             }
         )) }
 }

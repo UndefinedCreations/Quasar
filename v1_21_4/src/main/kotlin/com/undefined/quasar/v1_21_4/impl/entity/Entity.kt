@@ -12,7 +12,6 @@ import com.undefined.quasar.v1_21_4.mappings.MethodMappings
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.game.*
-import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket.Pos
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.Pose
 import net.minecraft.world.entity.PositionMoveRotation
@@ -63,33 +62,17 @@ abstract class Entity(
     private var FLAG_INVISIBLE = 5
     private var FLAG_GLOWING = 6
 
-    private var customName: String? = null
-    private var isCustomNameVisible = false
-    private var fire = false
-    private var freezing = false
-    private var visible = true
-    private var gravity = false
-    private var silent = false
-    private var collidable = false
-    private var glowing = false
-    private var glowingColor: ChatColor = ChatColor.WHITE
     private var passengers: MutableList<Entity> = mutableListOf()
 
-    override fun setCustomName(name: String?) =
-        setEntityDataAccessor(DATA_CUSTOM_NAME, Optional.ofNullable(CraftChatMessage.fromStringOrNull(name))) {
-            customName = name
-        }
+    override fun setCustomName(name: String?) = setEntityDataAccessor(DATA_CUSTOM_NAME, Optional.ofNullable(CraftChatMessage.fromStringOrNull(name)))
 
-    override fun getCustomName(): String? = customName
+    override fun getCustomName(): String? = getEntityDataValue(DATA_CUSTOM_NAME)?.let {
+        if (it.isPresent) it.get().string else null
+    }
 
-    override fun isCustomNameVisible(): Boolean = isCustomNameVisible
+    override fun isCustomNameVisible(): Boolean = getEntityDataValue(DATA_CUSTOM_NAME_VISIBLE) ?: false
 
-    override fun setCustomNameVisibility(visible: Boolean) =
-        setEntityDataAccessor(DATA_CUSTOM_NAME_VISIBLE, visible) {
-            if (!visible) setCustomName(null)
-            isCustomNameVisible = visible
-        }
-
+    override fun setCustomNameVisibility(visible: Boolean) = setEntityDataAccessor(DATA_CUSTOM_NAME_VISIBLE, visible)
 
     override fun teleport(location: Location) {
         val entity = entity ?: return
@@ -137,37 +120,27 @@ abstract class Entity(
         setLocation(location)
     }
 
-    override fun setVisualFire(fire: Boolean) =
-        setSharedFlag(FLAG_ONFIRE, fire) {
-            this.fire = fire
-        }
+    override fun setVisualFire(fire: Boolean) = setSharedFlag(FLAG_ONFIRE, fire)
 
-    override fun isVisualFire(): Boolean = fire
+    override fun isVisualFire(): Boolean = getSharedFlag(FLAG_ONFIRE)
 
-    override fun setVisualFreezing(freezing: Boolean) =
-        setEntityDataAccessor(DATA_TICKS_FROZEN, if(freezing) Int.MAX_VALUE else -1) {
-            this.freezing = freezing
-        }
+    override fun setVisualFreezing(freezing: Boolean) = setEntityDataAccessor(DATA_TICKS_FROZEN, if(freezing) Int.MAX_VALUE else -1)
 
-    override fun isFreezing(): Boolean = freezing
+    override fun isFreezing(): Boolean = getEntityDataValue(DATA_TICKS_FROZEN)?.let { it > 0 } ?: false
 
-    override fun setVisible(visible: Boolean) =
-        setSharedFlag(FLAG_INVISIBLE, !visible) {
-            this.visible = visible
-        }
+    override fun setVisible(visible: Boolean) = setSharedFlag(FLAG_INVISIBLE, !visible)
 
-    override fun isVisible(): Boolean = visible
+    override fun isVisible(): Boolean = !getSharedFlag(FLAG_INVISIBLE)
 
     override fun setCollidable(collidable: Boolean) {
         entity ?: return
-        this.collidable = collidable
-        entityTeam.collisionRule = if (this.collidable) Team.CollisionRule.ALWAYS else Team.CollisionRule.NEVER
+        entityTeam.collisionRule = if (collidable) Team.CollisionRule.ALWAYS else Team.CollisionRule.NEVER
         sendPackets(
             ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(entityTeam, true)
         )
     }
 
-    override fun isCollidable(): Boolean = collidable
+    override fun isCollidable(): Boolean = entityTeam.collisionRule == Team.CollisionRule.ALWAYS
 
     override fun setRotation(yaw: Float, pitch: Float) {
         val entity = entity ?: return
@@ -223,47 +196,35 @@ abstract class Entity(
 
     override fun getPassengers(): List<Entity> = passengers
 
-    override fun setGlowing(glow: Boolean) =
-        setSharedFlag(FLAG_GLOWING, glow) {
-            this.glowing = glow
-        }
+    override fun setGlowing(glow: Boolean) = setSharedFlag(FLAG_GLOWING, glow)
 
     override fun setGlowingColor(chatColor: ChatColor) {
         entity ?: return
-        glowingColor = chatColor
         entityTeam.color = ChatFormatting.valueOf(chatColor.name)
         sendPackets(
             ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(entityTeam, true)
         )
     }
 
-    override fun getGlowingColor(): ChatColor = glowingColor
+    override fun getGlowingColor(): ChatColor = ChatColor.valueOf(entityTeam.color.name)
 
-    override fun isGlowing(): Boolean = glowing
+    override fun isGlowing(): Boolean = getSharedFlag(FLAG_GLOWING)
 
-    override fun setGravity(gravity: Boolean) =
-        setEntityDataAccessor(DATA_NO_GRAVITY, !gravity) {
-            this.gravity = gravity
-        }
+    override fun setGravity(gravity: Boolean) = setEntityDataAccessor(DATA_NO_GRAVITY, !gravity)
 
-    override fun hasGravity(): Boolean = gravity
+    override fun hasGravity(): Boolean = !(getEntityDataValue(DATA_NO_GRAVITY) ?: true)
 
-    override fun setSilent(silent: Boolean) =
-        setEntityDataAccessor(DATA_SILENT, silent) {
-            this.silent = silent
-        }
+    override fun setSilent(silent: Boolean) = setEntityDataAccessor(DATA_SILENT, silent)
 
-    override fun isSilent(): Boolean = silent
+    override fun isSilent(): Boolean = getEntityDataValue(DATA_SILENT) ?: false
 
     override fun isStanding(): Boolean = entity?.entityData?.get(DATA_POSE) == Pose.STANDING
 
-    override fun setStanding() =
-        setEntityDataAccessor(DATA_POSE, Pose.STANDING) {}
+    override fun setStanding() = setEntityDataAccessor(DATA_POSE, Pose.STANDING)
 
     override fun isSleeping(): Boolean = entity?.entityData?.get(DATA_POSE) == Pose.SLEEPING
 
-    override fun setSleeping() =
-        setEntityDataAccessor(DATA_POSE, Pose.SLEEPING) {}
+    override fun setSleeping() = setEntityDataAccessor(DATA_POSE, Pose.SLEEPING)
 
     fun toRotationValue(yaw: Float): Byte = floor(yaw * 256.0f / 360.0f).toInt().toByte()
 
@@ -273,17 +234,17 @@ abstract class Entity(
         val json = super.getEntityData()
         val entityJson = JsonObject()
 
-        entityJson.addProperty("customName", customName)
-        entityJson.addProperty("isCustomNameVisible", isCustomNameVisible)
+        entityJson.addProperty("customName", getCustomName())
+        entityJson.addProperty("isCustomNameVisible", isCustomNameVisible())
 
-        entityJson.addProperty("fire", fire)
-        entityJson.addProperty("freezing", freezing)
-        entityJson.addProperty("visible", visible)
-        entityJson.addProperty("gravity", gravity)
+        entityJson.addProperty("fire", isVisualFire())
+        entityJson.addProperty("freezing", isFreezing())
+        entityJson.addProperty("visible", isVisible())
+        entityJson.addProperty("gravity", hasGravity())
 
-        entityJson.addProperty("collidable", collidable)
-        entityJson.addProperty("glowing", glowing)
-        entityJson.addProperty("glowingColor", glowingColor.name)
+        entityJson.addProperty("collidable", isCollidable())
+        entityJson.addProperty("glowing", isGlowing())
+        entityJson.addProperty("glowingColor", getGlowingColor().name)
 
         val passengersArray = JsonArray()
         passengers.forEach {
@@ -298,33 +259,33 @@ abstract class Entity(
     override fun setEntityData(jsonObject: JsonObject) {
         val entityJson = jsonObject["entity"].asJsonObject
 
-        entityJson["customName"].asString.run {
-            customName = if(this == "null") null else this
-        }
-        isCustomNameVisible = entityJson["isCustomNameVisible"].asBoolean
+        setCustomName(entityJson["customName"].asString.let {
+            if(it == "null") null else it
+        })
+        setCustomNameVisibility(entityJson["isCustomNameVisible"].asBoolean)
 
-        fire = entityJson["fire"].asBoolean
-        freezing = entityJson["freezing"].asBoolean
-        visible = entityJson["visible"].asBoolean
-        gravity = entityJson["gravity"].asBoolean
+        setVisualFire(entityJson["fire"].asBoolean)
+        setVisualFreezing(entityJson["freezing"].asBoolean)
+        setVisible(entityJson["visible"].asBoolean)
+        setGravity(entityJson["gravity"].asBoolean)
 
-        collidable = entityJson["collidable"].asBoolean
-        glowing = entityJson["glowing"].asBoolean
-        glowingColor = ChatColor.valueOf(entityJson["glowingColor"].asString)
+        setCollidable(entityJson["collidable"].asBoolean)
+        setGlowing(entityJson["glowing"].asBoolean)
+        setGlowingColor(ChatColor.valueOf(entityJson["glowingColor"].asString))
     }
 
-    override fun updateEntity() {
-        customName?.let { setCustomName(it) }
-        setCustomNameVisibility(isCustomNameVisible)
+    override fun setDefaultValues() {
+        setCustomName(null)
+        setCustomNameVisibility(false)
 
-        setVisualFreezing(fire)
-        setVisualFreezing(freezing)
-        setVisible(visible)
-        setGravity(gravity)
+        setVisualFreezing(false)
+        setVisualFreezing(false)
+        setVisible(true)
+        setGravity(false)
 
-        setCollidable(collidable)
-        setGlowing(gravity)
-        setGlowingColor(glowingColor)
+        setCollidable(false)
+        setGlowing(false)
+        setGlowingColor(ChatColor.WHITE)
     }
 
     override fun getTests(): MutableList<() -> String> =
@@ -336,88 +297,88 @@ abstract class Entity(
                     .joinToString("")
                 setCustomName(name)
                 setCustomNameVisibility(true)
-                getTestMessage(this::class, "Set custom name", name)
+                getTestMessage(this::class, "Set custom name", getCustomName())
             },
             {
                 setCustomNameVisibility(false)
-                getTestMessage(this::class, "Set custom name visibility", false)
+                getTestMessage(this::class, "Set custom name visibility", isCustomNameVisible())
             },
             {
                 setVisualFreezing(true)
-                getTestMessage(this::class, "Set visual freezing", true)
+                getTestMessage(this::class, "Set visual freezing", isFreezing())
             },
             {
                 setVisualFreezing(false)
-                getTestMessage(this::class, "Set visual freezing", false)
+                getTestMessage(this::class, "Set visual freezing", isFreezing())
             },
             {
                 setVisualFire(true)
-                getTestMessage(this::class, "Set visual fire", true)
+                getTestMessage(this::class, "Set visual fire", isVisualFire())
             },
             {
                 setVisualFire(false)
-                getTestMessage(this::class, "Set visual fire", false)
+                getTestMessage(this::class, "Set visual fire", isVisualFire())
             },
             {
                 setVisible(false)
-                getTestMessage(this::class, "Set visible", false)
+                getTestMessage(this::class, "Set visible", isVisible())
             },
             {
                 setVisible(true)
-                getTestMessage(this::class, "Set visible", true)
+                getTestMessage(this::class, "Set visible", isVisible())
             },
             {
                 setGravity(true)
-                getTestMessage(this::class, "Set gravity", true)
+                getTestMessage(this::class, "Set gravity", hasGravity())
             },
             {
                 setGravity(false)
-                getTestMessage(this::class, "Set gravity", false)
+                getTestMessage(this::class, "Set gravity", hasGravity())
             },
             {
                 setCollidable(true)
-                getTestMessage(this::class, "Set collidable", true)
+                getTestMessage(this::class, "Set collidable", isCollidable())
             },
             {
                 setCollidable(false)
-                getTestMessage(this::class, "Set collidable", false)
+                getTestMessage(this::class, "Set collidable", isCollidable())
             },
             {
                 setGlowing(true)
-                getTestMessage(this::class, "Set glowing", true)
+                getTestMessage(this::class, "Set glowing", isGlowing())
             },
             {
                 val color = ChatColor.entries.filter { it.isColor }.random()
                 setGlowingColor(color)
-                getTestMessage(this::class, "Set glowing color", color.name.lowercase())
+                getTestMessage(this::class, "Set glowing color", getGlowingColor().name.lowercase())
             },
             {
                 setGlowing(false)
-                getTestMessage(this::class, "Set glowing", false)
+                getTestMessage(this::class, "Set glowing", isGlowing())
             },
             {
                 setSilent(true)
-                getTestMessage(this::class, "Set silent", true)
+                getTestMessage(this::class, "Set silent", isSilent())
             },
             {
                 setSilent(false)
-                getTestMessage(this::class, "Set silent", false)
+                getTestMessage(this::class, "Set silent", isSilent())
             },
             {
                 val location = getLocation().clone().add(0.0, 5.0, 0.0)
                 teleport(location)
-                getTestMessage(this::class, "Teleport", Math.round(location.x), Math.round(location.y), Math.round(location.z))
+                getTestMessage(this::class, "Teleport", Math.round(getLocation().x), Math.round(getLocation().y), Math.round(getLocation().z))
             },
             {
                 val location = getLocation().clone().subtract(0.0, 5.0, 0.0)
                 teleport(location)
-                getTestMessage(this::class, "Teleport", Math.round(location.x), Math.round(location.y), Math.round(location.z))
+                getTestMessage(this::class, "Teleport", Math.round(getLocation().x), Math.round(getLocation().y), Math.round(getLocation().z))
             },
             {
                 val yaw = Random().nextFloat(-180f, 180f)
                 val pitch = Random().nextFloat(-180f, 180f)
                 setRotation(yaw, pitch)
-                getTestMessage(this::class, "Set Rotation", pitch, yaw)
+                getTestMessage(this::class, "Set Rotation", getLocation().pitch, getLocation().yaw)
             },
             {
                 setRotation(0f, 0f)
@@ -426,21 +387,21 @@ abstract class Entity(
             {
                 val location = getLocation().clone().add(0.0, 5.0, 0.0)
                 moveTo(location)
-                getTestMessage(this::class, "Move to", Math.round(location.x), Math.round(location.y), Math.round(location.z))
+                getTestMessage(this::class, "Move to", Math.round(getLocation().x), Math.round(getLocation().y), Math.round(getLocation().z))
             },
             {
                 val location = getLocation().clone().subtract(0.0, 5.0, 0.0)
                 moveTo(location)
-                getTestMessage(this::class, "Move to", Math.round(location.x), Math.round(location.y), Math.round(location.z))
+                getTestMessage(this::class, "Move to", Math.round(getLocation().x), Math.round(getLocation().y), Math.round(getLocation().z))
             },
             {
                 setSleeping()
-                getTestMessage(this::class, "Set sleeping")
+                getTestMessage(this::class, "Set sleeping", isSleeping())
             }
             ,
             {
                 setStanding()
-                getTestMessage(this::class, "Set standing")
+                getTestMessage(this::class, "Set standing", isStanding())
             }
         )
 

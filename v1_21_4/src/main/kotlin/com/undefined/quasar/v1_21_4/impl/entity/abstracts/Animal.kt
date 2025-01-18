@@ -9,48 +9,44 @@ import net.minecraft.network.syncher.EntityDataAccessor
 
 abstract class Animal(entityType: EntityType) : LivingEntity(entityType), Animal {
 
-    private var baby = false
-
     private var DATA_BABY_ID: EntityDataAccessor<Boolean>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.AgeableMob::class.java,
             FieldMappings.Entity.LivingEntity.Mob.Animal.DATA_BABY_ID
         )
 
-    override fun setBaby(bady: Boolean) =
-        setEntityDataAccessor(DATA_BABY_ID, bady) {
-            this.baby = bady
-        }
+    override fun setBaby(bady: Boolean) = setEntityDataAccessor(DATA_BABY_ID, bady)
 
-    override fun isBady(): Boolean = false
+    override fun isBady(): Boolean = getEntityDataValue(DATA_BABY_ID) ?: false
 
     override fun getEntityData(): JsonObject {
         val livingEntityJson = super.getEntityData()
         val animalJson = JsonObject()
-        animalJson.addProperty("bady", baby)
+        animalJson.addProperty("baby", isBady())
         livingEntityJson.add("animal", animalJson)
         return livingEntityJson
     }
 
     override fun setEntityData(jsonObject: JsonObject) {
         super<LivingEntity>.setEntityData(jsonObject)
-        val animalJson = jsonObject["animal"].asBoolean
+        val animalJson = jsonObject["animal"].asJsonObject
+        setBaby(animalJson["baby"].asBoolean)
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setBaby(baby)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setBaby(false)
     }
 
     override fun getTests(): MutableList<() -> String> =
         super.getTests().apply { addAll(mutableListOf(
             {
                 setBaby(true)
-                getTestMessage(this@Animal::class, "Set baby", true)
+                getTestMessage(this@Animal::class, "Set baby", isBady())
             },
             {
                 setBaby(false)
-                getTestMessage(this@Animal::class, "Set baby", false)
+                getTestMessage(this@Animal::class, "Set baby", isBady())
             }
         )) }
 }

@@ -10,19 +10,16 @@ import net.minecraft.world.level.Level
 
 class Breeze : LivingEntity(EntityType.BREEZE), Breeze {
 
-    private var animation = Breeze.Animation.IDLE
+    override fun setAnimation(animation: Breeze.Animation) = setEntityDataAccessor(DATA_POSE, Pose.entries.first { it.id() == animation.id })
 
-    override fun setAnimation(animation: Breeze.Animation) =
-        setEntityDataAccessor(DATA_POSE, Pose.entries.first { it.id() == animation.id }) {
-            this.animation = animation
-        }
-
-    override fun getAnimation(): Breeze.Animation = animation
+    override fun getAnimation(): Breeze.Animation = getEntityDataValue(DATA_POSE)?.let { data ->
+        Breeze.Animation.entries.first { data.id() == it.id }
+    } ?: Breeze.Animation.IDLE
 
     override fun getEntityData(): JsonObject {
         val monsterJson = super.getEntityData()
         val breezeJson = JsonObject()
-        breezeJson.addProperty("animation", animation.id)
+        breezeJson.addProperty("animation", getAnimation().id)
         monsterJson.add("breeze", breezeJson)
         return monsterJson
     }
@@ -30,12 +27,12 @@ class Breeze : LivingEntity(EntityType.BREEZE), Breeze {
     override fun setEntityData(jsonObject: JsonObject) {
         super<LivingEntity>.setEntityData(jsonObject)
         val breezeJson = jsonObject["breeze"].asJsonObject
-        animation = Breeze.Animation.entries.first { it.id == breezeJson["animation"].asInt }
+        setAnimation(Breeze.Animation.entries.first { it.id == breezeJson["animation"].asInt })
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setAnimation(animation)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setAnimation(Breeze.Animation.IDLE)
     }
 
     override fun getEntityClass(level: Level): Entity =
@@ -45,7 +42,7 @@ class Breeze : LivingEntity(EntityType.BREEZE), Breeze {
         super.getTests().apply { addAll(Breeze.Animation.entries.map {
             {
                 setAnimation(it)
-                getTestMessage(this@Breeze::class, "Setting animation", it)
+                getTestMessage(this@Breeze::class, "Setting animation", getAnimation().name.lowercase())
             }
         }) }
 }

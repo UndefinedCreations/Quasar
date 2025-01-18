@@ -10,7 +10,7 @@ interface AreaEffectCloud : Entity {
     fun getRadius(): Float
 
     fun setParticleColor(color: Color)
-    fun getParticleColor(): Color?
+    fun getParticleColor(): Color
 
     fun isInCloud(location: Location): Boolean
     fun isInCloud(entity: org.bukkit.entity.Entity): Boolean = isInCloud(entity.location)

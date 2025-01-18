@@ -127,7 +127,7 @@ abstract class LivingEntity(entityType: EntityType): LivingEntity, Entity(entity
         }
     }
 
-    override fun updateEntity() {
+    override fun setDefaultValues() {
         items.forEach { setItem(it.key, it.value) }
     }
 

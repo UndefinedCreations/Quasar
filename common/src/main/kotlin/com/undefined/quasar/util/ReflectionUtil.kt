@@ -19,11 +19,12 @@ fun <T : Any> Any.getPrivateField(clazz: Class<*>, name: String): T =
 fun <T : Any> Any.getPrivateField(name: String): T =
     javaClass.getDeclaredField(name).apply { isAccessible = true }[this] as T
 
-fun Any.setPrivateField(clazz: Class<*>, name: String, data: Any) =
-    clazz.javaClass.getDeclaredField(name).run {
+fun setPrivateField(clazz: Class<*>, name: String, data: Any) {
+    clazz.getDeclaredField(name).run {
         isAccessible = true
         set(this, data)
     }
+}
 
 fun <T : Any> Any.executePrivateMethod(name: String, vararg args: Any?): T =
     javaClass.getDeclaredMethod(name).apply { isAccessible = true }(this, args) as T

@@ -3,6 +3,7 @@ package com.undefined.quasar.v1_21_4.impl.entity.item
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.entities.entity.item.FallingBlockEntity
 import com.undefined.quasar.v1_21_4.impl.entity.Entity
+import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import net.minecraft.world.level.Level
 import org.bukkit.Location
 import org.bukkit.Material
@@ -23,15 +24,11 @@ class FallingBlockEntity : Entity(EntityType.FALLING_BLOCK), FallingBlockEntity 
     override fun getFallingBlock(): BlockData = blockData
 
     override fun spawn(location: Location) {
-
         val craftWorld = location.world as CraftWorld
         this.entity = getEntityClass(craftWorld.handle)
-
-        net.minecraft.world.entity.item.FallingBlockEntity::class.java.getDeclaredField("g").apply {
+        net.minecraft.world.entity.item.FallingBlockEntity::class.java.getDeclaredField(FieldMappings.Entity.FallingBlockEntity.BLOCK).apply {
             isAccessible = true
-            set(entity, (blockData as CraftBlockData).state)
-        }
-
+        }.set(entity, (blockData as CraftBlockData).state)
         super.spawn(location)
     }
 

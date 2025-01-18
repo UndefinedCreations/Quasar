@@ -14,8 +14,7 @@ import org.bukkit.Location
 import kotlin.random.Random
 
 class AreaEffectCloud : Entity(EntityType.AREA_EFFECT_CLOUD), AreaEffectCloud {
-    private var radius = 3f
-    private var color = Color.PURPLE
+
     private var DATA_RADIUS: EntityDataAccessor<Float>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.AreaEffectCloud::class.java,
@@ -27,28 +26,27 @@ class AreaEffectCloud : Entity(EntityType.AREA_EFFECT_CLOUD), AreaEffectCloud {
             FieldMappings.Entity.AreaEffectCloud.DATA_PARTICLE
         )
 
-    override fun isInCloud(location: Location): Boolean = if (getLocation().distance(location) <= radius) true else false
+    override fun isInCloud(location: Location): Boolean = if (getLocation().distance(location) <= getRadius()) true else false
 
     override fun setParticleColor(color: Color) =
         setEntityDataAccessor(DATA_PARTICLE,
             ColorParticleOption.create(
                 ParticleTypes.ENTITY_EFFECT, color.red.toFloat(), color.green.toFloat(), color.blue.toFloat()
-            )) { this.color = color }
+            ))
 
-    override fun getParticleColor(): Color? = color
+    override fun getParticleColor(): Color = getEntityDataValue(DATA_PARTICLE)?.let { data ->
+        (data as ColorParticleOption).let { Color.fromARGB( it.alpha.toInt(), it.red.toInt(), it.green.toInt(), it.blue.toInt()) }
+    } ?: Color.PURPLE
 
-    override fun getRadius(): Float = radius
+    override fun getRadius(): Float = getEntityDataValue(DATA_RADIUS) ?: 3f
 
-    override fun setRadius(float: Float) =
-        setEntityDataAccessor(DATA_RADIUS, float) {
-            this.radius = float
-        }
+    override fun setRadius(float: Float) = setEntityDataAccessor(DATA_RADIUS, float)
 
     override fun getEntityData(): JsonObject {
         val entityJson = super.getEntityData()
         val areaEffectCloudJson = JsonObject()
-        areaEffectCloudJson.addProperty("radius", radius)
-        areaEffectCloudJson.addProperty("color", color.asARGB())
+        areaEffectCloudJson.addProperty("radius", getRadius())
+        areaEffectCloudJson.addProperty("color", getParticleColor().asARGB())
         entityJson.add("areaEffectCloud", areaEffectCloudJson)
         return entityJson
     }
@@ -56,14 +54,14 @@ class AreaEffectCloud : Entity(EntityType.AREA_EFFECT_CLOUD), AreaEffectCloud {
     override fun setEntityData(jsonObject: JsonObject) {
         super<Entity>.setEntityData(jsonObject)
         val areaEffectCloudJson = jsonObject["areaEffectCloud"].asJsonObject
-        this.radius = areaEffectCloudJson["radius"].asFloat
-        this.color = Color.fromARGB(areaEffectCloudJson["color"].asInt)
+        setRadius(areaEffectCloudJson["radius"].asFloat)
+        setParticleColor(Color.fromARGB(areaEffectCloudJson["color"].asInt))
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setParticleColor(color)
-        setRadius(radius)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setParticleColor(Color.PURPLE)
+        setRadius(3f)
     }
 
     override fun getTests(): MutableList<() -> String> =
@@ -71,7 +69,7 @@ class AreaEffectCloud : Entity(EntityType.AREA_EFFECT_CLOUD), AreaEffectCloud {
             {
                 val color = Color.fromRGB(Random.nextInt(255), Random.nextInt(255), Random.nextInt(255))
                 setParticleColor(color)
-                getTestMessage(this::class, "Set particle color", color.red, color.green, color.blue)
+                getTestMessage(this::class, "Set particle color", getParticleColor().red, getParticleColor().green, getParticleColor().blue)
             },
             {
                 val radius = Random.nextDouble(25.0)

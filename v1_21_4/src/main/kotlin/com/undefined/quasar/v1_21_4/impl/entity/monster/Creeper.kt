@@ -12,9 +12,6 @@ import kotlin.random.Random
 
 class Creeper : LivingEntity(EntityType.CREEPER), Creeper {
 
-    private var swell = 0
-    private var ignite = false
-
     private var DATA_SWELL_DIR: EntityDataAccessor<Int>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.monster.Creeper::class.java,
@@ -26,23 +23,19 @@ class Creeper : LivingEntity(EntityType.CREEPER), Creeper {
             FieldMappings.Entity.LivingEntity.Mob.Monster.Creeper.DATA_IS_IGNITED
         )
 
-    override fun setSwell(swell: Int) =
-        setEntityDataAccessor(DATA_SWELL_DIR, swell) {
-            this.swell = swell
-        }
+    override fun setSwell(swell: Int) = setEntityDataAccessor(DATA_SWELL_DIR, swell)
 
-    override fun getSwell(): Int = swell
+    override fun getSwell(): Int = getEntityDataValue(DATA_SWELL_DIR) ?: 0
 
-    override fun setIgnite(ignite: Boolean) =
-        setEntityDataAccessor(DATA_IS_IGNITED, ignite) {
-            this.ignite = ignite
-        }
+    override fun setIgnite(ignite: Boolean) = setEntityDataAccessor(DATA_IS_IGNITED, ignite)
+
+    override fun isIgnite(): Boolean = getEntityDataValue(DATA_IS_IGNITED) ?: false
 
     override fun getEntityData(): JsonObject {
         val monsterJson = super.getEntityData()
         val creeperJson = JsonObject()
-        creeperJson.addProperty("swell", swell)
-        creeperJson.addProperty("ignite", ignite)
+        creeperJson.addProperty("swell", getSwell())
+        creeperJson.addProperty("ignite", isIgnite())
         monsterJson.add("creeper", creeperJson)
         return monsterJson
     }
@@ -50,17 +43,15 @@ class Creeper : LivingEntity(EntityType.CREEPER), Creeper {
     override fun setEntityData(jsonObject: JsonObject) {
         super<LivingEntity>.setEntityData(jsonObject)
         val creeperJson = jsonObject["creeper"].asJsonObject
-        this.swell = creeperJson["swell"].asInt
-        this.ignite = creeperJson["ignite"].asBoolean
+        setSwell(creeperJson["swell"].asInt)
+        setIgnite(creeperJson["ignite"].asBoolean)
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setSwell(swell)
-        setIgnite(ignite)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setSwell(0)
+        setIgnite(false)
     }
-
-    override fun isIgnite(): Boolean = ignite
 
     override fun getEntityClass(level: Level): Entity =
         net.minecraft.world.entity.monster.Creeper(net.minecraft.world.entity.EntityType.CREEPER, level)
@@ -69,11 +60,11 @@ class Creeper : LivingEntity(EntityType.CREEPER), Creeper {
         super.getTests().apply { addAll(mutableListOf(
             {
                 setIgnite(true)
-                getTestMessage(this@Creeper::class, "Set ignite", ignite)
+                getTestMessage(this@Creeper::class, "Set ignite", isIgnite())
             },
             {
                 setIgnite(false)
-                getTestMessage(this@Creeper::class, "Set ignite", ignite)
+                getTestMessage(this@Creeper::class, "Set ignite", isIgnite())
             },
             {
                 setSwell(Random.nextInt(1000))

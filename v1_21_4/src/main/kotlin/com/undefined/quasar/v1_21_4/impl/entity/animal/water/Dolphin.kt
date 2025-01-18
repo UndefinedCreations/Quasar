@@ -11,9 +11,6 @@ import net.minecraft.world.level.Level
 
 class Dolphin : Animal(EntityType.DOLPHIN), Dolphin {
 
-    private var gotFish = false
-    private var moistness = 0
-
     private var GOT_FISH: EntityDataAccessor<Boolean>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.animal.Dolphin::class.java,
@@ -26,24 +23,20 @@ class Dolphin : Animal(EntityType.DOLPHIN), Dolphin {
         )
 
     override fun setGotFish(gotFish: Boolean) =
-        setEntityDataAccessor(GOT_FISH, gotFish) {
-            this.gotFish = gotFish
-        }
+        setEntityDataAccessor(GOT_FISH, gotFish)
 
-    override fun hasFish(): Boolean = gotFish
+    override fun hasFish(): Boolean = getEntityDataValue(GOT_FISH) ?: false
 
     override fun setMoistnessLevel(moistness: Int) =
-        setEntityDataAccessor(MOISTNESS_LEVEL, moistness) {
-            this.moistness = moistness
-        }
+        setEntityDataAccessor(MOISTNESS_LEVEL, moistness)
 
-    override fun getMoistnessLevel(): Int = moistness
+    override fun getMoistnessLevel(): Int = getEntityDataValue(MOISTNESS_LEVEL) ?: 0
 
     override fun getEntityData(): JsonObject {
         val waterJson = super.getEntityData()
         val dolphinJson = JsonObject()
-        dolphinJson.addProperty("gotFish", gotFish)
-        dolphinJson.addProperty("moistnessLevel", moistness)
+        dolphinJson.addProperty("gotFish", hasFish())
+        dolphinJson.addProperty("moistnessLevel", getMoistnessLevel())
         waterJson.add("dolphin", dolphinJson)
         return waterJson
     }
@@ -51,14 +44,14 @@ class Dolphin : Animal(EntityType.DOLPHIN), Dolphin {
     override fun setEntityData(jsonObject: JsonObject) {
         super<Animal>.setEntityData(jsonObject)
         val dolphinJson = jsonObject["dolphin"].asJsonObject
-        gotFish = dolphinJson["gotFish"].asBoolean
-        moistness = dolphinJson["moistnessLevel"].asInt
+        setGotFish(dolphinJson["gotFish"].asBoolean)
+        setMoistnessLevel(dolphinJson["moistnessLevel"].asInt)
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setGotFish(gotFish)
-        setMoistnessLevel(moistness)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setGotFish(false)
+        setMoistnessLevel(0)
     }
 
     override fun getEntityClass(level: Level): Entity =
@@ -68,15 +61,15 @@ class Dolphin : Animal(EntityType.DOLPHIN), Dolphin {
         super.getTests().apply { addAll(mutableListOf(
             {
                 setGotFish(true)
-                getTestMessage(this@Dolphin::class, "Set got fish", true)
+                getTestMessage(this@Dolphin::class, "Set got fish", hasFish())
             },
             {
                 setGotFish(false)
-                getTestMessage(this@Dolphin::class, "Set got fish", false)
+                getTestMessage(this@Dolphin::class, "Set got fish", hasFish())
             },
             {
                 setMoistnessLevel(0)
-                getTestMessage(this@Dolphin::class, "Set moistness level", 0)
+                getTestMessage(this@Dolphin::class, "Set moistness level", getMoistnessLevel())
             }
         )) }
 }

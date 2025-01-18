@@ -1,7 +1,6 @@
 package com.undefined.quasar.interfaces.entities.entity.monster
 
 import com.undefined.quasar.interfaces.abstracts.Monster
-import org.bukkit.Material
 import org.bukkit.block.data.BlockData
 
 interface EnderMan : Monster {

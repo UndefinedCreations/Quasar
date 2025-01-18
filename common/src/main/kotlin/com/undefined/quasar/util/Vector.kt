@@ -59,4 +59,5 @@ class Vector(
             jsonObject["z"].asDouble
         ) }
     }
+
 }

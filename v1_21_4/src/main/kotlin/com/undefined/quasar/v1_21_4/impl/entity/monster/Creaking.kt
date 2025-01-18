@@ -11,9 +11,6 @@ import net.minecraft.world.level.Level
 
 class Creaking : LivingEntity(EntityType.CREAKING), Creaking {
 
-    private var active = true
-    private var isTearing = false
-
     private var IS_ACTIVE: EntityDataAccessor<Boolean>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.monster.creaking.Creaking::class.java,
@@ -25,25 +22,19 @@ class Creaking : LivingEntity(EntityType.CREAKING), Creaking {
             FieldMappings.Entity.LivingEntity.Mob.Monster.Creaking.IS_TEARING_DOWN
         )
 
-    override fun setActive(active: Boolean) =
-        setEntityDataAccessor(IS_ACTIVE, active) {
-            this.active = active
-        }
+    override fun setActive(active: Boolean) = setEntityDataAccessor(IS_ACTIVE, active)
 
-    override fun isActive(): Boolean = active
+    override fun isActive(): Boolean = getEntityDataValue(IS_ACTIVE) ?: false
 
-    override fun setTearingDown(tearing: Boolean) =
-        setEntityDataAccessor(IS_TEARING_DOWN, tearing) {
-            this.isTearing = tearing
-        }
+    override fun setTearingDown(tearing: Boolean) = setEntityDataAccessor(IS_TEARING_DOWN, tearing)
 
-    override fun isTearingDown(): Boolean = isTearing
+    override fun isTearingDown(): Boolean = getEntityDataValue(IS_TEARING_DOWN) ?: false
 
     override fun getEntityData(): JsonObject {
         val monsterJson = super.getEntityData()
         val creakingJson = JsonObject()
         creakingJson.addProperty("active", isActive())
-        creakingJson.addProperty("isTearing", isTearing)
+        creakingJson.addProperty("isTearing", isTearingDown())
         monsterJson.add("creaking", creakingJson)
         return monsterJson
     }
@@ -51,14 +42,14 @@ class Creaking : LivingEntity(EntityType.CREAKING), Creaking {
     override fun setEntityData(jsonObject: JsonObject) {
         super<LivingEntity>.setEntityData(jsonObject)
         val creakingJson = jsonObject["creaking"].asJsonObject
-        active = creakingJson["active"].asBoolean
-        isTearing = creakingJson["isTearing"].asBoolean
+        setActive(creakingJson["active"].asBoolean)
+        setTearingDown(creakingJson["isTearing"].asBoolean)
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
+    override fun setDefaultValues() {
+        super.setDefaultValues()
         setActive(true)
-        setTearingDown(true)
+        setTearingDown(false)
     }
 
     override fun getEntityClass(level: Level): Entity =
@@ -68,19 +59,19 @@ class Creaking : LivingEntity(EntityType.CREAKING), Creaking {
         super.getTests().apply { addAll(mutableListOf(
             {
                 setActive(false)
-                getTestMessage(this@Creaking::class, "Set active", false)
+                getTestMessage(this@Creaking::class, "Set active", isActive())
             },
             {
                 setActive(true)
-                getTestMessage(this@Creaking::class, "Set active", true)
+                getTestMessage(this@Creaking::class, "Set active", isActive())
             },
             {
                 setTearingDown(true)
-                getTestMessage(this@Creaking::class, "Set tearing down", true)
+                getTestMessage(this@Creaking::class, "Set tearing down", isTearingDown())
             },
             {
                 setTearingDown(false)
-                getTestMessage(this@Creaking::class, "Set tearing down", false)
+                getTestMessage(this@Creaking::class, "Set tearing down", isTearingDown())
             }
         )) }
 }

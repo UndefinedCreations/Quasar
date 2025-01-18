@@ -6,10 +6,10 @@ interface Armadillo : Animal {
     fun setState(state: State)
     fun getState(): State
 
-    enum class State {
-        IDLE,
-        ROLLING,
-        SCARED,
-        UNROLLING
+    enum class State(val id: Int) {
+        IDLE(0),
+        ROLLING(1),
+        SCARED(2),
+        UNROLLING(3)
     }
 }

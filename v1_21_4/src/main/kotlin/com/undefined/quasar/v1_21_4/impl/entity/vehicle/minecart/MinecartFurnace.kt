@@ -10,25 +10,20 @@ import net.minecraft.world.level.Level
 
 class MinecartFurnace : Minecart(EntityType.FURNACE_MINECART), MinecartFurnace {
 
-    private var fueled = false
-
     private var DATA_ID_FUEL: EntityDataAccessor<Boolean>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.vehicle.MinecartFurnace::class.java,
             FieldMappings.Entity.Vehicle.Minecart.MinecartFurnace.DATA_ID_FUEL
         )
 
-    override fun setFueled(fueled: Boolean) =
-        setEntityDataAccessor(DATA_ID_FUEL, fueled) {
-            this.fueled = fueled
-        }
+    override fun setFueled(fueled: Boolean) = setEntityDataAccessor(DATA_ID_FUEL, fueled)
 
-    override fun isFueled(): Boolean = fueled
+    override fun isFueled(): Boolean = getEntityDataValue(DATA_ID_FUEL) ?: false
 
     override fun getEntityData(): JsonObject {
         val minecart = super.getEntityData()
         val furnaceMinecart = JsonObject()
-        furnaceMinecart.addProperty("fueled", fueled)
+        furnaceMinecart.addProperty("fueled", isFueled())
         minecart.add("furnaceMinecart", furnaceMinecart)
         return minecart
     }
@@ -36,12 +31,12 @@ class MinecartFurnace : Minecart(EntityType.FURNACE_MINECART), MinecartFurnace {
     override fun setEntityData(jsonObject: JsonObject) {
         super<Minecart>.setEntityData(jsonObject)
         val furnaceMinecart = jsonObject["furnaceMinecart"].asJsonObject
-        fueled = furnaceMinecart["fueled"].asBoolean
+        setFueled(furnaceMinecart["fueled"].asBoolean)
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setFueled(fueled)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setFueled(false)
     }
 
     override fun getEntityClass(level: Level): Entity =
@@ -52,11 +47,11 @@ class MinecartFurnace : Minecart(EntityType.FURNACE_MINECART), MinecartFurnace {
         super.getTests().apply { addAll(mutableListOf(
             {
                 setFueled(true)
-                getTestMessage(this@MinecartFurnace::class, "Set fueled", true)
+                getTestMessage(this@MinecartFurnace::class, "Set fueled", isFueled())
             },
             {
                 setFueled(false)
-                getTestMessage(this@MinecartFurnace::class, "Set fueled", false)
+                getTestMessage(this@MinecartFurnace::class, "Set fueled", isFueled())
             }
         )) }
 }

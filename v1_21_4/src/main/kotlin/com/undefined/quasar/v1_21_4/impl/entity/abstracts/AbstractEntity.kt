@@ -5,6 +5,7 @@ import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
 import com.undefined.quasar.util.getPrivateField
 import com.undefined.quasar.util.repeat
+import com.undefined.quasar.v1_21_4.util.sendPacket
 import com.undefined.quasar.v1_21_4.util.sendPackets
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket
@@ -74,7 +75,7 @@ abstract class AbstractEntity(
         )
 
         this.entity = entity
-        updateEntity()
+        setDefaultValues()
     }
 
     override fun kill() {
@@ -100,11 +101,19 @@ abstract class AbstractEntity(
             Bukkit.getOfflinePlayer(viewer).player?.sendPackets(packet.toList())
     }
 
-    fun sendEntityMetaData() {
+    fun sendEntityMetaData(player: Player? = null) {
         if (entity == null) return
         val data = entity!!.entityData.packDirty() ?: return
         val packet = ClientboundSetEntityDataPacket(entity!!.id, data)
-        sendPackets(packet)
+        if (player == null) sendPackets(packet) else player.sendPacket(packet)
+    }
+
+    override fun resendPackets() {
+        sendEntityMetaData()
+    }
+
+    override fun resendPackets(player: Player) {
+        sendEntityMetaData(player)
     }
 
     fun <T> getEntityDataAccessor(field: EntityDataAccessor<*>?, clazz: Class<*>, name: String): T? {
@@ -116,23 +125,33 @@ abstract class AbstractEntity(
         )
     }
 
-    fun <T> setEntityDataAccessor(accessor: EntityDataAccessor<T>?, data: T?, runnable: (Unit) -> Unit) {
+    fun <T> getEntityDataValue(accessor: EntityDataAccessor<T>?): T? {
+        if (entity != null) {
+            return entity!!.entityData.get(accessor)
+        }
+        return null
+    }
+
+    fun <T> setEntityDataAccessor(accessor: EntityDataAccessor<T>?, data: T?) {
         if (entity == null) return
         entity!!.entityData.set(accessor, data)
         sendEntityMetaData()
-        runnable(Unit)
     }
 
-    fun setSharedFlag(flag: Int, boolean: Boolean, runnable: (Unit) -> Unit) {
+    fun setSharedFlag(flag: Int, boolean: Boolean) {
         if (entity == null) return
         entity!!.setSharedFlag(flag, boolean)
         sendEntityMetaData()
-        runnable(Unit)
+    }
+
+    fun getSharedFlag(flag: Int): Boolean {
+        val entity = entity ?: return false
+        return entity.getSharedFlag(flag)
     }
 
     fun setLocation(location: Location) { this.location = location }
 
-    fun getTestMessage(entity: KClass<*>, infoText: String, vararg data: Any): String =
+    fun getTestMessage(entity: KClass<*>, infoText: String, vararg data: Any?): String =
         "${ChatColor.GRAY} ${entity.simpleName} | $infoText {${ChatColor.GREEN}Success!${ChatColor.GRAY}} [${ChatColor.AQUA}${
             data.joinToString(", ") { it.toString() }
         }${ChatColor.GRAY}]"

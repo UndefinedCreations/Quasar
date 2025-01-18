@@ -11,11 +11,6 @@ import net.minecraft.world.level.Level
 
 class Bee : Animal(EntityType.BEE), Bee {
 
-    private var angy = false
-    private var nector = false
-    private var stung = false
-    private var rolling = false
-
     private var DATA_FLAGS_ID: EntityDataAccessor<Byte>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.animal.Bee::class.java,
@@ -31,35 +26,23 @@ class Bee : Animal(EntityType.BEE), Bee {
     private val STUNG_ID = 4
     private val ROLLING_ID = 2
 
-    override fun isAngy(): Boolean = angy
+    override fun isAngy(): Boolean = getEntityDataValue(DATA_REMAINING_ANGER_TIME)?.let { it > 0 } ?: false
 
-    override fun setAngy(angy: Boolean) =
-        setEntityDataAccessor(DATA_REMAINING_ANGER_TIME, if (angy) Int.MAX_VALUE else -1) {
-            this.angy = angy
-        }
+    override fun setAngy(angy: Boolean) = setEntityDataAccessor(DATA_REMAINING_ANGER_TIME, if (angy) Int.MAX_VALUE else -1)
 
-    override fun hasNector(): Boolean = nector
+    override fun hasNector(): Boolean = getFlag(NECTOR_ID)
 
-    override fun setNector(nector: Boolean) =
-        setSharedFlag(NECTOR_ID, nector) {
-            this.nector = nector
-        }
+    override fun setNector(nector: Boolean) = setFlag(NECTOR_ID, nector)
 
-    override fun hasStung(): Boolean = stung
+    override fun hasStung(): Boolean = getFlag(STUNG_ID)
 
-    override fun setHasStung(stung: Boolean) =
-        setFlag(STUNG_ID, stung) {
-            this.stung = stung
-        }
+    override fun setHasStung(stung: Boolean) = setFlag(STUNG_ID, stung)
 
-    override fun isRolling(): Boolean = rolling
+    override fun isRolling(): Boolean = getFlag(ROLLING_ID)
 
-    override fun setRolling(rolling: Boolean) =
-        setFlag(ROLLING_ID, rolling) {
-            this.rolling = rolling
-        }
+    override fun setRolling(rolling: Boolean) = setFlag(ROLLING_ID, rolling)
 
-    private fun setFlag(i: Int, flag: Boolean, runnable: (Unit) -> Unit) {
+    private fun setFlag(i: Int, flag: Boolean) {
         val entity = entity ?: return
         if (flag) {
             entity.entityData.set(
@@ -71,16 +54,20 @@ class Bee : Animal(EntityType.BEE), Bee {
             )
         }
         sendEntityMetaData()
-        runnable(Unit)
+    }
+
+    private fun getFlag(i: Int): Boolean {
+        val entity = entity ?: return false
+        return ((entity.entityData.get(DATA_FLAGS_ID) as Byte).toInt() and i) != 0
     }
 
     override fun getEntityData(): JsonObject {
         val animalJson = super.getEntityData()
         val beeJson = JsonObject()
-        beeJson.addProperty("angy", angy)
-        beeJson.addProperty("nector", nector)
-        beeJson.addProperty("stung", stung)
-        beeJson.addProperty("rolling", rolling)
+        beeJson.addProperty("angy", isAngy())
+        beeJson.addProperty("nector", hasNector())
+        beeJson.addProperty("stung", hasStung())
+        beeJson.addProperty("rolling", isRolling())
         animalJson.add("bee", beeJson)
         return animalJson
     }
@@ -88,18 +75,18 @@ class Bee : Animal(EntityType.BEE), Bee {
     override fun setEntityData(jsonObject: JsonObject) {
         super<Animal>.setEntityData(jsonObject)
         val beeJson = jsonObject["bee"].asJsonObject
-        angy = beeJson["angy"].asBoolean
-        nector = beeJson["nector"].asBoolean
-        stung = beeJson["stung"].asBoolean
-        rolling = beeJson["rolling"].asBoolean
+        setAngy(beeJson["angy"].asBoolean)
+        setNector(beeJson["nector"].asBoolean)
+        setHasStung(beeJson["stung"].asBoolean)
+        setRolling(beeJson["rolling"].asBoolean)
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setAngy(angy)
-        setNector(nector)
-        setHasStung(stung)
-        setRolling(rolling)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setAngy(false)
+        setNector(false)
+        setHasStung(false)
+        setRolling(false)
     }
 
     override fun getEntityClass(level: Level): Entity =
@@ -109,35 +96,35 @@ class Bee : Animal(EntityType.BEE), Bee {
         super.getTests().apply { addAll(mutableListOf(
             {
                 setAngy(true)
-                getTestMessage(this::class, "Set angy", true)
+                getTestMessage(this::class, "Set angy", isAngy())
             },
             {
                 setNector(true)
-                getTestMessage(this::class, "Set nector", true)
+                getTestMessage(this::class, "Set nector", hasNector())
             },
             {
                 setHasStung(true)
-                getTestMessage(this::class, "Set stung", true)
+                getTestMessage(this::class, "Set stung", hasStung())
             },
             {
                 setRolling(true)
-                getTestMessage(this::class, "Set rolling", true)
+                getTestMessage(this::class, "Set rolling", isRolling())
             },
             {
                 setAngy(false)
-                getTestMessage(this::class, "Set angy", false)
+                getTestMessage(this::class, "Set angy", isAngy())
             },
             {
                 setNector(false)
-                getTestMessage(this::class, "Set nector", false)
+                getTestMessage(this::class, "Set nector", hasNector())
             },
             {
                 setHasStung(false)
-                getTestMessage(this::class, "Set stung", false)
+                getTestMessage(this::class, "Set stung", hasStung())
             },
             {
                 setRolling(false)
-                getTestMessage(this::class, "Set rolling", false)
+                getTestMessage(this::class, "Set rolling", isRolling())
             }
         )) }
 }

@@ -9,25 +9,22 @@ import net.minecraft.network.syncher.EntityDataAccessor
 
 abstract class SpellcasterIllager(entityType: EntityType) : Raider(entityType), SpellcasterIllager {
 
-    private var spell = SpellcasterIllager.IllagerSpell.NONE
-
     private var DATA_SPELL_CASTING_ID: EntityDataAccessor<Byte>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.monster.SpellcasterIllager::class.java,
             FieldMappings.Entity.LivingEntity.Mob.Monster.Raider.SpellcasterIllager.DATA_SPELL_CASTING_ID
         )
 
-    override fun setSpellCasting(spell: SpellcasterIllager.IllagerSpell) =
-        setEntityDataAccessor(DATA_SPELL_CASTING_ID, spell.id) {
-            this.spell = spell
-        }
+    override fun setSpellCasting(spell: SpellcasterIllager.IllagerSpell) = setEntityDataAccessor(DATA_SPELL_CASTING_ID, spell.id)
 
-    override fun getSpellCasting(): SpellcasterIllager.IllagerSpell = spell
+    override fun getSpellCasting(): SpellcasterIllager.IllagerSpell = getEntityDataValue(DATA_SPELL_CASTING_ID)?.let {
+        data -> SpellcasterIllager.IllagerSpell.entries.first { it.id == data }
+    } ?: SpellcasterIllager.IllagerSpell.NONE
 
     override fun getEntityData(): JsonObject {
         val raiderJson = super.getEntityData()
         val spellCasterIllagerJson = JsonObject()
-        spellCasterIllagerJson.addProperty("spell", spell.id)
+        spellCasterIllagerJson.addProperty("spell", getSpellCasting().id)
         raiderJson.add("spellCasterIllager", spellCasterIllagerJson)
         return raiderJson
     }
@@ -35,12 +32,12 @@ abstract class SpellcasterIllager(entityType: EntityType) : Raider(entityType), 
     override fun setEntityData(jsonObject: JsonObject) {
         super<Raider>.setEntityData(jsonObject)
         val spellCasterIllagerJson = jsonObject["spellCasterIllager"].asJsonObject
-        spell = SpellcasterIllager.IllagerSpell.entries.first { it.id == spellCasterIllagerJson["spell"].asByte }
+        setSpellCasting(SpellcasterIllager.IllagerSpell.entries.first { it.id == spellCasterIllagerJson["spell"].asByte })
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setSpellCasting(spell)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setSpellCasting(SpellcasterIllager.IllagerSpell.NONE)
     }
 
     override fun getTests(): MutableList<() -> String> =
@@ -49,7 +46,7 @@ abstract class SpellcasterIllager(entityType: EntityType) : Raider(entityType), 
                 SpellcasterIllager.IllagerSpell.entries.map {
                     {
                         setSpellCasting(it)
-                        getTestMessage(this@SpellcasterIllager::class, "Set spell casting", it.name.lowercase())
+                        getTestMessage(this@SpellcasterIllager::class, "Set spell casting", getSpellCasting().name.lowercase())
 
                     }
                 }

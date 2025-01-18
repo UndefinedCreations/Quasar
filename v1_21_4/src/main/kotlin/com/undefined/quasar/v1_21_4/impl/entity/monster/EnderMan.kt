@@ -12,15 +12,10 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
 import org.bukkit.Material
 import org.bukkit.block.data.BlockData
-import org.bukkit.craftbukkit.v1_21_R3.block.CraftBlockState
 import org.bukkit.craftbukkit.v1_21_R3.block.data.CraftBlockData
-import java.util.Optional
+import java.util.*
 
 class EnderMan : LivingEntity(EntityType.ENDERMAN), EnderMan {
-
-    private var holdingBlock: BlockData? = null
-    private var creeping = false
-    private var staredAt = false
 
     private var DATA_CARRY_STATE: EntityDataAccessor<Optional<BlockState>>? = null
         get() = getEntityDataAccessor(field,
@@ -40,33 +35,26 @@ class EnderMan : LivingEntity(EntityType.ENDERMAN), EnderMan {
             FieldMappings.Entity.LivingEntity.Mob.Monster.EnderMan.DATA_STARED_AT
         )
 
-    override fun getHoldingBlock(): BlockData? = holdingBlock
+    override fun getHoldingBlock(): BlockData? = getEntityDataValue(DATA_CARRY_STATE)?.let { data ->
+        if (data.isPresent) CraftBlockData.fromData(data.get()) else null
+    }
 
-    override fun setCreeping(creeping: Boolean) =
-        setEntityDataAccessor(DATA_CREEPY, creeping) {
-            this.creeping = creeping
-        }
+    override fun setCreeping(creeping: Boolean) = setEntityDataAccessor(DATA_CREEPY, creeping)
 
-    override fun isCreeping(): Boolean = creeping
+    override fun isCreeping(): Boolean = getEntityDataValue(DATA_CREEPY) ?: false
 
-    override fun setStaredAt(staring: Boolean) =
-        setEntityDataAccessor(DATA_STARED_AT, staring) {
-            this.staredAt = staring
-        }
+    override fun setStaredAt(staring: Boolean) = setEntityDataAccessor(DATA_STARED_AT, staring)
 
-    override fun isBeaningStaredAt(): Boolean = staredAt
+    override fun isBeaningStaredAt(): Boolean = getEntityDataValue(DATA_STARED_AT) ?: false
 
-    override fun setHoldingBlock(block: BlockData?) =
-        setEntityDataAccessor(DATA_CARRY_STATE, if (block == null) Optional.empty() else Optional.of((block as CraftBlockData).state)) {
-            this.holdingBlock = block
-        }
+    override fun setHoldingBlock(block: BlockData?) = setEntityDataAccessor(DATA_CARRY_STATE, if (block == null) Optional.empty() else Optional.of((block as CraftBlockData).state))
 
     override fun getEntityData(): JsonObject {
         val monsterJson = super.getEntityData()
         val endermanJson = JsonObject()
-        endermanJson.addProperty("blockData", BlockDataUtil.getID(holdingBlock))
-        endermanJson.addProperty("staredAt", staredAt)
-        endermanJson.addProperty("creeping", creeping)
+        endermanJson.addProperty("blockData", BlockDataUtil.getID(getHoldingBlock()))
+        endermanJson.addProperty("staredAt", isBeaningStaredAt())
+        endermanJson.addProperty("creeping", isCreeping())
         monsterJson.add("enderMan", endermanJson)
         return monsterJson
     }
@@ -74,16 +62,16 @@ class EnderMan : LivingEntity(EntityType.ENDERMAN), EnderMan {
     override fun setEntityData(jsonObject: JsonObject) {
         super<LivingEntity>.setEntityData(jsonObject)
         val enderManJson = jsonObject["enderMan"].asJsonObject
-        holdingBlock = BlockDataUtil.getBlockData(enderManJson["blockData"].asInt)
-        staredAt = enderManJson["staredAt"].asBoolean
-        creeping = enderManJson["creeping"].asBoolean
+        setHoldingBlock(BlockDataUtil.getBlockData(enderManJson["blockData"].asInt))
+        setStaredAt(enderManJson["staredAt"].asBoolean)
+        setCreeping(enderManJson["creeping"].asBoolean)
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setHoldingBlock(holdingBlock)
-        setCreeping(creeping)
-        setStaredAt(staredAt)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setHoldingBlock(null)
+        setCreeping(false)
+        setStaredAt(false)
     }
 
     override fun getEntityClass(level: Level): Entity =
@@ -97,23 +85,23 @@ class EnderMan : LivingEntity(EntityType.ENDERMAN), EnderMan {
             },
             {
                 setHoldingBlock(null)
-                getTestMessage(this@EnderMan::class, "Set holding block", "null")
+                getTestMessage(this@EnderMan::class, "Set holding block", getHoldingBlock())
             },
             {
                 setCreeping(true)
-                getTestMessage(this@EnderMan::class, "Set creeping", true)
+                getTestMessage(this@EnderMan::class, "Set creeping", isCreeping())
             },
             {
                 setCreeping(false)
-                getTestMessage(this@EnderMan::class, "Set creeping", false)
+                getTestMessage(this@EnderMan::class, "Set creeping", isCreeping())
             },
             {
                 setStaredAt(true)
-                getTestMessage(this@EnderMan::class, "Set stared at", true)
+                getTestMessage(this@EnderMan::class, "Set stared at", isBeaningStaredAt())
             },
             {
                 setStaredAt(false)
-                getTestMessage(this@EnderMan::class, "Set stared at", false)
+                getTestMessage(this@EnderMan::class, "Set stared at", isBeaningStaredAt())
             }
         )) }
 }

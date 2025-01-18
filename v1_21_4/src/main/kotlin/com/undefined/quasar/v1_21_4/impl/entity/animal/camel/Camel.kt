@@ -12,33 +12,27 @@ import net.minecraft.world.level.Level
 
 class Camel : AbstractHorse(EntityType.CAMEL), Camel {
 
-    private var dashing = false
-    private var animation = Camel.Animation.STANDING
-
     private var DASH: EntityDataAccessor<Boolean>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.animal.camel.Camel::class.java,
             FieldMappings.Entity.LivingEntity.Mob.Animal.AbstractHorse.Camel.DASH
         )
 
-    override fun setDashing(dashing: Boolean) =
-        setEntityDataAccessor(DASH, dashing) {
-            this.dashing = dashing
-        }
+    override fun setDashing(dashing: Boolean) = setEntityDataAccessor(DASH, dashing)
 
-    override fun isDashing(): Boolean = dashing
+    override fun isDashing(): Boolean = getEntityDataValue(DASH) ?: false
 
-    override fun setAnimation(animation: Camel.Animation) =
-        setEntityDataAccessor(DATA_POSE, Pose.entries.first { it.id() == animation.id }) {
-            this.animation = animation
-        }
+    override fun setAnimation(animation: Camel.Animation) = setEntityDataAccessor(DATA_POSE, Pose.entries.first { it.id() == animation.id })
 
-    override fun getAnimation(): Camel.Animation = animation
+    override fun getAnimation(): Camel.Animation = getEntityDataValue(DATA_POSE)?.let {
+        data -> Camel.Animation.entries.first { it.id == data.id() }
+    } ?: Camel.Animation.STANDING
 
     override fun getEntityData(): JsonObject {
         val horseJson = super.getEntityData()
         val camelJson = JsonObject()
-        camelJson.addProperty("dashing", dashing)
+        camelJson.addProperty("dashing", isDashing())
+        camelJson.addProperty("animation", getAnimation().id)
         horseJson.add("camel", camelJson)
         return horseJson
     }
@@ -46,12 +40,14 @@ class Camel : AbstractHorse(EntityType.CAMEL), Camel {
     override fun setEntityData(jsonObject: JsonObject) {
         super<AbstractHorse>.setEntityData(jsonObject)
         val camelJson = jsonObject["camel"].asJsonObject
-        dashing = camelJson["dashing"].asBoolean
+        setDashing(camelJson["dashing"].asBoolean)
+        setAnimation(Camel.Animation.entries.first { it.id == camelJson["animation"].asInt })
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setDashing(dashing)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setDashing(false)
+        setAnimation(Camel.Animation.STANDING)
     }
 
     override fun getEntityClass(level: Level): Entity =
@@ -62,17 +58,17 @@ class Camel : AbstractHorse(EntityType.CAMEL), Camel {
             addAll(mutableListOf(
                 {
                     setDashing(true)
-                    getTestMessage(this@Camel::class, "Set dashing", true)
+                    getTestMessage(this@Camel::class, "Set dashing", isDashing())
                 },
                 {
                     setDashing(false)
-                    getTestMessage(this@Camel::class, "Set dashing", false)
+                    getTestMessage(this@Camel::class, "Set dashing", isDashing())
                 }
             ))
             addAll(Camel.Animation.entries.map {
                 {
                     setAnimation(it)
-                    getTestMessage(this@Camel::class, "Set animation", it)
+                    getTestMessage(this@Camel::class, "Set animation", getAnimation().name.lowercase())
                 }
             })
         }

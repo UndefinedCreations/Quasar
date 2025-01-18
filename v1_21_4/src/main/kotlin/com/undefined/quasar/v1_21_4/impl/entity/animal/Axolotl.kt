@@ -11,7 +11,6 @@ import net.minecraft.world.level.Level
 
 class Axolotl : Animal(EntityType.AXOLOTL), Axolotl {
 
-    private var variant = Axolotl.Variant.LUCY
     private var DATA_VARIANT: EntityDataAccessor<Int>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.animal.axolotl.Axolotl::class.java,
@@ -19,16 +18,16 @@ class Axolotl : Animal(EntityType.AXOLOTL), Axolotl {
         )
 
     override fun setVariant(variant: Axolotl.Variant) =
-         setEntityDataAccessor(DATA_VARIANT, variant.id) {
-             this.variant = variant
-         }
+         setEntityDataAccessor(DATA_VARIANT, variant.id)
 
-    override fun getVariant(): Axolotl.Variant = variant
+    override fun getVariant(): Axolotl.Variant = getEntityDataValue(DATA_VARIANT)?.let {
+        data -> Axolotl.Variant.entries.first { it.id == data }
+    } ?: Axolotl.Variant.LUCY
 
     override fun getEntityData(): JsonObject {
         val livingEntityJson = super.getEntityData()
         val axolotlJson = JsonObject()
-        axolotlJson.addProperty("variant", variant.id)
+        axolotlJson.addProperty("variant", getVariant().id)
         livingEntityJson.add("axolotl", axolotlJson)
         return livingEntityJson
     }
@@ -36,12 +35,12 @@ class Axolotl : Animal(EntityType.AXOLOTL), Axolotl {
     override fun setEntityData(jsonObject: JsonObject) {
         super<Animal>.setEntityData(jsonObject)
         val axolotlJson = jsonObject["axolotl"].asJsonObject
-        variant = Axolotl.Variant.entries.first { it.id == axolotlJson["variant"].asInt }
+        setVariant(Axolotl.Variant.entries.first { it.id == axolotlJson["variant"].asInt })
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setVariant(variant)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setVariant(Axolotl.Variant.LUCY)
     }
 
     override fun getEntityClass(level: Level): Entity =
@@ -51,7 +50,7 @@ class Axolotl : Animal(EntityType.AXOLOTL), Axolotl {
         super.getTests().apply { addAll(Axolotl.Variant.entries.map {
             {
                 setVariant(it)
-                getTestMessage(this@Axolotl::class, "Set variant", it)
+                getTestMessage(this@Axolotl::class, "Set variant", getVariant().name.lowercase())
             }
         }) }
 }

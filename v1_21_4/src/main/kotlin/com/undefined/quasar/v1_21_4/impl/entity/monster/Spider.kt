@@ -11,8 +11,6 @@ import net.minecraft.world.level.Level
 
 open class Spider(entityType: EntityType = EntityType.SPIDER) : LivingEntity(entityType), Spider {
 
-    private var climbing = false
-
     private var DATA_FLAGS_ID: EntityDataAccessor<Byte>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.monster.Spider::class.java,
@@ -31,12 +29,15 @@ open class Spider(entityType: EntityType = EntityType.SPIDER) : LivingEntity(ent
         sendEntityMetaData()
     }
 
-    override fun isClimbing(): Boolean = climbing
+    override fun isClimbing(): Boolean {
+        val entity = entity ?: return false
+        return ((entity.entityData.get(DATA_FLAGS_ID) as Byte).toInt() and 1) != 0
+    }
 
     override fun getEntityData(): JsonObject {
         val monsterJson = super.getEntityData()
         val spiderJson = JsonObject()
-        spiderJson.addProperty("climbing", climbing)
+        spiderJson.addProperty("climbing", isClimbing())
         monsterJson.add("spider", spiderJson)
         return monsterJson
     }
@@ -44,12 +45,12 @@ open class Spider(entityType: EntityType = EntityType.SPIDER) : LivingEntity(ent
     override fun setEntityData(jsonObject: JsonObject) {
         super<LivingEntity>.setEntityData(jsonObject)
         val spiderJson = jsonObject["spider"].asJsonObject
-        climbing = spiderJson["climbing"].asBoolean
+        setClimbing(spiderJson["climbing"].asBoolean)
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setClimbing(climbing)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setClimbing(false)
     }
 
     override fun getEntityClass(level: Level): Entity =
@@ -59,11 +60,11 @@ open class Spider(entityType: EntityType = EntityType.SPIDER) : LivingEntity(ent
         super.getTests().apply { addAll(mutableListOf(
             {
                 setClimbing(true)
-                getTestMessage(this@Spider::class, "Set climbing", true)
+                getTestMessage(this@Spider::class, "Set climbing", isClimbing())
             },
             {
                 setClimbing(false)
-                getTestMessage(this@Spider::class, "Set climbing", false)
+                getTestMessage(this@Spider::class, "Set climbing", isClimbing())
             },
         )) }
 }

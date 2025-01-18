@@ -52,22 +52,13 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
             FieldMappings.Entity.LivingEntity.ArmorStand.DATA_RIGHT_LEG_POSE
         )
 
-    private var small = false
-    private var basePlate = false
-    private var arms = false
-
-    private var headRotation = ArmorStand.Rotations(0.0f, 0.0f, 0.0f)
-    private var bodyRotation = ArmorStand.Rotations(0.0f, 0.0f, 0.0f)
-    private var leftArmRotation = ArmorStand.Rotations(-10.0f, 0.0f, -10.0f)
-    private var rightArmRotation = ArmorStand.Rotations(-15.0f, 0.0f, 10.0f)
-    private var leftLegRotation = ArmorStand.Rotations(-1.0f, 0.0f, -1.0f)
-    private var rightLegRotation = ArmorStand.Rotations(1.0f, 0.0f, 1.0f)
-
-    override fun isSmall(): Boolean = small
+    override fun isSmall(): Boolean {
+        val entity = entity ?: return false
+        return ((entity.entityData.get(DATA_CLIENT_FLAGS) as Byte).toInt() and 1) != 0
+    }
 
     override fun setSmall(small: Boolean) {
         val armorStand = entity ?: return
-        this.small = small
         armorStand.entityData.set(DATA_CLIENT_FLAGS,
             setBit(
                 armorStand.entityData.get(DATA_CLIENT_FLAGS) as Byte,
@@ -78,11 +69,13 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
         sendEntityMetaData()
     }
 
-    override fun isShowingBasePlate(): Boolean = basePlate
+    override fun isShowingBasePlate(): Boolean {
+        val entity = entity ?: return false
+        return ((entity.entityData.get(DATA_CLIENT_FLAGS) as Byte).toInt() and 16) != 0;
+    }
 
     override fun setShowingBasePlate(showing: Boolean) {
         val armorStand = entity ?: return
-        this.basePlate = showing
         armorStand.entityData.set(DATA_CLIENT_FLAGS,
             setBit(
                 armorStand.entityData.get(DATA_CLIENT_FLAGS) as Byte,
@@ -93,11 +86,13 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
         sendEntityMetaData()
     }
 
-    override fun isShowingArms(): Boolean = arms
+    override fun isShowingArms(): Boolean {
+        val entity = entity ?: return false
+        return ((entity.entityData.get(DATA_CLIENT_FLAGS) as Byte).toInt() and 4) != 0;
+    }
 
     override fun setShowingArms(showing: Boolean) {
         val armorStand = entity ?: return
-        this.arms = showing
         armorStand.entityData.set(DATA_CLIENT_FLAGS,
             setBit(
                 armorStand.entityData.get(DATA_CLIENT_FLAGS) as Byte,
@@ -108,62 +103,45 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
         sendEntityMetaData()
     }
 
-    override fun getHeadRotation(): ArmorStand.Rotations = headRotation
+    override fun getHeadRotation(): ArmorStand.Rotations = getEntityDataValue(DATA_HEAD_POSE)?.let { nmsRotationToQuauas(it) } ?: ArmorStand.Rotations.EMPTY()
 
-    override fun setHeadRotation(rotations: ArmorStand.Rotations) =
-        setEntityDataAccessor(DATA_HEAD_POSE, rotations.toNMSRotations()) {
-            this.headRotation = rotations
-        }
+    override fun setHeadRotation(rotations: ArmorStand.Rotations) = setEntityDataAccessor(DATA_HEAD_POSE, rotations.toNMSRotations())
 
-    override fun getBodyRotation(): ArmorStand.Rotations = bodyRotation
+    override fun getBodyRotation(): ArmorStand.Rotations = getEntityDataValue(DATA_BODY_POSE)?.let { nmsRotationToQuauas(it) } ?: ArmorStand.Rotations.EMPTY()
 
-    override fun setBodyRotation(rotations: ArmorStand.Rotations) =
-        setEntityDataAccessor(DATA_BODY_POSE, rotations.toNMSRotations()) {
-            this.bodyRotation = rotations
-        }
+    override fun setBodyRotation(rotations: ArmorStand.Rotations) = setEntityDataAccessor(DATA_BODY_POSE, rotations.toNMSRotations())
 
-    override fun getLeftArmRotation(): ArmorStand.Rotations = leftArmRotation
+    override fun getLeftArmRotation(): ArmorStand.Rotations = getEntityDataValue(DATA_LEFT_ARM_POSE)?.let { nmsRotationToQuauas(it) } ?: ArmorStand.Rotations.EMPTY()
 
-    override fun setLeftArmRotation(rotations: ArmorStand.Rotations) =
-        setEntityDataAccessor(DATA_LEFT_ARM_POSE, rotations.toNMSRotations()) {
-            this.leftArmRotation = rotations
-        }
+    override fun setLeftArmRotation(rotations: ArmorStand.Rotations) = setEntityDataAccessor(DATA_LEFT_ARM_POSE, rotations.toNMSRotations())
 
-    override fun getRightArmRotation(): ArmorStand.Rotations = rightArmRotation
 
-    override fun setRightArmRotation(rotations: ArmorStand.Rotations) =
-        setEntityDataAccessor(DATA_RIGHT_ARM_POSE, rotations.toNMSRotations()) {
-            this.rightArmRotation = rotations
-        }
+    override fun getRightArmRotation(): ArmorStand.Rotations = getEntityDataValue(DATA_RIGHT_ARM_POSE)?.let { nmsRotationToQuauas(it) } ?: ArmorStand.Rotations.EMPTY()
 
-    override fun getLeftLegRotation(): ArmorStand.Rotations = leftLegRotation
+    override fun setRightArmRotation(rotations: ArmorStand.Rotations) = setEntityDataAccessor(DATA_RIGHT_ARM_POSE, rotations.toNMSRotations())
 
-    override fun setLeftLegRotation(rotations: ArmorStand.Rotations) =
-        setEntityDataAccessor(DATA_LEFT_LEG_POSE, rotations.toNMSRotations()) {
-            this.leftLegRotation = rotations
-        }
+    override fun getLeftLegRotation(): ArmorStand.Rotations = getEntityDataValue(DATA_LEFT_LEG_POSE)?.let { nmsRotationToQuauas(it) } ?: ArmorStand.Rotations.EMPTY()
 
-    override fun getRightLegRotation(): ArmorStand.Rotations = rightLegRotation
+    override fun setLeftLegRotation(rotations: ArmorStand.Rotations) = setEntityDataAccessor(DATA_LEFT_LEG_POSE, rotations.toNMSRotations())
 
-    override fun setRightLegRotation(rotations: ArmorStand.Rotations) =
-        setEntityDataAccessor(DATA_RIGHT_LEG_POSE, rotations.toNMSRotations()) {
-            this.rightLegRotation = rotations
-        }
+    override fun getRightLegRotation(): ArmorStand.Rotations = getEntityDataValue(DATA_RIGHT_LEG_POSE)?.let { nmsRotationToQuauas(it) } ?: ArmorStand.Rotations.EMPTY()
+
+    override fun setRightLegRotation(rotations: ArmorStand.Rotations) = setEntityDataAccessor(DATA_RIGHT_LEG_POSE, rotations.toNMSRotations())
 
     override fun getEntityData(): JsonObject {
         val json = super.getEntityData()
         val armorStandJson = JsonObject()
 
-        armorStandJson.addProperty("small", small)
-        armorStandJson.addProperty("basePlate", basePlate)
-        armorStandJson.addProperty("arms", arms)
+        armorStandJson.addProperty("small", isSmall())
+        armorStandJson.addProperty("basePlate", isShowingBasePlate())
+        armorStandJson.addProperty("arms", isShowingArms())
 
-        armorStandJson.add("headRotation", headRotation.json())
-        armorStandJson.add("bodyRotation", bodyRotation.json())
-        armorStandJson.add("leftArmRotation", leftArmRotation.json())
-        armorStandJson.add("rightArmRotation", rightArmRotation.json())
-        armorStandJson.add("leftLegRotation", leftLegRotation.json())
-        armorStandJson.add("rightLegRotation", rightLegRotation.json())
+        armorStandJson.add("headRotation", getHeadRotation().json())
+        armorStandJson.add("bodyRotation", getBodyRotation().json())
+        armorStandJson.add("leftArmRotation", getLeftArmRotation().json())
+        armorStandJson.add("rightArmRotation", getRightArmRotation().json())
+        armorStandJson.add("leftLegRotation", getLeftLegRotation().json())
+        armorStandJson.add("rightLegRotation", getRightLegRotation().json())
 
         json.add("armorStandData", armorStandJson)
         return json
@@ -173,56 +151,56 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
 
         val armorStandJson = jsonObject["armorStandData"].asJsonObject
 
-        small = armorStandJson["small"].asBoolean
-        basePlate = armorStandJson["basePlate"].asBoolean
-        arms = armorStandJson["arms"].asBoolean
+        setSmall(armorStandJson["small"].asBoolean)
+        setShowingBasePlate(armorStandJson["basePlate"].asBoolean)
+        setShowingArms(armorStandJson["arms"].asBoolean)
 
-        headRotation = ArmorStand.Rotations(armorStandJson["headRotation"].asJsonArray)
-        headRotation = ArmorStand.Rotations(armorStandJson["bodyRotation"].asJsonArray)
-        headRotation = ArmorStand.Rotations(armorStandJson["leftArmRotation"].asJsonArray)
-        headRotation = ArmorStand.Rotations(armorStandJson["rightArmRotation"].asJsonArray)
-        headRotation = ArmorStand.Rotations(armorStandJson["leftLegRotation"].asJsonArray)
-        headRotation = ArmorStand.Rotations(armorStandJson["rightLegRotation"].asJsonArray)
+        setHeadRotation(ArmorStand.Rotations(armorStandJson["headRotation"].asJsonArray))
+        setBodyRotation(ArmorStand.Rotations(armorStandJson["bodyRotation"].asJsonArray))
+        setLeftArmRotation(ArmorStand.Rotations(armorStandJson["leftArmRotation"].asJsonArray))
+        setRightArmRotation(ArmorStand.Rotations(armorStandJson["rightArmRotation"].asJsonArray))
+        setLeftLegRotation(ArmorStand.Rotations(armorStandJson["leftLegRotation"].asJsonArray))
+        setRightLegRotation(ArmorStand.Rotations(armorStandJson["rightLegRotation"].asJsonArray))
     }
-    override fun updateEntity() {
-        super.updateEntity()
+    override fun setDefaultValues() {
+        super.setDefaultValues()
 
-        setSmall(small)
-        setShowingBasePlate(basePlate)
-        setShowingArms(arms)
+        setSmall(false)
+        setShowingBasePlate(true)
+        setShowingArms(false)
 
-        setHeadRotation(headRotation)
-        setBodyRotation(bodyRotation)
-        setLeftArmRotation(leftArmRotation)
-        setRightArmRotation(rightArmRotation)
-        setLeftLegRotation(leftLegRotation)
-        setRightLegRotation(rightLegRotation)
+        setHeadRotation(ArmorStand.Rotations(0.0f, 0.0f, 0.0f))
+        setBodyRotation(ArmorStand.Rotations(0.0f, 0.0f, 0.0f))
+        setLeftArmRotation(ArmorStand.Rotations(-10.0f, 0.0f, -10.0f))
+        setRightArmRotation(ArmorStand.Rotations(-15.0f, 0.0f, 10.0f))
+        setLeftLegRotation(ArmorStand.Rotations(-1.0f, 0.0f, -1.0f))
+        setRightLegRotation(ArmorStand.Rotations(1.0f, 0.0f, 1.0f))
     }
     override fun getTests(): MutableList<() -> String> =
         super.getTests().apply { addAll(mutableListOf(
             {
                 setSmall(true)
-                getTestMessage(this@ArmorStand::class, "Set small", true)
+                getTestMessage(this@ArmorStand::class, "Set small", isSmall())
             },
             {
                 setSmall(false)
-                getTestMessage(this@ArmorStand::class, "Set small", false)
+                getTestMessage(this@ArmorStand::class, "Set small", isSmall())
             },
             {
                 setShowingBasePlate(false)
-                getTestMessage(this@ArmorStand::class, "Set base plate", false)
+                getTestMessage(this@ArmorStand::class, "Set base plate", isShowingBasePlate())
             },
             {
                 setShowingBasePlate(true)
-                getTestMessage(this@ArmorStand::class, "Set base plate", true)
+                getTestMessage(this@ArmorStand::class, "Set base plate", isShowingBasePlate())
             },
             {
                 setShowingArms(true)
-                getTestMessage(this@ArmorStand::class, "Set arms", true)
+                getTestMessage(this@ArmorStand::class, "Set arms", isShowingArms())
             },
             {
                 setShowingArms(false)
-                getTestMessage(this@ArmorStand::class, "Set arms", false)
+                getTestMessage(this@ArmorStand::class, "Set arms", isShowingArms())
             },
             {
                 setHeadRotation(
@@ -385,6 +363,8 @@ class ArmorStand: ArmorStand, LivingEntity(EntityType.ARMORSTAND) {
                 )
             }
         )) }
+
+    fun nmsRotationToQuauas(rotations: Rotations): ArmorStand.Rotations = ArmorStand.Rotations(rotations.x, rotations.y, rotations.z)
 
     override fun getEntityClass(level: Level): net.minecraft.world.entity.Entity =
         net.minecraft.world.entity.decoration.ArmorStand(net.minecraft.world.entity.EntityType.ARMOR_STAND, level)

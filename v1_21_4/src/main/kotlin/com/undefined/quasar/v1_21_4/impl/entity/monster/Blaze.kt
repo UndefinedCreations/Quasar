@@ -11,19 +11,19 @@ import net.minecraft.world.level.Level
 
 class Blaze : LivingEntity(EntityType.BLAZE), Blaze {
 
-    private var charged = false
-
     private var DATA_FLAGS_ID: EntityDataAccessor<Byte>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.monster.Blaze::class.java,
             FieldMappings.Entity.LivingEntity.Mob.Monster.Blaze.DATA_FLAGS_ID
         )
 
-    override fun isCharged(): Boolean = charged
+    override fun isCharged(): Boolean {
+        val entity = entity ?: return false
+        return ((entity.entityData.get(DATA_FLAGS_ID) as Byte).toInt() and 1) != 0
+    }
 
     override fun setCharged(charged: Boolean) {
         val entity = entity ?: return
-        this.charged = charged
         var var1 = entity.entityData.get(DATA_FLAGS_ID) as Byte
         var1 = if (charged) {
             (var1.toInt() or 1).toByte()
@@ -37,7 +37,7 @@ class Blaze : LivingEntity(EntityType.BLAZE), Blaze {
     override fun getEntityData(): JsonObject {
         val monsterJson = super.getEntityData()
         val blazeJson = JsonObject()
-        blazeJson.addProperty("charged", charged)
+        blazeJson.addProperty("charged", isCharged())
         monsterJson.add("blaze", blazeJson)
         return monsterJson
     }
@@ -45,12 +45,12 @@ class Blaze : LivingEntity(EntityType.BLAZE), Blaze {
     override fun setEntityData(jsonObject: JsonObject) {
         super<LivingEntity>.setEntityData(jsonObject)
         val blazeJson = jsonObject["blaze"].asJsonObject
-        charged = blazeJson["charged"].asBoolean
+        setCharged(blazeJson["charged"].asBoolean)
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setCharged(charged)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setCharged(false)
     }
 
     override fun getEntityClass(level: Level): Entity =
@@ -60,11 +60,11 @@ class Blaze : LivingEntity(EntityType.BLAZE), Blaze {
         super.getTests().apply { addAll(mutableListOf(
             {
                 setCharged(true)
-                getTestMessage(this@Blaze::class, "Set charged", true)
+                getTestMessage(this@Blaze::class, "Set charged", isCharged())
             },
             {
                 setCharged(false)
-                getTestMessage(this@Blaze::class, "Set charged", false)
+                getTestMessage(this@Blaze::class, "Set charged", isCharged())
             }
         )) }
 }

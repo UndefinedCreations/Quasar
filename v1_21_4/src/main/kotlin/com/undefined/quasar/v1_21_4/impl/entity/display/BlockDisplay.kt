@@ -15,25 +15,20 @@ import org.bukkit.craftbukkit.v1_21_R3.block.data.CraftBlockData
 
 class BlockDisplay : Display(EntityType.BLOCK_DISPLAY), BlockDisplay {
 
-    private var blockData = Material.STONE.createBlockData()
-
     private var DATA_BLOCK_STATE_ID: EntityDataAccessor<BlockState>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.Display.BlockDisplay::class.java,
             FieldMappings.Entity.Display.BlockDisplay.DATA_BLOCK_STATE_ID
         )
 
-    override fun setBlock(blockData: BlockData) =
-        setEntityDataAccessor(DATA_BLOCK_STATE_ID, (blockData as CraftBlockData).state) {
-            this.blockData = blockData
-        }
+    override fun setBlock(blockData: BlockData) = setEntityDataAccessor(DATA_BLOCK_STATE_ID, (blockData as CraftBlockData).state)
 
-    override fun getBlock(): BlockData = blockData
+    override fun getBlock(): BlockData = getEntityDataValue(DATA_BLOCK_STATE_ID)?.let { CraftBlockData.fromData(it) } ?: Material.STONE.createBlockData()
 
     override fun getEntityData(): JsonObject {
         val displayJson = super.getEntityData()
         val blockDisplayJson = JsonObject()
-        blockDisplayJson.addProperty("blockData", BlockDataUtil.getID(blockData))
+        blockDisplayJson.addProperty("blockData", BlockDataUtil.getID(getBlock()))
         displayJson.add("blockDisplay", blockDisplayJson)
         return displayJson
     }
@@ -41,12 +36,12 @@ class BlockDisplay : Display(EntityType.BLOCK_DISPLAY), BlockDisplay {
     override fun setEntityData(jsonObject: JsonObject) {
         super<Display>.setEntityData(jsonObject)
         val blockDisplayJson = jsonObject["blockDisplay"].asJsonObject
-        blockData = BlockDataUtil.getBlockData(blockDisplayJson["blockData"].asInt)
+        setBlock(BlockDataUtil.getBlockData(blockDisplayJson["blockData"].asInt))
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setBlock(blockData)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setBlock(Material.STONE.createBlockData())
     }
 
     override fun getEntityClass(level: Level): Entity =

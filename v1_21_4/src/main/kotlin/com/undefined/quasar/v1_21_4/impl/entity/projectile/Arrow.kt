@@ -12,24 +12,20 @@ import kotlin.random.Random
 
 class Arrow : Entity(EntityType.ARROW), Arrow {
 
-    private var color: Color? = null
     private var ID_EFFECT_COLOR: EntityDataAccessor<Int>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.projectile.Arrow::class.java,
             FieldMappings.Entity.Projectile.Arrow.ID_EFFECT_COLOR
         )
 
-    override fun getEffectColor(): Color? = color
+    override fun getEffectColor(): Color? = getEntityDataValue(ID_EFFECT_COLOR)?.let { Color.fromARGB(it) }
 
-    override fun setEffectColor(color: Color?) =
-        setEntityDataAccessor(ID_EFFECT_COLOR, color?.asARGB() ?: -1) {
-            this.color = color
-        }
+    override fun setEffectColor(color: Color?) = setEntityDataAccessor(ID_EFFECT_COLOR, color?.asARGB() ?: -1)
 
     override fun getEntityData(): JsonObject {
         val projectileJson = super.getEntityData()
         val arrowJson = JsonObject()
-        arrowJson.addProperty("color", color?.asARGB() ?: -1)
+        arrowJson.addProperty("color", getEffectColor()?.asARGB() ?: -1)
         projectileJson.add("arrow", arrowJson)
         return projectileJson
     }
@@ -37,12 +33,12 @@ class Arrow : Entity(EntityType.ARROW), Arrow {
     override fun setEntityData(jsonObject: JsonObject) {
         super<Entity>.setEntityData(jsonObject)
         val arrowJson = jsonObject["arrow"].asJsonObject
-        this.color = Color.fromARGB(arrowJson["color"].asInt)
+        setEffectColor(Color.fromARGB(arrowJson["color"].asInt))
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setEffectColor(color)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setEffectColor(null)
     }
 
     override fun getTests(): MutableList<() -> String> =
@@ -50,7 +46,7 @@ class Arrow : Entity(EntityType.ARROW), Arrow {
             {
                 val color = Color.fromRGB(Random.nextInt(255), Random.nextInt(255), Random.nextInt(255))
                 setEffectColor(color)
-                getTestMessage(this@Arrow::class, "Set arrow effect color", color.red, color.green, color.blue)
+                getTestMessage(this@Arrow::class, "Set arrow effect color", getEffectColor()?.red, getEffectColor()?.green, getEffectColor()?.blue)
             }
         )) }
 

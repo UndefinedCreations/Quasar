@@ -11,19 +11,19 @@ import net.minecraft.world.level.Level
 
 class Bat : LivingEntity(EntityType.BAT), Bat {
 
-    private var resting = false
-
     private var DATA_ID_FLAGS: EntityDataAccessor<Byte>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.ambient.Bat::class.java,
             FieldMappings.Entity.LivingEntity.Mob.AmbientCreature.Bat.DATA_ID_FLAGS
         )
 
-    override fun isResting(): Boolean = resting
+    override fun isResting(): Boolean {
+        val entity = entity ?: return false
+        return ((entity.entityData.get(DATA_ID_FLAGS) as Byte).toInt() and 1) != 0
+    }
 
     override fun setResting(resting: Boolean) {
         val entity = entity ?: return
-        this.resting = resting
         val b0 = entity.entityData.get(DATA_ID_FLAGS) as Byte
         if (resting) {
             entity.entityData.set(DATA_ID_FLAGS, (b0.toInt() or 1).toByte())
@@ -37,7 +37,7 @@ class Bat : LivingEntity(EntityType.BAT), Bat {
     override fun getEntityData(): JsonObject {
         val ambientCreatureJson = super.getEntityData()
         val batJson = JsonObject()
-        batJson.addProperty("resting", resting)
+        batJson.addProperty("resting", isResting())
         ambientCreatureJson.add("bat", ambientCreatureJson)
         return ambientCreatureJson
     }
@@ -45,12 +45,12 @@ class Bat : LivingEntity(EntityType.BAT), Bat {
     override fun setEntityData(jsonObject: JsonObject) {
         super<LivingEntity>.setEntityData(jsonObject)
         val ambientCreatureJson = jsonObject["bat"].asJsonObject
-        resting = ambientCreatureJson["resting"].asBoolean
+        setResting(ambientCreatureJson["resting"].asBoolean)
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setResting(resting)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setResting(false)
     }
 
     override fun getEntityClass(level: Level): Entity =
@@ -60,11 +60,11 @@ class Bat : LivingEntity(EntityType.BAT), Bat {
         super.getTests().apply { addAll(mutableListOf(
             {
               setResting(true)
-              getTestMessage(this@Bat::class, "Set resting", true)
+              getTestMessage(this@Bat::class, "Set resting", isResting())
          },
          {
                 setResting(false)
-             getTestMessage(this@Bat::class, "Set resting", false)
+             getTestMessage(this@Bat::class, "Set resting", isResting())
          }
          )) }
 }

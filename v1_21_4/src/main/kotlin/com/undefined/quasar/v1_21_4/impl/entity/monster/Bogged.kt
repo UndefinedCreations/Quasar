@@ -13,25 +13,20 @@ import org.bukkit.inventory.ItemStack
 
 class Bogged : LivingEntity(EntityType.BOGGED), Bogged {
 
-    private var sheared = false
-
     private var DATA_SHEARED: EntityDataAccessor<Boolean>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.monster.Bogged::class.java,
             FieldMappings.Entity.LivingEntity.Mob.Monster.Bogged.DATA_SHEARED
         )
 
-    override fun isSheared(): Boolean = sheared
+    override fun isSheared(): Boolean = getEntityDataValue(DATA_SHEARED) ?: false
 
-    override fun setSheared(sheared: Boolean) =
-        setEntityDataAccessor(DATA_SHEARED, sheared) {
-            this.sheared = sheared
-        }
+    override fun setSheared(sheared: Boolean) = setEntityDataAccessor(DATA_SHEARED, sheared)
 
     override fun getEntityData(): JsonObject {
         val monsterJson = super.getEntityData()
         val boggedJson = JsonObject()
-        boggedJson.addProperty("sheared", sheared)
+        boggedJson.addProperty("sheared", isSheared())
         monsterJson.add("bogged", boggedJson)
         return monsterJson
     }
@@ -39,12 +34,12 @@ class Bogged : LivingEntity(EntityType.BOGGED), Bogged {
     override fun setEntityData(jsonObject: JsonObject) {
         super<LivingEntity>.setEntityData(jsonObject)
         val boggedJson = jsonObject["bogged"].asJsonObject
-        sheared = boggedJson["sheared"].asBoolean
+        setSheared(boggedJson["sheared"].asBoolean)
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setSheared(sheared)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setSheared(false)
     }
 
     override fun getEntityClass(level: Level): Entity =
@@ -54,11 +49,11 @@ class Bogged : LivingEntity(EntityType.BOGGED), Bogged {
         super.getTests().apply { addAll(mutableListOf(
             {
                 setSheared(true)
-                getTestMessage(this@Bogged::class, "Set sheared", true)
+                getTestMessage(this@Bogged::class, "Set sheared", isSheared())
             },
             {
                 setSheared(false)
-                getTestMessage(this@Bogged::class, "Set sheared", false)
+                getTestMessage(this@Bogged::class, "Set sheared", isSheared())
             },
             {
                 setItem(com.undefined.quasar.interfaces.LivingEntity.EquipmentSlot.MAINHAND, ItemStack(Material.BOW))

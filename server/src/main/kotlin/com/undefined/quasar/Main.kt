@@ -3,7 +3,6 @@ package com.undefined.quasar
 import com.google.gson.GsonBuilder
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
-import com.undefined.quasar.interfaces.entities.entity.display.BlockDisplay
 import com.undefined.stellar.StellarCommand
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -12,7 +11,6 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Level
 import kotlin.math.ceil
-import kotlin.math.floor
 import kotlin.math.sqrt
 
 class Main : JavaPlugin() {
@@ -35,7 +33,6 @@ class Main : JavaPlugin() {
             .addExecution<Player> { runAllTests(sender, getArgument("location"), getArgument("time")) }
             .addIntegerArgument("perRow")
             .addExecution<Player> { runAllTests(sender, getArgument("location"), getArgument("time"), getArgument("perRow")) }
-
 
 
         mainCommand.addArgument("randomEntityData")

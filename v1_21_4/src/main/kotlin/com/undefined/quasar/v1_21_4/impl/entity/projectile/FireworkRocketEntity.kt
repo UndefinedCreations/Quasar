@@ -15,8 +15,6 @@ import org.bukkit.inventory.ItemStack
 
 class FireworkRocketEntity : Entity(EntityType.FIREWORK_ROCKET_ENTITY), FireworkRocketEntity {
 
-    private var item = ItemStack(Material.FIREWORK_ROCKET)
-    private var shotAtAngle = false
 
     private var DATA_ID_FIREWORKS_ITEM: EntityDataAccessor<net.minecraft.world.item.ItemStack>? = null
         get() = getEntityDataAccessor(field,
@@ -30,25 +28,19 @@ class FireworkRocketEntity : Entity(EntityType.FIREWORK_ROCKET_ENTITY), Firework
             FieldMappings.Entity.Projectile.FireworkRocketEntity.DATA_SHOT_AT_ANGLE
         )
 
-    override fun setItem(item: ItemStack) =
-        setEntityDataAccessor(DATA_ID_FIREWORKS_ITEM, CraftItemStack.asNMSCopy(item)) {
-            this.item = item
-        }
+    override fun setItem(item: ItemStack) = setEntityDataAccessor(DATA_ID_FIREWORKS_ITEM, CraftItemStack.asNMSCopy(item))
 
-    override fun getItem(): ItemStack = item
+    override fun getItem(): ItemStack = getEntityDataValue(DATA_ID_FIREWORKS_ITEM)?.let { CraftItemStack.asBukkitCopy(it) } ?: ItemStack(Material.FIREWORK_ROCKET)
 
-    override fun setShotAtAngle(shotAtAngle: Boolean) =
-        setEntityDataAccessor(DATA_SHOT_AT_ANGLE, shotAtAngle) {
-            this.shotAtAngle = shotAtAngle
-        }
+    override fun setShotAtAngle(shotAtAngle: Boolean) = setEntityDataAccessor(DATA_SHOT_AT_ANGLE, shotAtAngle)
 
-    override fun isShotAtAngle(): Boolean = shotAtAngle
+    override fun isShotAtAngle(): Boolean = getEntityDataValue(DATA_SHOT_AT_ANGLE) ?: false
 
     override fun getEntityData(): JsonObject {
         val projectileJson = super.getEntityData()
         val fireworkRocketJson = JsonObject()
-        fireworkRocketJson.addProperty("item", item.serializer())
-        fireworkRocketJson.addProperty("shotAtAngle", shotAtAngle)
+        fireworkRocketJson.addProperty("item", getItem().serializer())
+        fireworkRocketJson.addProperty("shotAtAngle", isShotAtAngle())
         projectileJson.add("fireworkRocket", fireworkRocketJson)
         return projectileJson
     }
@@ -56,14 +48,14 @@ class FireworkRocketEntity : Entity(EntityType.FIREWORK_ROCKET_ENTITY), Firework
     override fun setEntityData(jsonObject: JsonObject) {
         super<Entity>.setEntityData(jsonObject)
         val fireworkRocket = jsonObject["fireworkRocket"].asJsonObject
-        item = ItemStackDeserializer.deserializer(fireworkRocket["item"].asString)
-        shotAtAngle = fireworkRocket["shotAtAngle"].asBoolean
+        setItem(ItemStackDeserializer.deserializer(fireworkRocket["item"].asString))
+        setShotAtAngle(fireworkRocket["shotAtAngle"].asBoolean)
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setItem(item)
-        setShotAtAngle(shotAtAngle)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setItem(ItemStack(Material.FIREWORK_ROCKET))
+        setShotAtAngle(false)
     }
 
     override fun getEntityClass(level: Level): net.minecraft.world.entity.Entity =
@@ -77,11 +69,11 @@ class FireworkRocketEntity : Entity(EntityType.FIREWORK_ROCKET_ENTITY), Firework
             },
             {
                 setShotAtAngle(true)
-                getTestMessage(this@FireworkRocketEntity::class, "Set shot at angle", true)
+                getTestMessage(this@FireworkRocketEntity::class, "Set shot at angle", isShotAtAngle())
             },
             {
                 setShotAtAngle(false)
-                getTestMessage(this@FireworkRocketEntity::class, "Set shot at angle", false)
+                getTestMessage(this@FireworkRocketEntity::class, "Set shot at angle", isShotAtAngle())
             }
         )) }
 }

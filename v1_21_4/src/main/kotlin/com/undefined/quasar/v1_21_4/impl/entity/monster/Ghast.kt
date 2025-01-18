@@ -11,25 +11,20 @@ import net.minecraft.world.level.Level
 
 class Ghast : LivingEntity(EntityType.GHAST), Ghast {
 
-    private var charging = false
-
     private var DATA_IS_CHARGING_ID: EntityDataAccessor<Boolean>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.monster.Ghast::class.java,
             FieldMappings.Entity.LivingEntity.Mob.Monster.Ghast.DATA_IS_CHARGING
         )
 
-    override fun setCharging(charging: Boolean) =
-        setEntityDataAccessor(DATA_IS_CHARGING_ID, charging) {
-            this.charging = charging
-        }
+    override fun setCharging(charging: Boolean) = setEntityDataAccessor(DATA_IS_CHARGING_ID, charging)
 
-    override fun isCharging(): Boolean = charging
+    override fun isCharging(): Boolean = getEntityDataValue(DATA_IS_CHARGING_ID) ?: false
 
     override fun getEntityData(): JsonObject {
         val monsterJson = super.getEntityData()
         val ghastJson = JsonObject()
-        ghastJson.addProperty("charging", charging)
+        ghastJson.addProperty("charging", isCharging())
         monsterJson.add("ghast", ghastJson)
         return monsterJson
     }
@@ -37,12 +32,12 @@ class Ghast : LivingEntity(EntityType.GHAST), Ghast {
     override fun setEntityData(jsonObject: JsonObject) {
         super<LivingEntity>.setEntityData(jsonObject)
         val ghastJson = jsonObject["ghast"].asJsonObject
-        charging = ghastJson["charging"].asBoolean
+        setCharging(ghastJson["charging"].asBoolean)
     }
 
-    override fun updateEntity() {
-        super.updateEntity()
-        setCharging(charging)
+    override fun setDefaultValues() {
+        super.setDefaultValues()
+        setCharging(false)
     }
 
     override fun getEntityClass(level: Level): Entity =
@@ -52,11 +47,11 @@ class Ghast : LivingEntity(EntityType.GHAST), Ghast {
         super.getTests().apply { addAll(mutableListOf(
             {
                 setCharging(true)
-                getTestMessage(this@Ghast::class, "Set charging", true)
+                getTestMessage(this@Ghast::class, "Set charging", isCharging())
             },
             {
                 setCharging(false)
-                getTestMessage(this@Ghast::class, "Set charging", false)
+                getTestMessage(this@Ghast::class, "Set charging", isCharging())
             }
         )) }
 }
