@@ -1,15 +1,9 @@
 package com.undefined.quasar.interfaces.entities.entity.decoration
 
-import com.undefined.quasar.interfaces.Entity
-import com.undefined.quasar.util.BlockPos
-
-interface HangingEntity : Entity {
+interface HangingEntity : BlockAttachedEntity {
 
     fun setDirection(direction: Direction)
     fun getDirection(): Direction
-
-    fun setPos(blockPos: BlockPos)
-    fun getPos(): BlockPos
 
     enum class Direction(val id: Int) {
         DOWN(0),

@@ -4,28 +4,33 @@ import com.undefined.quasar.entity.EntityFactory
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.exception.EntityNotFoundException
 import com.undefined.quasar.interfaces.Entity
+import com.undefined.quasar.interfaces.entities.entity.animal.IronGolem
 import com.undefined.quasar.v1_21_4.impl.entity.AreaEffectCloud
 import com.undefined.quasar.v1_21_4.impl.entity.ExperienceOrb
+import com.undefined.quasar.v1_21_4.impl.entity.Interaction
+import com.undefined.quasar.v1_21_4.impl.entity.LightningBolt
 import com.undefined.quasar.v1_21_4.impl.entity.ambient.Bat
 import com.undefined.quasar.v1_21_4.impl.entity.animal.*
 import com.undefined.quasar.v1_21_4.impl.entity.animal.camel.Camel
 import com.undefined.quasar.v1_21_4.impl.entity.animal.horse.Donkey
 import com.undefined.quasar.v1_21_4.impl.entity.animal.water.Cod
 import com.undefined.quasar.v1_21_4.impl.entity.animal.water.Dolphin
+import com.undefined.quasar.v1_21_4.impl.entity.animal.water.GlowSquid
+import com.undefined.quasar.v1_21_4.impl.entity.animal.water.Squid
 import com.undefined.quasar.v1_21_4.impl.entity.decoration.ArmorStand
 import com.undefined.quasar.v1_21_4.impl.entity.decoration.GlowItemFrame
 import com.undefined.quasar.v1_21_4.impl.entity.decoration.ItemFrame
+import com.undefined.quasar.v1_21_4.impl.entity.decoration.LeashFenceKnotEntity
 import com.undefined.quasar.v1_21_4.impl.entity.display.BlockDisplay
+import com.undefined.quasar.v1_21_4.impl.entity.display.ItemDisplay
 import com.undefined.quasar.v1_21_4.impl.entity.item.FallingBlockEntity
+import com.undefined.quasar.v1_21_4.impl.entity.item.ItemEntity
 import com.undefined.quasar.v1_21_4.impl.entity.monster.*
 import com.undefined.quasar.v1_21_4.impl.entity.monster.boss.EndCrystal
 import com.undefined.quasar.v1_21_4.impl.entity.monster.boss.EnderDragon
 import com.undefined.quasar.v1_21_4.impl.entity.projectile.*
 import com.undefined.quasar.v1_21_4.impl.entity.vehicle.boats.*
-import com.undefined.quasar.v1_21_4.impl.entity.vehicle.minecart.Minecart
-import com.undefined.quasar.v1_21_4.impl.entity.vehicle.minecart.MinecartChest
-import com.undefined.quasar.v1_21_4.impl.entity.vehicle.minecart.MinecartCommandBlock
-import com.undefined.quasar.v1_21_4.impl.entity.vehicle.minecart.MinecartFurnace
+import com.undefined.quasar.v1_21_4.impl.entity.vehicle.minecart.*
 
 class EntityFactory1_21_4 : EntityFactory {
 
@@ -87,9 +92,25 @@ class EntityFactory1_21_4 : EntityFactory {
             EntityType.GHAST -> Ghast()
             EntityType.GIANT -> Giant()
             EntityType.GLOW_ITEM_FRAME -> GlowItemFrame()
-
-            EntityType.ITEM_FRAME -> ItemFrame()
+            EntityType.GLOW_SQUID -> GlowSquid()
+            EntityType.GOAT -> Goat()
             EntityType.GUARDIAN -> Guardian()
+            EntityType.HOGLIN -> Hoglin()
+            EntityType.HOPPER_MINECART -> MinecartHopper()
+            EntityType.HORSE -> Horse()
+            EntityType.HUSK -> Husk()
+            EntityType.ILLUSIONER -> Illusioner()
+            EntityType.INTERACTION -> Interaction()
+            EntityType.IRON_GOLEM -> IronGolem()
+            EntityType.ITEM -> ItemEntity()
+            EntityType.ITEM_DISPLAY -> ItemDisplay()
+            EntityType.ITEM_FRAME -> ItemFrame()
+            EntityType.JUNGLE_BOAT -> JungleBoat()
+            EntityType.JUNGLE_CHEST_BOAT -> JungleChestBoat()
+            EntityType.LEASH_KNOT -> LeashFenceKnotEntity()
+            EntityType.LIGHTNING_BOLT -> LightningBolt()
+
+            EntityType.SQUID -> Squid()
             EntityType.ZOMBIE -> Zombie()
             EntityType.SPIDER -> Spider()
             EntityType.MINECART -> Minecart()

@@ -10,8 +10,6 @@ object FieldMappings {
             const val DATA_NO_GRAVITY = "aR"
             const val DATA_TICKS_FROZEN = "aS"
             const val DATA_POSE = "aq"
-            const val POSITION = "t"
-            const val LEVEL = "s"
         }
 
         object Vehicle {
@@ -57,6 +55,10 @@ object FieldMappings {
                         const val GOT_FISH = "cc"
                         const val MOISTNESS_LEVEL = "cd"
                     }
+                    object GlowSquid {
+                        // net/minecraft/world/entity/GlowSquid.html
+                        const val DATA_DARK_TICKS_REMAINING = "cg"
+                    }
                     object Allay {
                         // net/minecraft/world/entity/animal/allay/Allay.html
                         const val DATA_DANCING = "cf"
@@ -89,14 +91,24 @@ object FieldMappings {
                         const val DATA_VARIANT_ID = "cg"
                         const val DATA_TONGUE_TARGET_ID = "ch"
                     }
+                    object Goat {
+                        // net/minecraft/world/entity/animal/goat/Goat.html
+                        const val DATA_IS_SCREAMING_GOAT = "ch"
+                        const val DATA_HAS_LEFT_HORN = "ci"
+                        const val DATA_HAS_RIGHT_HORN = "cj"
+                    }
                     object AbstractHorse {
                         object Camel {
                             // net/minecraft/world/entity/animal/camel/Camel.html
                             const val DASH = "cc"
                         }
                         object AbstractChestHorse {
-                            //
+                            // net/minecraft/world/entity/animal/horse/AbstractChestedHorse.html
                             const val DATA_ID_CHEST = "bY"
+                        }
+                        object Horse {
+                            // net/minecraft/world/entity/animal/horse/Horse.html
+                            const val DATA_ID_TYPE_VARIANT = "bY"
                         }
                     }
                 }
@@ -161,6 +173,10 @@ object FieldMappings {
                     object Ghast {
                         // net/minecraft/world/entity/monster/Ghast.html
                         const val DATA_IS_CHARGING = "a"
+                    }
+                    object Hoglin {
+                        // net/minecraft/world/entity/monster/hoglin/Hoglin.html
+                        const val DATA_IMMUNE_TO_ZOMBIFICATION = "cc"
                     }
                 }
                 object AmbientCreature {
@@ -229,6 +245,12 @@ object FieldMappings {
                 const val DATA_BLOCK_STATE_ID = "p"
             }
 
+            object ItemDisplay {
+                // net/minecraft/world/entity/Display$ItemDisplay.html
+                const val DATA_ITEM_STACK_ID = "q"
+                const val DATA_ITEM_DISPLAY_ID = "r"
+            }
+
         }
 
         object Decoration {
@@ -260,6 +282,17 @@ object FieldMappings {
         object FallingBlockEntity {
             // net/minecraft/world/entity/item/FallingBlockEntity.html
             const val BLOCK = "g"
+        }
+
+        object ItemEntity {
+            // net/minecraft/world/entity/item/ItemEntity.html
+            const val DATA_ITEM = "c"
+        }
+
+        object Interaction {
+            // net/minecraft/world/entity/Interaction.html
+            const val DATA_WIDTH_ID = "b"
+            const val DATA_HEIGHT_ID = "c"
         }
 
     }

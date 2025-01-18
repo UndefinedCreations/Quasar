@@ -344,12 +344,7 @@ abstract class Display(entityType: EntityType) : Entity(entityType), Display {
                 getTestMessage(this@Display::class, "Set left rotation", getLeftRatation().x, getLeftRatation().y, getLeftRatation().z, getLeftRatation().w)
             },
             {
-                setLeftRotation(Quaternionf(
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
-                ))
+                setLeftRotation(Quaternionf())
                 getTestMessage(this@Display::class, "Set left rotation", getLeftRatation().x, getLeftRatation().y, getLeftRatation().z, getLeftRatation().w)
             },
             {
@@ -362,12 +357,7 @@ abstract class Display(entityType: EntityType) : Entity(entityType), Display {
                 getTestMessage(this@Display::class, "Set right rotation", getRightRatation().x, getRightRatation().y, getRightRatation().z, getRightRatation().w)
             },
             {
-                setRightRotation(Quaternionf(
-                    0.0,
-                    0.0,
-                    0.0,
-                    0.0
-                ))
+                setRightRotation(Quaternionf())
                 getTestMessage(this@Display::class, "Set right rotation", getRightRatation().x, getRightRatation().y, getRightRatation().z, getRightRatation().w)
             }
         ))

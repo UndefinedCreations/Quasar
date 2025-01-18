@@ -3,26 +3,30 @@ package com.undefined.quasar.enums
 import com.undefined.quasar.interfaces.Entity
 import com.undefined.quasar.interfaces.entities.entity.AreaEffectCloud
 import com.undefined.quasar.interfaces.entities.entity.ExperienceOrb
+import com.undefined.quasar.interfaces.entities.entity.Interaction
+import com.undefined.quasar.interfaces.entities.entity.LightningBolt
+import com.undefined.quasar.interfaces.entities.entity.item.ItemEntity
 import com.undefined.quasar.interfaces.entities.entity.ambient.Bat
 import com.undefined.quasar.interfaces.entities.entity.animal.*
 import com.undefined.quasar.interfaces.entities.entity.animal.camel.Camel
 import com.undefined.quasar.interfaces.entities.entity.animal.horse.Donkey
 import com.undefined.quasar.interfaces.entities.entity.animal.water.Cod
 import com.undefined.quasar.interfaces.entities.entity.animal.water.Dolphin
+import com.undefined.quasar.interfaces.entities.entity.animal.water.GlowSquid
+import com.undefined.quasar.interfaces.entities.entity.animal.water.Squid
 import com.undefined.quasar.interfaces.entities.entity.decoration.ArmorStand
 import com.undefined.quasar.interfaces.entities.entity.decoration.GlowItemFrame
 import com.undefined.quasar.interfaces.entities.entity.decoration.ItemFrame
+import com.undefined.quasar.interfaces.entities.entity.decoration.LeashFenceKnotEntity
 import com.undefined.quasar.interfaces.entities.entity.display.BlockDisplay
+import com.undefined.quasar.interfaces.entities.entity.display.ItemDisplay
 import com.undefined.quasar.interfaces.entities.entity.item.FallingBlockEntity
 import com.undefined.quasar.interfaces.entities.entity.monster.*
 import com.undefined.quasar.interfaces.entities.entity.monster.boss.EndCrystal
 import com.undefined.quasar.interfaces.entities.entity.monster.boss.EnderDragon
 import com.undefined.quasar.interfaces.entities.entity.projectile.*
 import com.undefined.quasar.interfaces.entities.entity.vehicle.boat.*
-import com.undefined.quasar.interfaces.entities.entity.vehicle.minecart.Minecart
-import com.undefined.quasar.interfaces.entities.entity.vehicle.minecart.MinecartChest
-import com.undefined.quasar.interfaces.entities.entity.vehicle.minecart.MinecartCommandBlock
-import com.undefined.quasar.interfaces.entities.entity.vehicle.minecart.MinecartFurnace
+import com.undefined.quasar.interfaces.entities.entity.vehicle.minecart.*
 import kotlin.reflect.KClass
 
 enum class EntityType(val clazz: KClass<out Entity>) {
@@ -82,9 +86,25 @@ enum class EntityType(val clazz: KClass<out Entity>) {
     GHAST(Ghast::class),
     GIANT(Giant::class),
     GLOW_ITEM_FRAME(GlowItemFrame::class),
-
-    ITEM_FRAME(ItemFrame::class),
+    GLOW_SQUID(GlowSquid::class),
+    GOAT(Goat::class),
     GUARDIAN(Guardian::class),
+    HOGLIN(Hoglin::class),
+    HOPPER_MINECART(MinecartHopper::class),
+    HORSE(Horse::class),
+    HUSK(Husk::class),
+    ILLUSIONER(Illusioner::class),
+    INTERACTION(Interaction::class),
+    IRON_GOLEM(IronGolem::class),
+    ITEM(ItemEntity::class),
+    ITEM_DISPLAY(ItemDisplay::class),
+    ITEM_FRAME(ItemFrame::class),
+    JUNGLE_BOAT(JungleBoat::class),
+    JUNGLE_CHEST_BOAT(JungleChestBoat::class),
+    LEASH_KNOT(LeashFenceKnotEntity::class),
+    LIGHTNING_BOLT(LightningBolt::class),
+
+    SQUID(Squid::class),
     ZOMBIE(Zombie::class),
     SPIDER(Spider::class),
     MINECART(Minecart::class)
