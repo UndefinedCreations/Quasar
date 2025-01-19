@@ -8,6 +8,7 @@ import com.undefined.quasar.util.getPrivateField
 import com.undefined.quasar.v1_21_4.impl.entity.Entity
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import org.bukkit.Location
+import org.bukkit.craftbukkit.v1_21_R3.CraftWorld
 
 abstract class BlockAttachedEntity(entityType: EntityType) : Entity(entityType), BlockAttachedEntity {
 
@@ -41,6 +42,8 @@ abstract class BlockAttachedEntity(entityType: EntityType) : Entity(entityType),
     }
 
     override fun spawn(location: Location) {
+        val craftWorld = location.world as CraftWorld
+        this.entity = getEntityClass(craftWorld.handle)
         if (blockPos.x != 0 || blockPos.y != 0 || blockPos.z != 0) {
             net.minecraft.world.entity.decoration.BlockAttachedEntity::class.java.getDeclaredField(FieldMappings.Entity.Decoration.BlockAttackedEntity.POS).apply {
                 isAccessible = true

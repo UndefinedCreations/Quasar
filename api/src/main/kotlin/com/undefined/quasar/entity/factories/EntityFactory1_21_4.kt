@@ -4,23 +4,16 @@ import com.undefined.quasar.entity.EntityFactory
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.exception.EntityNotFoundException
 import com.undefined.quasar.interfaces.Entity
-import com.undefined.quasar.interfaces.entities.entity.animal.IronGolem
-import com.undefined.quasar.v1_21_4.impl.entity.AreaEffectCloud
-import com.undefined.quasar.v1_21_4.impl.entity.ExperienceOrb
-import com.undefined.quasar.v1_21_4.impl.entity.Interaction
-import com.undefined.quasar.v1_21_4.impl.entity.LightningBolt
+import com.undefined.quasar.v1_21_4.impl.entity.*
 import com.undefined.quasar.v1_21_4.impl.entity.ambient.Bat
 import com.undefined.quasar.v1_21_4.impl.entity.animal.*
 import com.undefined.quasar.v1_21_4.impl.entity.animal.camel.Camel
 import com.undefined.quasar.v1_21_4.impl.entity.animal.horse.Donkey
-import com.undefined.quasar.v1_21_4.impl.entity.animal.water.Cod
-import com.undefined.quasar.v1_21_4.impl.entity.animal.water.Dolphin
-import com.undefined.quasar.v1_21_4.impl.entity.animal.water.GlowSquid
-import com.undefined.quasar.v1_21_4.impl.entity.animal.water.Squid
-import com.undefined.quasar.v1_21_4.impl.entity.decoration.ArmorStand
-import com.undefined.quasar.v1_21_4.impl.entity.decoration.GlowItemFrame
-import com.undefined.quasar.v1_21_4.impl.entity.decoration.ItemFrame
-import com.undefined.quasar.v1_21_4.impl.entity.decoration.LeashFenceKnotEntity
+import com.undefined.quasar.v1_21_4.impl.entity.animal.horse.Horse
+import com.undefined.quasar.v1_21_4.impl.entity.animal.horse.Llama
+import com.undefined.quasar.v1_21_4.impl.entity.animal.horse.Mule
+import com.undefined.quasar.v1_21_4.impl.entity.animal.water.*
+import com.undefined.quasar.v1_21_4.impl.entity.decoration.*
 import com.undefined.quasar.v1_21_4.impl.entity.display.BlockDisplay
 import com.undefined.quasar.v1_21_4.impl.entity.display.ItemDisplay
 import com.undefined.quasar.v1_21_4.impl.entity.item.FallingBlockEntity
@@ -109,11 +102,40 @@ class EntityFactory1_21_4 : EntityFactory {
             EntityType.JUNGLE_CHEST_BOAT -> JungleChestBoat()
             EntityType.LEASH_KNOT -> LeashFenceKnotEntity()
             EntityType.LIGHTNING_BOLT -> LightningBolt()
+            EntityType.LLAMA -> Llama()
+            EntityType.LLAMA_SPIT -> LlamaSpit()
+            EntityType.MAGMA_CUBE -> MagmaCube()
+            EntityType.MANGROVE_BOAT -> MangroveBoat()
+            EntityType.MANGROVE_CHEST_BOAT -> MangroveChestBoat()
+            EntityType.MINECART -> Minecart()
+            EntityType.MOOSHROOM -> MooshroomCow()
+            EntityType.MULE -> Mule()
+            EntityType.OAK_BOAT -> OakBoat()
+            EntityType.OAK_CHEST_BOAT -> OakChestBoat()
+            EntityType.OCELOT -> Ocelot()
+            EntityType.OMINOUS_ITEM_SPAWNER -> OminousItemSpawner()
+            EntityType.PAINTING -> Painting()
+            EntityType.PALE_OAK_BOAT -> PaleOakBoat()
+            EntityType.PALE_OAK_CHEST_BOAT -> PaleOakChestBoat()
+            EntityType.PANDA -> Panda()
+            EntityType.PARROT -> Parrot()
+            EntityType.PHANTOM -> Phantom()
+            EntityType.PIG -> Pig()
+            EntityType.PIGLIN -> Piglin()
+            EntityType.PIGLIN_BRUTE -> PiglinBrute()
+            EntityType.PILLAGER -> Pillager()
+            EntityType.POLAR_BEAR -> PolarBear()
+            EntityType.POTION -> ThrownPotion()
+            EntityType.PUFFERFISH -> Pufferfish()
+            EntityType.RABBIT -> Rabbit()
+            EntityType.RAVAGER -> Ravager()
+            EntityType.SALMON -> Salmon()
 
+
+            EntityType.SLIME -> Slime()
             EntityType.SQUID -> Squid()
             EntityType.ZOMBIE -> Zombie()
             EntityType.SPIDER -> Spider()
-            EntityType.MINECART -> Minecart()
             else -> throw EntityNotFoundException(entityType.name)
         }
 

@@ -218,9 +218,9 @@ abstract class Entity(
 
     override fun isSilent(): Boolean = getEntityDataValue(DATA_SILENT) ?: false
 
-    override fun isStanding(): Boolean = entity?.entityData?.get(DATA_POSE) == Pose.STANDING
+    override fun isPoseStanding(): Boolean = entity?.entityData?.get(DATA_POSE) == Pose.STANDING
 
-    override fun setStanding() = setEntityDataAccessor(DATA_POSE, Pose.STANDING)
+    override fun setPoseStanding() = setEntityDataAccessor(DATA_POSE, Pose.STANDING)
 
     override fun isSleeping(): Boolean = entity?.entityData?.get(DATA_POSE) == Pose.SLEEPING
 
@@ -400,8 +400,8 @@ abstract class Entity(
             }
             ,
             {
-                setStanding()
-                getTestMessage(this::class, "Set standing", isStanding())
+                setPoseStanding()
+                getTestMessage(this::class, "Set standing", isPoseStanding())
             }
         )
 

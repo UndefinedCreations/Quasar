@@ -3,13 +3,13 @@ package com.undefined.quasar.v1_21_4.impl.entity.animal.water
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.entities.entity.animal.water.Dolphin
-import com.undefined.quasar.v1_21_4.impl.entity.abstracts.Animal
+import com.undefined.quasar.v1_21_4.impl.entity.Entity
+import com.undefined.quasar.v1_21_4.impl.entity.LivingEntity
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import net.minecraft.network.syncher.EntityDataAccessor
-import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 
-class Dolphin : Animal(EntityType.DOLPHIN), Dolphin {
+class Dolphin : LivingEntity(EntityType.DOLPHIN), Dolphin {
 
     private var GOT_FISH: EntityDataAccessor<Boolean>? = null
         get() = getEntityDataAccessor(field,
@@ -42,7 +42,7 @@ class Dolphin : Animal(EntityType.DOLPHIN), Dolphin {
     }
 
     override fun setEntityData(jsonObject: JsonObject) {
-        super<Animal>.setEntityData(jsonObject)
+        super<LivingEntity>.setEntityData(jsonObject)
         val dolphinJson = jsonObject["dolphin"].asJsonObject
         setGotFish(dolphinJson["gotFish"].asBoolean)
         setMoistnessLevel(dolphinJson["moistnessLevel"].asInt)
@@ -54,7 +54,7 @@ class Dolphin : Animal(EntityType.DOLPHIN), Dolphin {
         setMoistnessLevel(0)
     }
 
-    override fun getEntityClass(level: Level): Entity =
+    override fun getEntityClass(level: Level): net.minecraft.world.entity.Entity =
         net.minecraft.world.entity.animal.Dolphin(net.minecraft.world.entity.EntityType.DOLPHIN, level)
 
     override fun getTests(): MutableList<() -> String> =

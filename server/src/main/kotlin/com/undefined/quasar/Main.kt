@@ -82,7 +82,6 @@ class Main : JavaPlugin() {
         var inRow = 1.0
         var row = 0.0
         val peR = if (perRow == 5) ceil(sqrt(EntityType.entries.size.toDouble())).toInt() else perRow
-        println(peR)
         EntityType.entries.forEach {
             val testLocation = location.clone().add(5*inRow, 0.0, 5*row)
             if (inRow.toInt() == peR) {

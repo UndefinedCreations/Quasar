@@ -1,8 +1,8 @@
-package com.undefined.quasar.v1_21_4.impl.entity.animal
+package com.undefined.quasar.v1_21_4.impl.entity.animal.horse
 
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
-import com.undefined.quasar.interfaces.entities.entity.animal.Horse
+import com.undefined.quasar.interfaces.entities.entity.animal.horse.Horse
 import com.undefined.quasar.v1_21_4.impl.entity.abstracts.AbstractHorse
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import net.minecraft.network.syncher.EntityDataAccessor

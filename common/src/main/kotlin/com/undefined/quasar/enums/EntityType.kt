@@ -1,23 +1,17 @@
 package com.undefined.quasar.enums
 
 import com.undefined.quasar.interfaces.Entity
-import com.undefined.quasar.interfaces.entities.entity.AreaEffectCloud
-import com.undefined.quasar.interfaces.entities.entity.ExperienceOrb
-import com.undefined.quasar.interfaces.entities.entity.Interaction
-import com.undefined.quasar.interfaces.entities.entity.LightningBolt
+import com.undefined.quasar.interfaces.entities.entity.*
 import com.undefined.quasar.interfaces.entities.entity.item.ItemEntity
 import com.undefined.quasar.interfaces.entities.entity.ambient.Bat
 import com.undefined.quasar.interfaces.entities.entity.animal.*
 import com.undefined.quasar.interfaces.entities.entity.animal.camel.Camel
 import com.undefined.quasar.interfaces.entities.entity.animal.horse.Donkey
-import com.undefined.quasar.interfaces.entities.entity.animal.water.Cod
-import com.undefined.quasar.interfaces.entities.entity.animal.water.Dolphin
-import com.undefined.quasar.interfaces.entities.entity.animal.water.GlowSquid
-import com.undefined.quasar.interfaces.entities.entity.animal.water.Squid
-import com.undefined.quasar.interfaces.entities.entity.decoration.ArmorStand
-import com.undefined.quasar.interfaces.entities.entity.decoration.GlowItemFrame
-import com.undefined.quasar.interfaces.entities.entity.decoration.ItemFrame
-import com.undefined.quasar.interfaces.entities.entity.decoration.LeashFenceKnotEntity
+import com.undefined.quasar.interfaces.entities.entity.animal.horse.Horse
+import com.undefined.quasar.interfaces.entities.entity.animal.horse.Llama
+import com.undefined.quasar.interfaces.entities.entity.animal.horse.Mule
+import com.undefined.quasar.interfaces.entities.entity.animal.water.*
+import com.undefined.quasar.interfaces.entities.entity.decoration.*
 import com.undefined.quasar.interfaces.entities.entity.display.BlockDisplay
 import com.undefined.quasar.interfaces.entities.entity.display.ItemDisplay
 import com.undefined.quasar.interfaces.entities.entity.item.FallingBlockEntity
@@ -103,9 +97,39 @@ enum class EntityType(val clazz: KClass<out Entity>) {
     JUNGLE_CHEST_BOAT(JungleChestBoat::class),
     LEASH_KNOT(LeashFenceKnotEntity::class),
     LIGHTNING_BOLT(LightningBolt::class),
+    LLAMA(Llama::class),
+    LLAMA_SPIT(LlamaSpit::class),
+    MAGMA_CUBE(MagmaCube::class),
+    MANGROVE_BOAT(MangroveBoat::class),
+    MANGROVE_CHEST_BOAT(MangroveChestBoat::class),
+    MINECART(Minecart::class),
+    MOOSHROOM(MooshroomCow::class),
+    MULE(Mule::class),
+    OAK_BOAT(OakBoat::class),
+    OAK_CHEST_BOAT(OakChestBoat::class),
+    OCELOT(Ocelot::class),
+    OMINOUS_ITEM_SPAWNER(OminousItemSpawner::class),
+    PAINTING(Painting::class),
+    PALE_OAK_BOAT(PaleOakBoat::class),
+    PALE_OAK_CHEST_BOAT(PaleOakChestBoat::class),
+    PANDA(Panda::class),
+    PARROT(Parrot::class),
+    PHANTOM(Phantom::class),
+    PIG(Pig::class),
+    PIGLIN(Piglin::class),
+    PIGLIN_BRUTE(PiglinBrute::class),
+    PILLAGER(Pillager::class),
+    POLAR_BEAR(PolarBear::class),
+    POTION(ThrownPotion::class),
+    PUFFERFISH(Pufferfish::class),
+    RABBIT(Rabbit::class),
+    RAVAGER(Ravager::class),
+    SALMON(Salmon::class),
 
+
+
+    SLIME(Slime::class),
     SQUID(Squid::class),
     ZOMBIE(Zombie::class),
-    SPIDER(Spider::class),
-    MINECART(Minecart::class)
+    SPIDER(Spider::class)
 }

@@ -31,7 +31,6 @@ abstract class LivingEntity(entityType: EntityType): LivingEntity, Entity(entity
             FieldMappings.Entity.LivingEntity.DATA_LIVING_ENTITY_FLAGS
         )
 
-
     override fun isUsingItem(offhand: Boolean): Boolean = if (offhand) usingOffhand else usingMainHand
 
     override fun stopUsingItem() {
