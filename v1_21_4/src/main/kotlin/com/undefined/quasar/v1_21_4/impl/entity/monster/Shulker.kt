@@ -9,9 +9,7 @@ import com.undefined.quasar.v1_21_4.impl.entity.LivingEntity
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.item.DyeColor
 import net.minecraft.world.level.Level
-import java.util.function.Function
 import kotlin.random.Random
 
 class Shulker : LivingEntity(EntityType.SHULKER), Shulker {

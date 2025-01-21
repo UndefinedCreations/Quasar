@@ -5,7 +5,6 @@ import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.entities.entity.item.PrimedTnt
 import com.undefined.quasar.v1_21_4.impl.entity.Entity
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
-import net.minecraft.network.chat.Component
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState

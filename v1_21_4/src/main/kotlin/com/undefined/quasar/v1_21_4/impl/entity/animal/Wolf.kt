@@ -11,7 +11,6 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.animal.WolfVariant
 import net.minecraft.world.level.Level
 import org.bukkit.Color
-import org.bukkit.craftbukkit.v1_21_R3.entity.CraftFrog.CraftVariant
 import org.bukkit.craftbukkit.v1_21_R3.entity.CraftWolf
 import kotlin.random.Random
 

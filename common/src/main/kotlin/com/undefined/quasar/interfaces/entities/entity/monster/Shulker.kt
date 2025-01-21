@@ -1,6 +1,5 @@
 package com.undefined.quasar.interfaces.entities.entity.monster
 
-import com.undefined.quasar.interfaces.LivingEntity
 import com.undefined.quasar.interfaces.abstracts.Monster
 import com.undefined.quasar.util.Color
 import com.undefined.quasar.util.Direction

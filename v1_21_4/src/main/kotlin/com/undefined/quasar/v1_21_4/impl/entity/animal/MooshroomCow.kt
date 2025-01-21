@@ -4,10 +4,8 @@ import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.entities.entity.animal.MooshroomCow
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
-import net.minecraft.core.Holder
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.animal.FrogVariant
 import net.minecraft.world.level.Level
 
 class MooshroomCow : Cow(EntityType.MOOSHROOM), MooshroomCow {

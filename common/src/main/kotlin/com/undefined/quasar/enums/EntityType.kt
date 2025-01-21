@@ -2,7 +2,6 @@ package com.undefined.quasar.enums
 
 import com.undefined.quasar.interfaces.Entity
 import com.undefined.quasar.interfaces.entities.entity.*
-import com.undefined.quasar.interfaces.entities.entity.item.ItemEntity
 import com.undefined.quasar.interfaces.entities.entity.ambient.Bat
 import com.undefined.quasar.interfaces.entities.entity.animal.*
 import com.undefined.quasar.interfaces.entities.entity.animal.camel.Camel
@@ -13,6 +12,7 @@ import com.undefined.quasar.interfaces.entities.entity.display.BlockDisplay
 import com.undefined.quasar.interfaces.entities.entity.display.ItemDisplay
 import com.undefined.quasar.interfaces.entities.entity.display.TextDisplay
 import com.undefined.quasar.interfaces.entities.entity.item.FallingBlockEntity
+import com.undefined.quasar.interfaces.entities.entity.item.ItemEntity
 import com.undefined.quasar.interfaces.entities.entity.item.PrimedTnt
 import com.undefined.quasar.interfaces.entities.entity.monster.*
 import com.undefined.quasar.interfaces.entities.entity.monster.boss.EndCrystal

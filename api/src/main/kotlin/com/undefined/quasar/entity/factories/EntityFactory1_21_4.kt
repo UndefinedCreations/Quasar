@@ -21,10 +21,10 @@ import com.undefined.quasar.v1_21_4.impl.entity.monster.*
 import com.undefined.quasar.v1_21_4.impl.entity.monster.boss.EndCrystal
 import com.undefined.quasar.v1_21_4.impl.entity.monster.boss.EnderDragon
 import com.undefined.quasar.v1_21_4.impl.entity.npc.Villager
+import com.undefined.quasar.v1_21_4.impl.entity.npc.WanderingTrader
 import com.undefined.quasar.v1_21_4.impl.entity.projectile.*
 import com.undefined.quasar.v1_21_4.impl.entity.vehicle.boats.*
 import com.undefined.quasar.v1_21_4.impl.entity.vehicle.minecart.*
-import com.undefined.quasar.v1_21_4.impl.entity.npc.WanderingTrader
 
 class EntityFactory1_21_4 : EntityFactory {
 

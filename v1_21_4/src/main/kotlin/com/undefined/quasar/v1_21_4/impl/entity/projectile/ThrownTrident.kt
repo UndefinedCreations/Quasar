@@ -1,7 +1,6 @@
 package com.undefined.quasar.v1_21_4.impl.entity.projectile
 
 import com.undefined.quasar.enums.EntityType
-import com.undefined.quasar.interfaces.abstracts.Projectile
 import com.undefined.quasar.interfaces.entities.entity.projectile.ThrownTrident
 import com.undefined.quasar.v1_21_4.impl.entity.Entity
 import net.minecraft.world.level.Level
