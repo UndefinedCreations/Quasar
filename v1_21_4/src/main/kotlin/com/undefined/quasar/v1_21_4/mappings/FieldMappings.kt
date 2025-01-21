@@ -63,6 +63,10 @@ object FieldMappings {
                         // net/minecraft/world/entity/animal/Pufferfish.html
                         const val PUFF_STATE = "bY"
                     }
+                    object TropicalFish {
+                        // net/minecraft/world/entity/animal/TropicalFish.html
+                        const val DATA_ID_TYPE_VARIANT = "c"
+                    }
                     object GlowSquid {
                         // net/minecraft/world/entity/GlowSquid.html
                         const val DATA_DARK_TICKS_REMAINING = "cg"
@@ -136,6 +140,33 @@ object FieldMappings {
                     object Rabbit {
                         // net/minecraft/world/entity/animal/Rabbit.html
                         const val DATA_TYPE_ID = "ce"
+                    }
+                    object Sheep {
+                        // net/minecraft/world/entity/animal/Sheep.html
+                        const val DATA_WOOL_ID = "bZ"
+                    }
+                    object Sniffer {
+                        // net/minecraft/world/entity/animal/sniffer/Sniffer.html
+                        const val DATA_STATE = "cl"
+                    }
+                    object SnowGolem {
+                        // net/minecraft/world/entity/animal/SnowGolem.html
+                        const val DATA_PUMPKIN_ID = "a"
+                    }
+                    object Strider {
+                        // net/minecraft/world/entity/monster/Strider.html
+                        const val DATA_SUFFOCATING = "ce"
+                        const val DATA_SADDLE_ID = "cf"
+                    }
+                    object Turtle {
+                        // net/minecraft/world/entity/animal/Turtle.html
+                        const val TRAVELLING = "cf"
+                    }
+                    object Wolf {
+                        // net/minecraft/world/entity/animal/Wolf.html
+                        const val DATA_COLLAR_COLOR = "cf"
+                        const val DATA_REMAINING_ANGER_TIME = "cg"
+                        const val DATA_VARIANT_ID = "ch"
                     }
                     object AbstractHorse {
                         object Camel {
@@ -234,6 +265,33 @@ object FieldMappings {
                         // net/minecraft/world/entity/monster/Phantom.html
                         const val ID_SIZE = "c"
                     }
+                    object Shulker {
+                        // net/minecraft/world/entity/monster/Shulker.html
+                        const val DATA_ATTACH_FACE_ID = "a"
+                        const val DATA_PEEK_ID = "b"
+                        const val DATA_COLOR_ID = "c"
+                    }
+                    object Skeleton {
+                        // net/minecraft/world/entity/monster/Skeleton.html
+                        const val DATA_STRAY_CONVERSION_ID = "c"
+                    }
+                    object Vex {
+                        // net/minecraft/world/entity/monster/Vex.html
+                        const val DATA_FLAGS_ID = "c"
+                    }
+                    object Witch {
+                        // net/minecraft/world/entity/monster/Witch.html
+                        const val DATA_USING_ITEM = "bY"
+                    }
+                    object Zoglin {
+                        // net/minecraft/world/entity/monster/Zoglin.html
+                        const val DATA_BABY_ID = "bY"
+                    }
+                    object ZombieVillager {
+                        // net/minecraft/world/entity/monster/ZombieVillager.html
+                        const val DATA_VILLAGER_DATA = "c"
+                        const val DATA_CONVERTING_ID = "b"
+                    }
                     object AbstractPiglin {
                         // net/minecraft/world/entity/monster/piglin/AbstractPiglin.html
                         const val DATA_IMMUNE_TO_ZOMBIFICATION = "a"
@@ -251,6 +309,13 @@ object FieldMappings {
                         // net/minecraft/world/entity/ambient/Bat.html
                         const val DATA_ID_FLAGS = "bX"
                     }
+                }
+            }
+
+            object Npc {
+                object Villager {
+                    // net/minecraft/world/entity/npc/Villager.html
+                    const val DATA_VILLAGER_DATA = "cf"
                 }
             }
 
@@ -288,6 +353,10 @@ object FieldMappings {
                 const val DATA_ID_FIREWORKS_ITEM = "a"
                 const val DATA_SHOT_AT_ANGLE = "c"
             }
+            object WitherSkull {
+                // net/minecraft/world/entity/projectile/WitherSkull.html
+                const val DATA_DANGEROUS = "d"
+            }
         }
 
         object Display {
@@ -316,6 +385,15 @@ object FieldMappings {
                 // net/minecraft/world/entity/Display$ItemDisplay.html
                 const val DATA_ITEM_STACK_ID = "q"
                 const val DATA_ITEM_DISPLAY_ID = "r"
+            }
+
+            object TextDisplay {
+                // net/minecraft/world/entity/Display$TextDisplay.html
+                const val DATA_TEXT_ID = "aG"
+                const val DATA_LINE_WIDTH_ID = "aH"
+                const val DATA_BACKGROUND_COLOR_ID = "aI"
+                const val DATA_TEXT_OPACITY_ID = "aJ"
+                const val DATA_STYLE_FLAGS_ID = "aK"
             }
 
         }
@@ -370,6 +448,11 @@ object FieldMappings {
         object OminousItemSpawner {
             // net/minecraft/world/entity/OminousItemSpawner.html
             const val DATA_ITEM = "f"
+        }
+
+        object PrimedTnt {
+            // net/minecraft/world/entity/item/PrimedTnt.html
+            const val DATA_BLOCK_STATE_ID = "c"
         }
 
     }

@@ -10,7 +10,7 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 
 
-class Llama : AbstractChestHorse(EntityType.LLAMA), Llama {
+open class Llama(entityType: EntityType = EntityType.LLAMA) : AbstractChestHorse(entityType), Llama {
 
     private var DATA_VARIANT_ID: EntityDataAccessor<Int>? = null
         get() = getEntityDataAccessor(field,

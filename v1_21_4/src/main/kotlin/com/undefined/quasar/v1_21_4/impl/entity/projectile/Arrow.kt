@@ -10,7 +10,7 @@ import net.minecraft.world.level.Level
 import org.bukkit.Color
 import kotlin.random.Random
 
-class Arrow : Entity(EntityType.ARROW), Arrow {
+open class Arrow(entityType: EntityType = EntityType.ARROW) : Entity(entityType), Arrow {
 
     private var ID_EFFECT_COLOR: EntityDataAccessor<Int>? = null
         get() = getEntityDataAccessor(field,

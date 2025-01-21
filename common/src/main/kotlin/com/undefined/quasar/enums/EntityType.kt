@@ -6,18 +6,20 @@ import com.undefined.quasar.interfaces.entities.entity.item.ItemEntity
 import com.undefined.quasar.interfaces.entities.entity.ambient.Bat
 import com.undefined.quasar.interfaces.entities.entity.animal.*
 import com.undefined.quasar.interfaces.entities.entity.animal.camel.Camel
-import com.undefined.quasar.interfaces.entities.entity.animal.horse.Donkey
-import com.undefined.quasar.interfaces.entities.entity.animal.horse.Horse
-import com.undefined.quasar.interfaces.entities.entity.animal.horse.Llama
-import com.undefined.quasar.interfaces.entities.entity.animal.horse.Mule
+import com.undefined.quasar.interfaces.entities.entity.animal.horse.*
 import com.undefined.quasar.interfaces.entities.entity.animal.water.*
 import com.undefined.quasar.interfaces.entities.entity.decoration.*
 import com.undefined.quasar.interfaces.entities.entity.display.BlockDisplay
 import com.undefined.quasar.interfaces.entities.entity.display.ItemDisplay
+import com.undefined.quasar.interfaces.entities.entity.display.TextDisplay
 import com.undefined.quasar.interfaces.entities.entity.item.FallingBlockEntity
+import com.undefined.quasar.interfaces.entities.entity.item.PrimedTnt
 import com.undefined.quasar.interfaces.entities.entity.monster.*
 import com.undefined.quasar.interfaces.entities.entity.monster.boss.EndCrystal
 import com.undefined.quasar.interfaces.entities.entity.monster.boss.EnderDragon
+import com.undefined.quasar.interfaces.entities.entity.monster.boss.Wither
+import com.undefined.quasar.interfaces.entities.entity.npc.Villager
+import com.undefined.quasar.interfaces.entities.entity.npc.WanderingTrader
 import com.undefined.quasar.interfaces.entities.entity.projectile.*
 import com.undefined.quasar.interfaces.entities.entity.vehicle.boat.*
 import com.undefined.quasar.interfaces.entities.entity.vehicle.minecart.*
@@ -125,11 +127,47 @@ enum class EntityType(val clazz: KClass<out Entity>) {
     RABBIT(Rabbit::class),
     RAVAGER(Ravager::class),
     SALMON(Salmon::class),
-
-
-
+    SHEEP(Sheep::class),
+    SHULKER(Shulker::class),
+    SHULKER_BULLET(ShulkerBullet::class),
+    SILVERFISH(Silverfish::class),
+    SKELETON(Skeleton::class),
+    SKELETON_HORSE(SkeletonHorse::class),
     SLIME(Slime::class),
+    SMALL_FIREBALL(SmallFireball::class),
+    SNIFFER(Sniffer::class),
+    SNOWBALL(Snowball::class),
+    SNOW_GOLEM(SnowGolem::class),
+    SPAWNER_MINECART(MinecartSpawner::class),
+    SPECTRAL_ARROW(SpectralArrow::class),
+    SPIDER(Spider::class),
+    SPRUCE_BOAT(SpruceBoat::class),
+    SPRUCE_CHEST_BOAT(SpruceChestBoat::class),
     SQUID(Squid::class),
+    STRAY(Stray::class),
+    STRIDER(Spider::class),
+    TADPOLE(Tadpole::class),
+    TEXT_DISPLAY(TextDisplay::class),
+    TNT(PrimedTnt::class),
+    TNT_MINECART(MinecartTNT::class),
+    TRADER_LLAMA(TraderLlama::class),
+    TRIDENT(ThrownTrident::class),
+    TROPICAL_FISH(TropicalFish::class),
+    TURTLE(Turtle::class),
+    VEX(Vex::class),
+    VILLAGER(Villager::class),
+    VINDICATOR(Vindicator::class),
+    WANDERING_TRADER(WanderingTrader::class),
+    WARDEN(Warden::class),
+    WIND_CHARGE(WindCharge::class),
+    WITCH(Witch::class),
+    WITHER(Wither::class),
+    WITHER_SKELETON(WitherSkeleton::class),
+    WITHER_SKULL(WitherSkull::class),
+    WOLF(Wolf::class),
+    ZOGLIN(Zoglin::class),
     ZOMBIE(Zombie::class),
-    SPIDER(Spider::class)
+    ZOMBIE_HORSE(ZombieHorse::class),
+    ZOMBIE_VILLAGER(ZombieVillager::class),
+    ZOMBIFIED_PIGLIN(ZombifiedPiglin::class)
 }

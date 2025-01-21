@@ -3,11 +3,15 @@ package com.undefined.quasar
 import com.google.gson.GsonBuilder
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
+import com.undefined.quasar.interfaces.entities.entity.animal.Sheep
+import com.undefined.quasar.interfaces.entities.entity.display.ItemDisplay
 import com.undefined.stellar.StellarCommand
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Level
 import kotlin.math.ceil
@@ -38,6 +42,22 @@ class Main : JavaPlugin() {
         mainCommand.addArgument("randomEntityData")
             .addExecution<Player> {
                 sender.sendMessage(GsonBuilder().setPrettyPrinting().create().toJson(spawnedEntities.random().getEntityData()))
+            }
+
+        mainCommand.addArgument("3dperson")
+            .addExecution<Player> {
+
+                val playerEntity = quasar.createQuasarEntity<Sheep>()
+                playerEntity.setEntity(sender)
+
+                val itemDisplay = quasar.createQuasarEntity<ItemDisplay>()
+                itemDisplay.addViewer(sender)
+                itemDisplay.spawn(sender.eyeLocation)
+                itemDisplay.setItem(ItemStack(Material.STONE))
+                itemDisplay.setTranslation(0.0, 3.0, 0.0)
+
+                playerEntity.addPassenger(itemDisplay)
+
             }
 
         val entityArgument = mainCommand.addArgument("entities").addEnumArgument<EntityType>("type")

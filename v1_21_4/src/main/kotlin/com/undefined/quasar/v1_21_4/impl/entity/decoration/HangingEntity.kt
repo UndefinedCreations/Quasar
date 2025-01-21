@@ -11,18 +11,17 @@ import org.bukkit.craftbukkit.v1_21_R3.CraftWorld
 
 abstract class HangingEntity(entityType: EntityType) : BlockAttachedEntity(entityType), HangingEntity {
 
-    private var direction = HangingEntity.Direction.SOUTH
+    private var direction = com.undefined.quasar.util.Direction.SOUTH
 
-
-    override fun setDirection(direction: HangingEntity.Direction) {
+    override fun setDirection(direction: com.undefined.quasar.util.Direction) {
         this.direction = direction
         respawn()
     }
 
-    override fun getDirection(): HangingEntity.Direction {
-        val entity = entity ?: return HangingEntity.Direction.SOUTH
+    override fun getDirection(): com.undefined.quasar.util.Direction {
+        val entity = entity ?: return com.undefined.quasar.util.Direction.SOUTH
         return entity.getPrivateField<Direction>(net.minecraft.world.entity.decoration.HangingEntity::class.java, FieldMappings.Entity.Decoration.HangingEntity.DIRECTION).let { data ->
-            HangingEntity.Direction.valueOf(data.name)
+            com.undefined.quasar.util.Direction.valueOf(data.name)
         }
     }
 
@@ -45,11 +44,11 @@ abstract class HangingEntity(entityType: EntityType) : BlockAttachedEntity(entit
 
     override fun setEntityData(jsonObject: JsonObject) {
         super<BlockAttachedEntity>.setEntityData(jsonObject)
-        setDirection(HangingEntity.Direction.entries.first { it.id == jsonObject["direction"].asInt })
+        setDirection(com.undefined.quasar.util.Direction.entries.first { it.id == jsonObject["direction"].asInt })
     }
 
     override fun getTests(): MutableList<() -> String> =
-        super.getTests().apply { addAll(HangingEntity.Direction.entries.map {
+        super.getTests().apply { addAll(com.undefined.quasar.util.Direction.entries.map {
             {
                 setDirection(it)
                 getTestMessage(this@HangingEntity::class, "Set direction", getDirection().name.lowercase())

@@ -20,6 +20,7 @@ import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_21_R3.CraftWorld
+import org.bukkit.craftbukkit.v1_21_R3.entity.CraftEntity
 import org.bukkit.entity.Player
 import java.util.*
 import kotlin.reflect.KClass
@@ -44,6 +45,10 @@ abstract class AbstractEntity(
 
     override fun removeViewer(player: Player) {
         viewers.remove(player.uniqueId)
+    }
+
+    override fun setEntity(entity: org.bukkit.entity.Entity) {
+        this.entity = (entity as CraftEntity).handle
     }
 
     override fun hasViewer(player: Player) = player.uniqueId in viewers

@@ -1,6 +1,7 @@
 package com.undefined.quasar.interfaces.entities.entity.animal.water
 
 import com.undefined.quasar.interfaces.Entity
+import com.undefined.quasar.interfaces.LivingEntity
 
-interface WaterAnimal : Entity {
+interface WaterAnimal : LivingEntity {
 }

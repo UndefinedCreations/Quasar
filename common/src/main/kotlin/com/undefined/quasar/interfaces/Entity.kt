@@ -11,6 +11,9 @@ import java.util.*
 interface Entity {
     val entityType: EntityType
 
+
+    fun setEntity(entity: org.bukkit.entity.Entity)
+
     fun getUUID(): UUID
 
     fun addViewer(player: Player)

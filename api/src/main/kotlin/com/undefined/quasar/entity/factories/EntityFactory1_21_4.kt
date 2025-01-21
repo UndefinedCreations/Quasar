@@ -8,22 +8,23 @@ import com.undefined.quasar.v1_21_4.impl.entity.*
 import com.undefined.quasar.v1_21_4.impl.entity.ambient.Bat
 import com.undefined.quasar.v1_21_4.impl.entity.animal.*
 import com.undefined.quasar.v1_21_4.impl.entity.animal.camel.Camel
-import com.undefined.quasar.v1_21_4.impl.entity.animal.horse.Donkey
-import com.undefined.quasar.v1_21_4.impl.entity.animal.horse.Horse
-import com.undefined.quasar.v1_21_4.impl.entity.animal.horse.Llama
-import com.undefined.quasar.v1_21_4.impl.entity.animal.horse.Mule
+import com.undefined.quasar.v1_21_4.impl.entity.animal.horse.*
 import com.undefined.quasar.v1_21_4.impl.entity.animal.water.*
 import com.undefined.quasar.v1_21_4.impl.entity.decoration.*
 import com.undefined.quasar.v1_21_4.impl.entity.display.BlockDisplay
 import com.undefined.quasar.v1_21_4.impl.entity.display.ItemDisplay
+import com.undefined.quasar.v1_21_4.impl.entity.display.TextDisplay
 import com.undefined.quasar.v1_21_4.impl.entity.item.FallingBlockEntity
 import com.undefined.quasar.v1_21_4.impl.entity.item.ItemEntity
+import com.undefined.quasar.v1_21_4.impl.entity.item.PrimedTnt
 import com.undefined.quasar.v1_21_4.impl.entity.monster.*
 import com.undefined.quasar.v1_21_4.impl.entity.monster.boss.EndCrystal
 import com.undefined.quasar.v1_21_4.impl.entity.monster.boss.EnderDragon
+import com.undefined.quasar.v1_21_4.impl.entity.npc.Villager
 import com.undefined.quasar.v1_21_4.impl.entity.projectile.*
 import com.undefined.quasar.v1_21_4.impl.entity.vehicle.boats.*
 import com.undefined.quasar.v1_21_4.impl.entity.vehicle.minecart.*
+import com.undefined.quasar.v1_21_4.impl.entity.npc.WanderingTrader
 
 class EntityFactory1_21_4 : EntityFactory {
 
@@ -130,12 +131,49 @@ class EntityFactory1_21_4 : EntityFactory {
             EntityType.RABBIT -> Rabbit()
             EntityType.RAVAGER -> Ravager()
             EntityType.SALMON -> Salmon()
-
-
+            EntityType.SHEEP -> Sheep()
+            EntityType.SHULKER -> Shulker()
+            EntityType.SHULKER_BULLET -> ShulkerBullet()
+            EntityType.SILVERFISH -> Silverfish()
+            EntityType.SKELETON -> Skeleton()
+            EntityType.SKELETON_HORSE -> SkeletonHorse()
             EntityType.SLIME -> Slime()
-            EntityType.SQUID -> Squid()
-            EntityType.ZOMBIE -> Zombie()
+            EntityType.SMALL_FIREBALL -> SmallFireball()
+            EntityType.SNIFFER -> Sniffer()
+            EntityType.SNOWBALL -> Snowball()
+            EntityType.SNOW_GOLEM -> SnowGolem()
+            EntityType.SPAWNER_MINECART -> MinecartSpawner()
+            EntityType.SPECTRAL_ARROW -> SpectralArrow()
             EntityType.SPIDER -> Spider()
+            EntityType.SPRUCE_BOAT -> SpruceBoat()
+            EntityType.SPRUCE_CHEST_BOAT -> SpruceChestBoat()
+            EntityType.SQUID -> Squid()
+            EntityType.STRAY -> Stray()
+            EntityType.STRIDER -> Strider()
+            EntityType.TADPOLE -> Tadpole()
+            EntityType.TEXT_DISPLAY -> TextDisplay()
+            EntityType.TNT -> PrimedTnt()
+            EntityType.TNT_MINECART -> MinecartTNT()
+            EntityType.TRADER_LLAMA -> TraderLlama()
+            EntityType.TRIDENT -> ThrownTrident()
+            EntityType.TROPICAL_FISH -> TropicalFish()
+            EntityType.TURTLE -> Turtle()
+            EntityType.VEX -> Vex()
+            EntityType.VILLAGER -> Villager()
+            EntityType.VINDICATOR -> Vindicator()
+            EntityType.WANDERING_TRADER -> WanderingTrader()
+            EntityType.WARDEN -> Warden()
+            EntityType.WIND_CHARGE -> WindCharge()
+            EntityType.WITCH -> Witch()
+            EntityType.WITHER -> Witch()
+            EntityType.WITHER_SKELETON -> WitherSkeleton()
+            EntityType.WITHER_SKULL -> WitherSkull()
+            EntityType.WOLF -> Wolf()
+            EntityType.ZOGLIN -> Zoglin()
+            EntityType.ZOMBIE -> Zombie()
+            EntityType.ZOMBIE_HORSE -> ZombieHorse()
+            EntityType.ZOMBIE_VILLAGER -> ZombieVillager()
+            EntityType.ZOMBIFIED_PIGLIN -> ZombifiedPiglin()
             else -> throw EntityNotFoundException(entityType.name)
         }
 

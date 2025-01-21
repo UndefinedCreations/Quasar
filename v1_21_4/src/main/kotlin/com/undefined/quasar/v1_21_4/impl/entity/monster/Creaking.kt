@@ -16,6 +16,7 @@ class Creaking : LivingEntity(EntityType.CREAKING), Creaking {
             net.minecraft.world.entity.monster.creaking.Creaking::class.java,
             FieldMappings.Entity.LivingEntity.Mob.Monster.Creaking.IS_ACTIVE
         )
+
     private var IS_TEARING_DOWN: EntityDataAccessor<Boolean>? = null
         get() = getEntityDataAccessor(field,
             net.minecraft.world.entity.monster.creaking.Creaking::class.java,

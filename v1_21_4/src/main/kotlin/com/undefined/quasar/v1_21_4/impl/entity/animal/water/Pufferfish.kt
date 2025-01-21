@@ -3,14 +3,14 @@ package com.undefined.quasar.v1_21_4.impl.entity.animal.water
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.entities.entity.animal.water.Pufferfish
-import com.undefined.quasar.v1_21_4.impl.entity.abstracts.Animal
+import com.undefined.quasar.v1_21_4.impl.entity.LivingEntity
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.Level
 import kotlin.random.Random
 
-class Pufferfish : com.undefined.quasar.v1_21_4.impl.entity.Entity(EntityType.PUFFERFISH), Pufferfish {
+class Pufferfish : LivingEntity(EntityType.PUFFERFISH), Pufferfish {
 
     private var PUFF_STATE: EntityDataAccessor<Int>? = null
         get() = getEntityDataAccessor(field,
@@ -31,7 +31,7 @@ class Pufferfish : com.undefined.quasar.v1_21_4.impl.entity.Entity(EntityType.PU
     }
 
     override fun setEntityData(jsonObject: JsonObject) {
-        super<com.undefined.quasar.v1_21_4.impl.entity.Entity>.setEntityData(jsonObject)
+        super<LivingEntity>.setEntityData(jsonObject)
         val pufferFishJson = jsonObject["pufferfish"].asJsonObject
         setPuff(pufferFishJson["puff"].asInt)
     }
