@@ -12,11 +12,16 @@ import net.minecraft.network.protocol.game.ClientboundEntityEventPacket
 import net.minecraft.network.protocol.game.ClientboundHurtAnimationPacket
 import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket
+import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.entity.ai.attributes.Attribute
+import net.minecraft.world.entity.ai.attributes.Attributes
 import org.bukkit.Material
+import org.bukkit.craftbukkit.v1_21_R3.attribute.CraftAttribute
 import org.bukkit.craftbukkit.v1_21_R3.inventory.CraftItemStack
 import org.bukkit.inventory.ItemStack
+import kotlin.random.Random
 
 abstract class LivingEntity(entityType: EntityType): LivingEntity, Entity(entityType) {
 
@@ -91,6 +96,17 @@ abstract class LivingEntity(entityType: EntityType): LivingEntity, Entity(entity
         sendPackets(ClientboundMoveEntityPacket.Rot(entity.id, toRotationValue(yaw), toRotationValue(pitch), true))
     }
 
+    override fun setScale(double: Double) {
+        val entity = entity as? net.minecraft.world.entity.LivingEntity ?: return
+        entity.getAttribute(Attributes.SCALE)?.baseValue = double
+        sendPackets(ClientboundUpdateAttributesPacket(entity.id, entity.attributes.attributesToUpdate))
+    }
+
+    override fun getScale(): Double {
+        val entity = entity as? net.minecraft.world.entity.LivingEntity ?: return 1.0
+        return entity.getAttribute(Attributes.SCALE)?.baseValue ?: 1.0
+    }
+
     private fun setLivingEntityFlag(i: Int, flag: Boolean) {
         val entity = entity ?: return
         var j = (entity.entityData.get(DATA_LIVING_ENTITY_FLAGS) as Byte).toInt()
@@ -110,6 +126,7 @@ abstract class LivingEntity(entityType: EntityType): LivingEntity, Entity(entity
             itemArray.add("$slot@${item.serializer()}")
         }
         livingEntityJson.add("items", itemArray)
+        livingEntityJson.addProperty("scale", getScale())
         entityJson.add("livingEntity", livingEntityJson)
         return entityJson
     }
@@ -124,10 +141,12 @@ abstract class LivingEntity(entityType: EntityType): LivingEntity, Entity(entity
             val item = ItemStackDeserializer.deserializer(split[1])
             items[slot] = item
         }
+        setScale(livingEntityJson["scale"].asDouble)
     }
 
     override fun setDefaultValues() {
         items.forEach { setItem(it.key, it.value) }
+        setScale(1.0)
     }
 
     override fun getTests(): MutableList<() -> String> =
@@ -145,6 +164,14 @@ abstract class LivingEntity(entityType: EntityType): LivingEntity, Entity(entity
             {
                 clearItems()
                 getTestMessage(this@LivingEntity::class, "Clear items")
+            },
+            {
+                setScale(Random.nextDouble(1.0, 2.0))
+                getTestMessage(this@LivingEntity::class, "Set scale", getScale())
+            },
+            {
+                setScale(1.0)
+                getTestMessage(this@LivingEntity::class, "Set scale", getScale())
             }
         )) }
 }

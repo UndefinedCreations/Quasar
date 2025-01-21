@@ -22,6 +22,10 @@ interface LivingEntity : Entity {
 
     fun clearItems() = EquipmentSlot.entries.forEach { setItem(it, Material.AIR) }
 
+    fun setScale(double: Double)
+
+    fun getScale(): Double
+
     enum class EquipmentSlot(val slot: Int) {
         MAINHAND(0),
         OFFHAND(40),
