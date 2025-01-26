@@ -30,7 +30,7 @@ import com.undefined.quasar.v1_21_4.impl.entity.vehicle.minecart.*
 import com.undefined.quasar.v1_21_4.listener.PacketListener
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
-import java.util.UUID
+import java.util.*
 
 class QuasarNMS(javaPlugin: JavaPlugin, autoLoader: String, sendMetaData: String) : EntityFactory {
 

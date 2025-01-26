@@ -1,25 +1,17 @@
 package com.undefined.quasar
 
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.extention.toQuasar
 import com.undefined.quasar.interfaces.Entity
-import com.undefined.quasar.interfaces.entities.entity.animal.Sheep
-import com.undefined.quasar.interfaces.entities.entity.display.ItemDisplay
-import com.undefined.quasar.interfaces.entities.entity.npc.player.Cape
 import com.undefined.quasar.interfaces.entities.entity.npc.player.Skin
 import com.undefined.stellar.StellarCommand
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Level
-import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.math.ceil
 import kotlin.math.sqrt

@@ -3,7 +3,7 @@ package com.undefined.quasar.interfaces.entities.entity.npc.player
 import com.google.gson.JsonParser
 import com.undefined.quasar.interfaces.LivingEntity
 import org.bukkit.entity.Entity
-import java.util.Base64
+import java.util.*
 
 interface Player : LivingEntity {
 

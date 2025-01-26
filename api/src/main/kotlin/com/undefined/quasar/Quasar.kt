@@ -1,10 +1,10 @@
 package com.undefined.quasar
 
-import com.undefined.quasar.interfaces.EntityFactory
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.exception.EntityNotFoundException
 import com.undefined.quasar.exception.UnsupportedVersionException
 import com.undefined.quasar.interfaces.Entity
+import com.undefined.quasar.interfaces.EntityFactory
 import com.undefined.quasar.util.NMSVersion
 import com.undefined.quasar.util.Option
 import com.undefined.quasar.v1_21_4.loader.QuasarNMS

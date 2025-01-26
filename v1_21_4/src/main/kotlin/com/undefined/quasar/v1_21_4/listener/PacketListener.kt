@@ -9,21 +9,15 @@ import com.undefined.quasar.v1_21_4.mappings.MethodMappings
 import net.minecraft.network.Connection
 import net.minecraft.network.protocol.game.ClientboundForgetLevelChunkPacket
 import net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket.Action
 import net.minecraft.network.protocol.game.ServerboundInteractPacket
 import net.minecraft.server.network.ServerCommonPacketListenerImpl
 import org.bukkit.Bukkit
-import org.bukkit.craftbukkit.v1_21_R3.CraftWorld
 import org.bukkit.craftbukkit.v1_21_R3.entity.CraftPlayer
-import org.bukkit.craftbukkit.v1_21_R3.entity.CraftWolf
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityInteractEvent
-import org.bukkit.event.player.PlayerInteractAtEntityEvent
-import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
-import java.util.UUID
+import java.util.*
 
 class PacketListener : Listener {
 

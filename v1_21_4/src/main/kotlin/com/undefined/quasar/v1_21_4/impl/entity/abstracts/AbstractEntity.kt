@@ -3,7 +3,6 @@ package com.undefined.quasar.v1_21_4.impl.entity.abstracts
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
-import com.undefined.quasar.util.DEFAULTS
 import com.undefined.quasar.util.Option
 import com.undefined.quasar.util.getPrivateField
 import com.undefined.quasar.util.repeat

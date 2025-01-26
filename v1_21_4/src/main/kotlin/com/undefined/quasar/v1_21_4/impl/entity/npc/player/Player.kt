@@ -36,7 +36,6 @@ import org.bukkit.craftbukkit.v1_21_R3.entity.CraftEntity
 import org.bukkit.craftbukkit.v1_21_R3.entity.CraftPlayer
 import org.bukkit.event.player.PlayerRespawnEvent
 import java.util.*
-import kotlin.collections.HashMap
 import kotlin.math.floor
 
 private val trueProfile: HashMap<UUID, GameProfile> = hashMapOf()

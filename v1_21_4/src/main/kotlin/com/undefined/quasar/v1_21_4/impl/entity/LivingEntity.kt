@@ -2,7 +2,6 @@ package com.undefined.quasar.v1_21_4.impl.entity
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
-import com.mojang.authlib.GameProfile
 import com.mojang.datafixers.util.Pair
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.LivingEntity
@@ -12,10 +11,8 @@ import com.undefined.quasar.v1_21_4.mappings.FieldMappings
 import net.minecraft.network.protocol.game.*
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.entity.ai.attributes.Attribute
 import net.minecraft.world.entity.ai.attributes.Attributes
 import org.bukkit.Material
-import org.bukkit.craftbukkit.v1_21_R3.attribute.CraftAttribute
 import org.bukkit.craftbukkit.v1_21_R3.inventory.CraftItemStack
 import org.bukkit.inventory.ItemStack
 import kotlin.random.Random
