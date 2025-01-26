@@ -1,9 +1,10 @@
-package com.undefined.quasar.entity.factories
+package com.undefined.quasar.v1_21_4.loader
 
-import com.undefined.quasar.entity.EntityFactory
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.exception.EntityNotFoundException
 import com.undefined.quasar.interfaces.Entity
+import com.undefined.quasar.interfaces.EntityFactory
+import com.undefined.quasar.util.Option
 import com.undefined.quasar.v1_21_4.impl.entity.*
 import com.undefined.quasar.v1_21_4.impl.entity.ambient.Bat
 import com.undefined.quasar.v1_21_4.impl.entity.animal.*
@@ -22,11 +23,37 @@ import com.undefined.quasar.v1_21_4.impl.entity.monster.boss.EndCrystal
 import com.undefined.quasar.v1_21_4.impl.entity.monster.boss.EnderDragon
 import com.undefined.quasar.v1_21_4.impl.entity.npc.Villager
 import com.undefined.quasar.v1_21_4.impl.entity.npc.WanderingTrader
+import com.undefined.quasar.v1_21_4.impl.entity.npc.player.Player
 import com.undefined.quasar.v1_21_4.impl.entity.projectile.*
 import com.undefined.quasar.v1_21_4.impl.entity.vehicle.boats.*
 import com.undefined.quasar.v1_21_4.impl.entity.vehicle.minecart.*
+import com.undefined.quasar.v1_21_4.listener.PacketListener
+import org.bukkit.Bukkit
+import org.bukkit.plugin.java.JavaPlugin
+import java.util.UUID
 
-class EntityFactory1_21_4 : EntityFactory {
+class QuasarNMS(javaPlugin: JavaPlugin, autoLoader: String, sendMetaData: String) : EntityFactory {
+
+    companion object {
+
+        lateinit var PLUGIN: JavaPlugin
+
+        lateinit var ENTITY_LOADER: Option
+        lateinit var SEND_META_PACKET: Option
+
+        val spawnedEntities: MutableSet<Entity> = mutableSetOf()
+
+        val loadedChunk: HashMap<Pair<Int, Int>, MutableList<UUID>> = hashMapOf()
+    }
+
+    init {
+        PLUGIN = javaPlugin
+
+        ENTITY_LOADER = Option.valueOf(autoLoader)
+        SEND_META_PACKET = Option.valueOf(sendMetaData)
+
+        Bukkit.getPluginManager().registerEvents(PacketListener(), javaPlugin)
+    }
 
     override fun createEntity(entityType: EntityType): Entity =
         when(entityType) {
@@ -174,7 +201,7 @@ class EntityFactory1_21_4 : EntityFactory {
             EntityType.ZOMBIE_HORSE -> ZombieHorse()
             EntityType.ZOMBIE_VILLAGER -> ZombieVillager()
             EntityType.ZOMBIFIED_PIGLIN -> ZombifiedPiglin()
+            EntityType.PLAYER -> Player()
             else -> throw EntityNotFoundException(entityType.name)
         }
-
 }

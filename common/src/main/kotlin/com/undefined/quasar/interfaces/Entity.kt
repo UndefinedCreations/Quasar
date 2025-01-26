@@ -3,6 +3,8 @@ package com.undefined.quasar.interfaces
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.undefined.quasar.enums.EntityType
+import com.undefined.quasar.util.ClickData
+import com.undefined.quasar.util.Option
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.entity.Player
@@ -10,7 +12,6 @@ import java.util.*
 
 interface Entity {
     val entityType: EntityType
-
 
     fun setEntity(entity: org.bukkit.entity.Entity)
 
@@ -24,7 +25,9 @@ interface Entity {
 
     fun spawn(location: Location)
 
-    fun kill()
+    fun spawn(location: Location, target: Player)
+
+    fun kill(player: Player? = null)
 
     fun respawn() {
         kill()
@@ -107,6 +110,8 @@ interface Entity {
 
     fun isPoseStanding(): Boolean
 
+    fun resetPose() = setPoseStanding()
+
     fun setEntityData(string: String) = setEntityData(JsonParser.parseString(string).asJsonObject)
 
     fun setEntityData(jsonObject: JsonObject)
@@ -118,6 +123,16 @@ interface Entity {
     fun resendPackets()
 
     fun resendPackets(player: Player)
+
+    fun setAutoLoader(autoLoader: Option)
+
+    fun isAutoLoading(): Boolean
+
+    fun setAutoMetaDataPacket(metaDataPacket: Option)
+
+    fun isAutoMetaDataPacket(): Boolean
+
+    fun clickEvent(click: (ClickData<*>) -> Unit)
 
     fun runTest(
         logger: Player,

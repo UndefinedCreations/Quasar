@@ -5,6 +5,8 @@ import org.bukkit.inventory.ItemStack
 
 interface LivingEntity : Entity {
 
+    fun setHeadRotation(yaw: Float)
+
     fun useItem(offhand: Boolean)
     fun stopUsingItem()
     fun isUsingItem(offhand: Boolean): Boolean

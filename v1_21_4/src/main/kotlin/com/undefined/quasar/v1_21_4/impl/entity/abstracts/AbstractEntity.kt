@@ -3,8 +3,11 @@ package com.undefined.quasar.v1_21_4.impl.entity.abstracts
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
+import com.undefined.quasar.util.DEFAULTS
+import com.undefined.quasar.util.Option
 import com.undefined.quasar.util.getPrivateField
 import com.undefined.quasar.util.repeat
+import com.undefined.quasar.v1_21_4.loader.QuasarNMS
 import com.undefined.quasar.v1_21_4.util.sendPacket
 import com.undefined.quasar.v1_21_4.util.sendPackets
 import net.minecraft.network.protocol.Packet
@@ -35,7 +38,24 @@ abstract class AbstractEntity(
     var entityTeam: PlayerTeam = scoreboard.addPlayerTeam("qausar_${UUID.randomUUID()}")
     var entity: net.minecraft.world.entity.Entity? = null
     private var location: Location? = null
-    private var viewers: MutableList<UUID> = mutableListOf()
+    val viewers: MutableList<UUID> = mutableListOf()
+
+    var isBukkitEntity = false
+
+    private var autoLoader = QuasarNMS.ENTITY_LOADER
+    private var sendMetaData = QuasarNMS.SEND_META_PACKET
+
+    override fun setAutoLoader(autoLoader: Option) {
+        this.autoLoader = autoLoader
+    }
+
+    override fun isAutoLoading(): Boolean = autoLoader == Option.AUTOMATIC
+
+    override fun setAutoMetaDataPacket(metaDataPacket: Option) {
+        this.sendMetaData = metaDataPacket
+    }
+
+    override fun isAutoMetaDataPacket(): Boolean = autoLoader == Option.AUTOMATIC
 
     override fun getUUID(): UUID = uuid
 
@@ -49,20 +69,33 @@ abstract class AbstractEntity(
 
     override fun setEntity(entity: org.bukkit.entity.Entity) {
         this.entity = (entity as CraftEntity).handle
+        QuasarNMS.spawnedEntities.add(this)
+        isBukkitEntity = true
     }
 
     override fun hasViewer(player: Player) = player.uniqueId in viewers
 
     override fun spawn(location: Location) {
+        sendPackets(*getSpawnPackets(location).toTypedArray())
+        println(QuasarNMS.loadedChunk.getOrElse(Pair(getLocation().chunk.x, getLocation().chunk.z), { mutableListOf() }))
+        setDefaultValues()
+        QuasarNMS.spawnedEntities.add(this)
+    }
+
+    override fun spawn(location: Location, target: Player) {
+        target.sendPacket(*getSpawnPackets(location).toTypedArray())
+        println(QuasarNMS.loadedChunk.getOrElse(Pair(getLocation().chunk.x, getLocation().chunk.z), { mutableListOf() }))
+        resendPackets(target)
+        QuasarNMS.spawnedEntities.add(this)
+    }
+
+    private fun getSpawnPackets(location: Location): List<Packet<*>> {
         this.location = location
-
         val craftWorld = location.world as CraftWorld
+
         val entity = if (this.entity == null) getEntityClass(craftWorld.handle) else this.entity!!
-
         entity.uuid = uuid
-
         entity.setPos(location.x, location.y, location.z)
-
         val serverEntity = ServerEntity(
             craftWorld.handle,
             entity,
@@ -71,23 +104,34 @@ abstract class AbstractEntity(
             {},
             mutableSetOf()
         )
-
+        this.entity = entity
         val packet = entity.getAddEntityPacket(serverEntity)
-        sendPackets(
+
+        setViewers()
+
+        return listOf(
             packet,
             ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(entityTeam, true),
             ClientboundSetPlayerTeamPacket.createPlayerPacket(entityTeam, entity.uuid.toString(), ClientboundSetPlayerTeamPacket.Action.ADD)
         )
-
-        this.entity = entity
-        setDefaultValues()
     }
 
-    override fun kill() {
-        entity?.let {
-            this.entity = null
-            sendPackets(ClientboundRemoveEntitiesPacket(it.id))
+    fun setViewers() {
+        if (isAutoLoading()) {
+            viewers.addAll(Bukkit.getOnlinePlayers()
+                .filter { it.world == getLocation().world }
+                .filter { it.location.distance(getLocation()) < 16 * Bukkit.getServer().viewDistance + 1 }.map { it.uniqueId }
+            )
         }
+    }
+
+    override fun kill(player: Player?) {
+        entity?.let {
+            if (player == null) this.entity = null
+            val packet = ClientboundRemoveEntitiesPacket(it.id)
+            if (player == null) sendPackets(packet) else player.sendPacket(packet)
+        }
+        if (player == null) QuasarNMS.spawnedEntities.remove(this)
     }
 
     override fun isAlive(): Boolean = entity != null
@@ -106,19 +150,20 @@ abstract class AbstractEntity(
             Bukkit.getOfflinePlayer(viewer).player?.sendPackets(packet.toList())
     }
 
-    fun sendEntityMetaData(player: Player? = null) {
+    fun sendEntityMetaData(player: Player? = null, manual: Boolean = false) {
         if (entity == null) return
+        if (!manual && sendMetaData == Option.MANUAL) return
         val data = entity!!.entityData.packDirty() ?: return
         val packet = ClientboundSetEntityDataPacket(entity!!.id, data)
         if (player == null) sendPackets(packet) else player.sendPacket(packet)
     }
 
     override fun resendPackets() {
-        sendEntityMetaData()
+        sendEntityMetaData(manual = true)
     }
 
     override fun resendPackets(player: Player) {
-        sendEntityMetaData(player)
+        sendEntityMetaData(player, true)
     }
 
     fun <T> getEntityDataAccessor(field: EntityDataAccessor<*>?, clazz: Class<*>, name: String): T? {

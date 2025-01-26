@@ -20,6 +20,7 @@ import com.undefined.quasar.interfaces.entities.entity.monster.boss.EnderDragon
 import com.undefined.quasar.interfaces.entities.entity.monster.boss.Wither
 import com.undefined.quasar.interfaces.entities.entity.npc.Villager
 import com.undefined.quasar.interfaces.entities.entity.npc.WanderingTrader
+import com.undefined.quasar.interfaces.entities.entity.npc.player.Player
 import com.undefined.quasar.interfaces.entities.entity.projectile.*
 import com.undefined.quasar.interfaces.entities.entity.vehicle.boat.*
 import com.undefined.quasar.interfaces.entities.entity.vehicle.minecart.*
@@ -169,5 +170,6 @@ enum class EntityType(val clazz: KClass<out Entity>) {
     ZOMBIE(Zombie::class),
     ZOMBIE_HORSE(ZombieHorse::class),
     ZOMBIE_VILLAGER(ZombieVillager::class),
-    ZOMBIFIED_PIGLIN(ZombifiedPiglin::class)
+    ZOMBIFIED_PIGLIN(ZombifiedPiglin::class),
+    PLAYER(Player::class)
 }

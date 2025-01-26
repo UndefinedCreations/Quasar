@@ -317,6 +317,10 @@ object FieldMappings {
                     // net/minecraft/world/entity/npc/Villager.html
                     const val DATA_VILLAGER_DATA = "cf"
                 }
+                object Player {
+                    // net/minecraft/world/entity/player/Player.html
+                    const val GAME_PROFILE = "cC"
+                }
             }
 
             object ArmorStand {
@@ -457,4 +461,23 @@ object FieldMappings {
 
     }
 
+    object PacketListener {
+
+        object ServerCommonPacketListenerImpl {
+            // net/minecraft/server/network/ServerCommonPacketListenerImpl.html
+            const val CONNECTION = "e"
+        }
+
+        object ServerboundInteractPacket {
+            // net/minecraft/network/protocol/game/ServerboundInteractPacket.html
+            const val ENTITY_ID = "b"
+            const val ACTION = "c"
+
+            object InteractionAction {
+                // net/minecraft/network/protocol/game/ServerboundInteractPacket$InteractionAction.html
+                const val HAND = "a"
+            }
+        }
+
+    }
 }

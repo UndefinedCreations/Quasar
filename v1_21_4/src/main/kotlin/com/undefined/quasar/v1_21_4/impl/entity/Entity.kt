@@ -5,6 +5,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.Entity
+import com.undefined.quasar.util.ClickData
 import com.undefined.quasar.util.getPrivateMethod
 import com.undefined.quasar.v1_21_4.impl.entity.abstracts.AbstractEntity
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
@@ -67,6 +68,8 @@ abstract class Entity(
     private var FLAG_ONFIRE = 0
     private var FLAG_INVISIBLE = 5
     private var FLAG_GLOWING = 6
+
+    val clickData: MutableList<(ClickData<*>) -> Unit> = mutableListOf()
 
     private var passengers: MutableList<Entity> = mutableListOf()
 
@@ -231,6 +234,8 @@ abstract class Entity(
     override fun isSleeping(): Boolean = entity?.entityData?.get(DATA_POSE) == Pose.SLEEPING
 
     override fun setSleeping() = setEntityDataAccessor(DATA_POSE, Pose.SLEEPING)
+
+    override fun clickEvent(click: (ClickData<*>) -> Unit)  { clickData.add(click) }
 
     fun toRotationValue(yaw: Float): Byte = floor(yaw * 256.0f / 360.0f).toInt().toByte()
 

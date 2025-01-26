@@ -6,4 +6,13 @@ object MethodMappings {
             const val SET_ROT = "b"
         }
     }
+
+    object ServerboundInteractionPacket {
+
+        object ActionType {
+            // net/minecraft/network/protocol/game/ServerboundInteractPacket$Action.html
+            const val GET_TYPE = "a"
+        }
+    }
+
 }

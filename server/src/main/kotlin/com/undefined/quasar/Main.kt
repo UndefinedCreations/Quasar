@@ -1,10 +1,14 @@
 package com.undefined.quasar
 
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
 import com.undefined.quasar.enums.EntityType
+import com.undefined.quasar.extention.toQuasar
 import com.undefined.quasar.interfaces.Entity
 import com.undefined.quasar.interfaces.entities.entity.animal.Sheep
 import com.undefined.quasar.interfaces.entities.entity.display.ItemDisplay
+import com.undefined.quasar.interfaces.entities.entity.npc.player.Cape
+import com.undefined.quasar.interfaces.entities.entity.npc.player.Skin
 import com.undefined.stellar.StellarCommand
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -15,6 +19,8 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.logging.Level
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.math.ceil
 import kotlin.math.sqrt
 
@@ -24,6 +30,7 @@ class Main : JavaPlugin() {
 
     lateinit var quasar: Quasar
 
+    @OptIn(ExperimentalEncodingApi::class)
     override fun onEnable() {
         quasar = Quasar(this)
 
@@ -45,20 +52,13 @@ class Main : JavaPlugin() {
                 sender.sendMessage(GsonBuilder().setPrettyPrinting().create().toJson(spawnedEntities.random().getEntityData()))
             }
 
-        mainCommand.addArgument("3dperson")
+        mainCommand.addArgument("player")
             .addExecution<Player> {
+                val playerEntity = sender.toQuasar() as com.undefined.quasar.interfaces.entities.entity.npc.player.Player
+                playerEntity.spawn(sender.location)
 
-                val playerEntity = quasar.createQuasarEntity<Sheep>()
-                playerEntity.setEntity(sender)
-
-                val itemDisplay = quasar.createQuasarEntity<ItemDisplay>()
-                itemDisplay.addViewer(sender)
-                itemDisplay.spawn(sender.eyeLocation)
-                itemDisplay.setItem(ItemStack(Material.STONE))
-                itemDisplay.setTranslation(0.0, 3.0, 0.0)
-
-                playerEntity.addPassenger(itemDisplay)
-
+                playerEntity.setSkin(Skin.of("_Sheldon_"))
+                playerEntity.setName("_Sheldon_")
             }
 
         val entityArgument = mainCommand.addArgument("entities").addEnumArgument<EntityType>("type")
@@ -66,10 +66,12 @@ class Main : JavaPlugin() {
             .addExecution<Player> {
                 val type = getArgument<EntityType>("type")
                 val entity = quasar.createQuasarEntity(type)
-                entity.addViewer(sender)
                 spawnedEntities.add(entity)
                 val location = sender.location
                 entity.spawn(location)
+                entity.clickEvent {
+                    println("Tester | ${it.click.name} - ${it.entity.entityType}")
+                }
                 sender.sendMessage("${ChatColor.GREEN} $type has been spawned at [${Math.round(location.x)}, ${Math.round(location.y)}, ${Math.round(location.z)}]")
             }
 
@@ -117,7 +119,6 @@ class Main : JavaPlugin() {
 
     private fun runTest(logger: Player, entity: Entity, location: Location, time: Int = 10, sendMessage: Boolean = true) {
         logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | {${ChatColor.GREEN}Tests Started!${ChatColor.GRAY}}")
-        entity.addViewer(logger)
         entity.spawn(location)
         entity.setGlowing(false)
         if (sendMessage) logger.sendMessage("${ChatColor.GRAY} ${entity.entityType.name} | Spawning {${ChatColor.GREEN}Success!${ChatColor.GRAY}}")

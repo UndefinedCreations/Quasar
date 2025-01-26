@@ -2,17 +2,14 @@ package com.undefined.quasar.v1_21_4.impl.entity
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import com.mojang.authlib.GameProfile
 import com.mojang.datafixers.util.Pair
 import com.undefined.quasar.enums.EntityType
 import com.undefined.quasar.interfaces.LivingEntity
 import com.undefined.quasar.util.ItemStackDeserializer
 import com.undefined.quasar.util.serializer
 import com.undefined.quasar.v1_21_4.mappings.FieldMappings
-import net.minecraft.network.protocol.game.ClientboundEntityEventPacket
-import net.minecraft.network.protocol.game.ClientboundHurtAnimationPacket
-import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket
-import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket
-import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket
+import net.minecraft.network.protocol.game.*
 import net.minecraft.network.syncher.EntityDataAccessor
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.ai.attributes.Attribute
@@ -35,6 +32,11 @@ abstract class LivingEntity(entityType: EntityType): LivingEntity, Entity(entity
             net.minecraft.world.entity.LivingEntity::class.java,
             FieldMappings.Entity.LivingEntity.DATA_LIVING_ENTITY_FLAGS
         )
+
+    override fun setHeadRotation(yaw: Float) {
+        val serverPlayer = entity ?: return
+        sendPackets(ClientboundRotateHeadPacket(serverPlayer, toRotationValue(yaw)))
+    }
 
     override fun isUsingItem(offhand: Boolean): Boolean = if (offhand) usingOffhand else usingMainHand
 
